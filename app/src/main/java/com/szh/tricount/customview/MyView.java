@@ -1,0 +1,277 @@
+package com.szh.tricount.customview;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
+import com.szh.tricount.MainActivity;
+import com.szh.tricount.R;
+import com.szh.tricount.datas.Calculator;
+import com.szh.tricount.datas.DataList;
+import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.DensityUtil;
+import com.szh.tricount.utils.MathUtil;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class MyView extends View {
+
+    private LinkedList<Integer> xs;
+    private LinkedList<Integer> ys;
+    private Paint paint;
+
+    private AlertDialog dialog;
+    private Paint paintTmp;
+
+    public MyView(Context context) {
+        super(context);
+        init();
+    }
+
+    public MyView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        Contacts.countLayout = 0;
+        paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setAlpha(180);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setStrokeWidth(DensityUtil.dip2px(this.getContext(), 3));
+        paintTmp = new Paint(this.paint);
+        paintTmp.setAlpha(255);
+        paintTmp.setColor(Color.RED);
+        if (dialog == null) {
+            dialog = new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.ensureRemove)
+                    .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            LinkedList<Integer> removedX = DataList.getLinesX().remove(Contacts.n);
+                            LinkedList<Integer> removedY = DataList.getLinesY().remove(Contacts.n);
+                            Calculator.getInstance(getContext()).deleteExtra(removedX, removedY);
+                            xs = null;
+                            xs = null;
+                            Contacts.n = -1;
+                            invalidate();
+                            MainActivity.showPathView();
+                        }
+                    })
+                    .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Contacts.n = -1;
+                            invalidate();
+                        }
+                    })
+                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            dialog.dismiss();
+                            Contacts.n = -1;
+                            invalidate();
+                        }
+                    })
+                    .create();
+            Window dialogWindow = dialog.getWindow();
+            WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();
+            layoutParams.alpha = 0.8f;
+            dialogWindow.setAttributes(layoutParams);
+        }
+    }
+
+    public void clearHashMap() {
+        if (Calculator.getInstance(getContext()).getHashMap() != null) {
+            Calculator.getInstance(getContext()).getHashMap().clear();
+            Calculator.getInstance(getContext()).setHashMap(null);
+        }
+    }
+
+    public void clearLinkedLists() {
+        if (Calculator.getInstance(getContext()).getLinkedLists() != null) {
+            Calculator.getInstance(getContext()).getLinkedLists().clear();
+            Calculator.getInstance(getContext()).setLinkedLists(null);
+        }
+    }
+
+    public ArrayList<LinkedList<Integer>> getLinesX() {
+        return DataList.getLinesX();
+    }
+
+    public void clearLinesX() {
+        DataList.getLinesX().clear();
+    }
+
+    public ArrayList<LinkedList<Integer>> getLinesY() {
+        return DataList.getLinesY();
+    }
+
+    public void clearLinesY() {
+        DataList.getLinesY().clear();
+    }
+
+    public void setXsNull() {
+        this.xs = null;
+    }
+
+    public void setYsNull() {
+        this.ys = null;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        if (Contacts.countLayout == 1) {
+            if (DataList.getLinesX() == null || DataList.getLinesX().size() == 0) {
+                initDraw(left, top, right, bottom);
+            }
+            Contacts.countLayout = 0;
+        }
+        Contacts.countLayout = 1;
+    }
+
+    private void initDraw(int left, int top, int right, int bottom) {
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,(left + right)/2);
+        ys.add(0,top + 200);
+        xs.add(1,left + 60);
+        ys.add(1,bottom - 200);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,(left + right)/2);
+        ys.add(0,top + 200);
+        xs.add(1,right - 60);
+        ys.add(1,bottom - 200);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,left + 60);
+        ys.add(0,bottom - 200);
+        xs.add(1,right - 60);
+        ys.add(1,bottom - 200);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        canvas.saveLayer(this.getLeft(),this.getTop(),this.getRight(),this.getBottom(),paint,Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
+        for (int i = 0; i < DataList.getLinesX().size(); i++) {
+            if (i == Contacts.n) {
+                canvas.drawLine(DataList.getLinesX().get(i).getFirst(),DataList.getLinesY().get(i).getFirst(),DataList.getLinesX().get(i).getLast(),DataList.getLinesY().get(i).getLast(),paintTmp);
+            }else {
+                canvas.drawLine(DataList.getLinesX().get(i).getFirst(),DataList.getLinesY().get(i).getFirst(),DataList.getLinesX().get(i).getLast(),DataList.getLinesY().get(i).getLast(),paint);
+            }
+        }
+        if (xs != null && ys != null) {
+            canvas.drawLine(xs.getFirst(),ys.getFirst(),xs.getLast(),ys.getLast(),paint);
+        }
+        canvas.restore();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN :
+                if (x < 50) {
+                    return true;
+                }
+                if (!Contacts.isAlter) {
+                    xs = new LinkedList<>();
+                    ys = new LinkedList<>();
+                    xs.add(0,x);
+                    ys.add(0,y);
+                    int[] ints = Calculator.getInstance(getContext()).checkPosition(xs.get(0), ys.get(0));
+                    xs.set(0,ints[0]);
+                    ys.set(0,ints[1]);
+                    xs.add(1,x);
+                    ys.add(1,y);
+                    MainActivity.showPathView(x, y);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE :
+                if (!Contacts.isAlter && xs != null && xs.size() == 2) {
+                    xs.set(1,x);
+                    ys.set(1,y);
+                    invalidate();
+                    MainActivity.showPathView(x, y);
+                }
+                break;
+            case MotionEvent.ACTION_UP :
+                if (Contacts.isAlter) {
+                    for (int i = 0; i < DataList.getLinesX().size(); i++) {
+                        Integer firstX = DataList.getLinesX().get(i).getFirst();
+                        Integer lastX = DataList.getLinesX().get(i).getLast();
+                        Integer firstY = DataList.getLinesY().get(i).getFirst();
+                        Integer lastY = DataList.getLinesY().get(i).getLast();
+                        if (MathUtil.pointToLine(firstX,firstY,lastX,lastY,x,y, this.getContext()) == 0) {
+                            Contacts.n = i;
+                            invalidate();
+                            dialog.show();
+                            break;
+                        }
+                    }
+                }else if (xs != null){
+                    if (xs.size() < 2) {
+                        xs = null;
+                        ys = null;
+                    } else {
+                        int[] ints = Calculator.getInstance(getContext()).checkPosition(x, y);
+                        xs.set(1,ints[0]);
+                        ys.set(1,ints[1]);
+                        if (MathUtil.pointToPoint(xs.get(0), ys.get(0), xs.get(1), ys.get(1)) < DensityUtil.dip2px(this.getContext(), 15)
+                                || MathUtil.isCoincideLines(xs.get(0), ys.get(0), xs.get(1), ys.get(1), this.getContext())) {
+                            xs = null;
+                            ys = null;
+                            invalidate();
+                            return true;
+                        }
+                        DataList.getLinesX().add(xs);
+                        DataList.getLinesY().add(ys);
+                        xs = null;
+                        ys = null;
+                        invalidate();
+                        Calculator.getInstance(getContext()).increasePoint();
+                        MainActivity.showPathView(x, y);
+                    }
+                }
+                break;
+        }
+        return true;
+    }
+
+    public void check() {
+        Calculator.getInstance(getContext()).check();
+    }
+
+    public int calculate() {
+        return Calculator.getInstance(getContext()).calculate();
+    }
+}

@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">三角形计算器</string>
+    <string name="about_name">关于</string>
+    <string name="result">计算结果：</string>
+    <string name="calculating">正在计算请稍候…</string>
+    <string name="draw">绘 制</string>
+    <string name="alter">修 改</string>
+    <string name="calculate">计 算</string>
+    <string name="clear">清 空</string>
+    <string name="textPre">图中有</string>
+    <string name="textPost">个三角形</string>
+    <string name="ensureClear">确定清空图中的线段吗？</string>
+    <string name="positive">确定</string>
+    <string name="negative">取消</string>
+    <string name="ensureRemove">确定删除此线段吗？</string>
+    <string name="exit_string">再按一次退出</string>
+    <string name="magnify_one_times">放大×1</string>
+    <string name="magnify_two_times">放大×2</string>
+</resources>

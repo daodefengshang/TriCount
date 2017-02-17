@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/ensureClear"
+    android:textColor="@android:color/holo_red_dark"
+    android:textSize="@dimen/message_size"
+    android:paddingLeft="@dimen/message_padding_left"
+    android:paddingTop="@dimen/message_padding_top"
+    android:paddingRight="@dimen/message_padding_right"
+    android:paddingBottom="@dimen/message_padding_bottom"/>
