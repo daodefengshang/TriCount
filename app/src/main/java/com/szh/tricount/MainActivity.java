@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button alter;
     private Button count;
     private Button clear;
+    
 
     private static MyView myView;
     private ProgressDialog progressDialog;
