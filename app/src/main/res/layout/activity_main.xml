@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.szh.tricount.MainActivity">
-    <LinearLayout
+    <com.szh.tricount.customview.CustomLinearLayout
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,7 +73,7 @@
                 android:textColor="@android:color/black"
                 android:background="@color/lightGray"/>
         </LinearLayout>
-    </LinearLayout>
+    </com.szh.tricount.customview.CustomLinearLayout>
     <FrameLayout
         android:id="@+id/id_left_menu_container"
         android:layout_width="match_parent"

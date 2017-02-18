@@ -24,9 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.customview.MyView;
 import com.szh.tricount.customview.PathView;
 import com.szh.tricount.fragment.LeftFragment;
+import com.szh.tricount.listener.CustomDrawerListener;
 import com.szh.tricount.utils.Contacts;
 
 import java.lang.ref.WeakReference;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button alter;
     private Button count;
     private Button clear;
+
     private static MyView myView;
     private ProgressDialog progressDialog;
 
@@ -47,8 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private MyHandler handler = new MyHandler(this);
     private static PathView pathView;
+
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mContentLayout;
+    private CustomLinearLayout mContentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerLayout);
-        mContentLayout = (LinearLayout) findViewById(R.id.content_layout);
+        mContentLayout = (CustomLinearLayout) findViewById(R.id.content_layout);
         alter = (Button) findViewById(R.id.alter);
         count = (Button) findViewById(R.id.count);
         clear = (Button) findViewById(R.id.clear);
@@ -81,25 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         count.setOnClickListener(this);
         clear.setOnClickListener(this);
         pathView.setOnClickListener(this);
-        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                View mContent = mDrawerLayout.getChildAt(0);
-                float scale = 1 - slideOffset;
-                float rightScale = 0.8f + scale * 0.2f;
-                if (drawerView.getTag().equals("LEFT")) {
-                    float leftScale = 1 - 0.3f * scale;
-                    drawerView.setScaleX(leftScale);
-                    drawerView.setScaleY(leftScale);
-                    drawerView.setAlpha(0.6f + 0.4f * slideOffset);
-                    mContent.setTranslationX(drawerView.getMeasuredWidth() * slideOffset);
-                    mContent.setPivotX(0);
-                    mContent.setPivotY(mContent.getMeasuredHeight()/2);
-                    mContent.setScaleX(rightScale);
-                    mContent.setScaleY(rightScale);
-                }
-            }
-        });
+        mDrawerLayout.addDrawerListener(new CustomDrawerListener(mDrawerLayout, mContentLayout));
     }
 
     @Override
@@ -145,6 +131,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressDialog.setTitle(R.string.calculating);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
+    }
+
+
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
+    }
+
+    public static MyView getMyView() {
+        return myView;
     }
 
     public static void showPathView() {

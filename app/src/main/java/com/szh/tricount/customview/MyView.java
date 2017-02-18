@@ -137,20 +137,20 @@ public class MyView extends View {
         super.onLayout(changed, left, top, right, bottom);
         if (Contacts.countLayout == 1) {
             if (DataList.getLinesX() == null || DataList.getLinesX().size() == 0) {
-                initDraw(left, top, right, bottom);
+                initDrawIsosceles(left, top, right, bottom);
             }
             Contacts.countLayout = 0;
         }
         Contacts.countLayout = 1;
     }
-
-    private void initDraw(int left, int top, int right, int bottom) {
+    //画等腰三角形
+    public void initDrawIsosceles(int left, int top, int right, int bottom) {
         xs = new LinkedList<>();
         ys = new LinkedList<>();
         xs.add(0,(left + right)/2);
-        ys.add(0,top + 200);
+        ys.add(0,top + 60);
         xs.add(1,left + 60);
-        ys.add(1,bottom - 200);
+        ys.add(1,bottom - 60);
         DataList.getLinesX().add(xs);
         DataList.getLinesY().add(ys);
         xs = null;
@@ -158,9 +158,9 @@ public class MyView extends View {
         xs = new LinkedList<>();
         ys = new LinkedList<>();
         xs.add(0,(left + right)/2);
-        ys.add(0,top + 200);
+        ys.add(0,top + 60);
         xs.add(1,right - 60);
-        ys.add(1,bottom - 200);
+        ys.add(1,bottom - 60);
         DataList.getLinesX().add(xs);
         DataList.getLinesY().add(ys);
         xs = null;
@@ -168,9 +168,143 @@ public class MyView extends View {
         xs = new LinkedList<>();
         ys = new LinkedList<>();
         xs.add(0,left + 60);
-        ys.add(0,bottom - 200);
+        ys.add(0,bottom - 60);
         xs.add(1,right - 60);
-        ys.add(1,bottom - 200);
+        ys.add(1,bottom - 60);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        invalidate();
+    }
+    //画等边三角形
+    public void initDrawEquilateral(int left, int top, int right, int bottom) {
+        int centerX = (left + right) / 2;
+        int centerY = (top + bottom) / 2;
+        int width = right - left;
+        int height = bottom - top;
+        int height1 = (int)((bottom - top) * 2 * Math.sqrt(3) / 3);
+        int distanceHorizental = (width < height1) ? width / 2 - 60 : height / 2 - 60;
+        int distanceVertical = (int)(distanceHorizental * Math.sqrt(3) / 2);
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX);
+        ys.add(0,centerY - distanceVertical);
+        xs.add(1,centerX - distanceHorizental);
+        ys.add(1,centerY + distanceVertical);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX);
+        ys.add(0,centerY - distanceVertical);
+        xs.add(1,centerX + distanceHorizental);
+        ys.add(1,centerY + distanceVertical);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX - distanceHorizental);
+        ys.add(0,centerY + distanceVertical);
+        xs.add(1,centerX + distanceHorizental);
+        ys.add(1,centerY + distanceVertical);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        invalidate();
+    }
+    //画矩形
+    public void initDrawRectangular(int left, int top, int right, int bottom) {
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,left + 60);
+        ys.add(0,top + 60);
+        xs.add(1,left + 60);
+        ys.add(1,bottom - 60);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,left + 60);
+        ys.add(0,bottom - 60);
+        xs.add(1,right - 60);
+        ys.add(1,bottom - 60);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,left + 60);
+        ys.add(0,top + 60);
+        xs.add(1,right - 60);
+        ys.add(1,top + 60);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,right - 60);
+        ys.add(0,top + 60);
+        xs.add(1,right - 60);
+        ys.add(1,bottom - 60);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        invalidate();
+    }
+    //画正方形
+    public void initDrawSquare(int left, int top, int right, int bottom) {
+        int centerX = (left + right) / 2;
+        int centerY = (top + bottom) / 2;
+        int width = right - left;
+        int height = bottom - top;
+        int distance = (width < height) ? width / 2 - 60 : height / 2 - 60;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX - distance);
+        ys.add(0,centerY - distance);
+        xs.add(1,centerX + distance);
+        ys.add(1,centerY - distance);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX - distance);
+        ys.add(0,centerY - distance);
+        xs.add(1,centerX - distance);
+        ys.add(1,centerY + distance);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX - distance);
+        ys.add(0,centerY + distance);
+        xs.add(1,centerX + distance);
+        ys.add(1,centerY + distance);
+        DataList.getLinesX().add(xs);
+        DataList.getLinesY().add(ys);
+        xs = null;
+        ys = null;
+        xs = new LinkedList<>();
+        ys = new LinkedList<>();
+        xs.add(0,centerX + distance);
+        ys.add(0,centerY - distance);
+        xs.add(1,centerX + distance);
+        ys.add(1,centerY + distance);
         DataList.getLinesX().add(xs);
         DataList.getLinesY().add(ys);
         xs = null;
