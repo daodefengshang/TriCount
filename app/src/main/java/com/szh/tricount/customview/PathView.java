@@ -39,6 +39,7 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     private int marginY;
     private int width;
     private int height;
+    //手势识别
     private GestureDetector gestureDetector = new GestureDetector(this.getContext(), this);
 
     public PathView(Context context) {
