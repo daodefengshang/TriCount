@@ -9,12 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.customview.MyView;
 import com.szh.tricount.datas.DataList;
+import com.szh.tricount.listener.RadioCheckedChangeListener;
+import com.szh.tricount.utils.ToastUtil;
 
 /**
  * Created by szh on 2017/2/17.
@@ -27,6 +30,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private Button isocelesButton;
     private Button rectangularButton;
     private Button squareButton;
+    private RadioGroup radioRemoveGroup;
 
     @Nullable
     @Override
@@ -42,6 +46,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View view) {
+        radioRemoveGroup = (RadioGroup) view.findViewById(R.id.radio_remove_group);
         equilateralButton = (Button) view.findViewById(R.id.button_equilateral);
         isocelesButton = (Button) view.findViewById(R.id.button_isosceles);
         rectangularButton = (Button) view.findViewById(R.id.button_rectangular);
@@ -49,6 +54,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initEvents() {
+        radioRemoveGroup.setOnCheckedChangeListener(new RadioCheckedChangeListener());
         equilateralButton.setOnClickListener(this);
         isocelesButton.setOnClickListener(this);
         rectangularButton.setOnClickListener(this);
@@ -95,7 +101,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     }
 
     private void toastAndClose() {
-        Toast.makeText(this.getContext(), R.string.requestClear, Toast.LENGTH_SHORT).show();
+        ToastUtil.toast(this.getContext(), R.string.requestClear);
         ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
     }
 }

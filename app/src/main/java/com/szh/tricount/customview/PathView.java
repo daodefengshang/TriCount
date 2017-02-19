@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.szh.tricount.R;
 import com.szh.tricount.utils.Contacts;
 import com.szh.tricount.utils.DensityUtil;
+import com.szh.tricount.utils.ToastUtil;
 
 /**
  * 放大镜
@@ -39,7 +40,7 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     private int marginY;
     private int width;
     private int height;
-    
+
     //手势识别
     private GestureDetector gestureDetector = new GestureDetector(this.getContext(), this);
 
@@ -179,11 +180,11 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
         if (FACTOR == 2) {
             FACTOR = 1;
             getPathMatrix().setScale(FACTOR, FACTOR);
-            Toast.makeText(getContext(), R.string.magnify_one_times, Toast.LENGTH_SHORT).show();
+            ToastUtil.toast(getContext(), R.string.magnify_one_times);
         }else {
             FACTOR = 2;
             getPathMatrix().setScale(FACTOR, FACTOR);
-            Toast.makeText(getContext(), R.string.magnify_two_times, Toast.LENGTH_SHORT).show();
+            ToastUtil.toast(getContext(), R.string.magnify_two_times);
         }
         return true;
     }

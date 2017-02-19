@@ -19,11 +19,14 @@ import com.szh.tricount.datas.DataList;
 import com.szh.tricount.utils.Contacts;
 import com.szh.tricount.utils.DensityUtil;
 import com.szh.tricount.utils.MathUtil;
+import com.szh.tricount.utils.RemoveMode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class MyView extends View {
+
+    private RemoveMode removeMode = RemoveMode.CLICK_RADIO;
 
     private LinkedList<Integer> xs;
     private LinkedList<Integer> ys;
@@ -106,6 +109,10 @@ public class MyView extends View {
             Calculator.getInstance(getContext()).getLinkedLists().clear();
             Calculator.getInstance(getContext()).setLinkedLists(null);
         }
+    }
+
+    public void setRemoveMode(RemoveMode removeMode) {
+        this.removeMode = removeMode;
     }
 
     public ArrayList<LinkedList<Integer>> getLinesX() {

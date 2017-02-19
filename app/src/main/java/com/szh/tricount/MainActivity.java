@@ -30,6 +30,7 @@ import com.szh.tricount.customview.PathView;
 import com.szh.tricount.fragment.LeftFragment;
 import com.szh.tricount.listener.CustomDrawerListener;
 import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if((System.currentTimeMillis() - exitTime) > 2000){
-                Toast.makeText(MainActivity.this, R.string.exit_string, Toast.LENGTH_SHORT).show();
+                ToastUtil.toast(MainActivity.this, R.string.exit_string);
                 exitTime = System.currentTimeMillis();
             } else {
                 this.finish();
