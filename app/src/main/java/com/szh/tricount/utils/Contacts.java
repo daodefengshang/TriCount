@@ -6,8 +6,6 @@ package com.szh.tricount.utils;
 public class Contacts {
     public static boolean isAlter = false;
 
-    public static int n = -1;
-
     public static int countLayout = 0;
 
     public static int prei = 0;

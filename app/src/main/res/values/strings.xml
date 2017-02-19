@@ -19,8 +19,6 @@
     <string name="magnify_two_times">放大×2</string>
     <string name="click_remove">点击删除</string>
     <string name="line_remove">划线删除</string>
-    <string name="cross_remove">交叉删除</string>
-    <string name="window_remove">窗口删除</string>
     <string name="initialize">初始化图形</string>
     <string name="equilateral_triangle">等边三角形</string>
     <string name="isosceles_triangle">等腰三角形</string>

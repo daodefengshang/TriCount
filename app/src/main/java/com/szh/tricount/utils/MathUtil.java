@@ -6,6 +6,7 @@ import com.szh.tricount.datas.DataList;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by szh on 2016/12/11.
@@ -85,4 +86,29 @@ public class MathUtil {
         }
         return ints;
     }
+    //判断list内是否有i
+    public static boolean hasSameNumber(int i, List<Integer> list) {
+        for (Integer num : list) {
+            if (i == num.intValue()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //判断两线段(1,2)、(3,4)是否相交
+    public static boolean isIntersect(int px1,int py1,int px2,int py2,int px3,int py3,int px4,int py4) {
+        boolean flag = false;
+        double d = (px2-px1)*(py4-py3) - (py2-py1)*(px4-px3);
+        if(d!=0)
+        {
+            double r = ((py1-py3)*(px4-px3)-(px1-px3)*(py4-py3))/d;
+            double s = ((py1-py3)*(px2-px1)-(px1-px3)*(py2-py1))/d;
+            if((r>=0) && (r <= 1) && (s >=0) && (s<=1))
+            {
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
 }

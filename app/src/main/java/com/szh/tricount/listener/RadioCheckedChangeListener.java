@@ -20,12 +20,6 @@ public class RadioCheckedChangeListener implements RadioGroup.OnCheckedChangeLis
             case R.id.line_radio:
                 MainActivity.getMyView().setRemoveMode(RemoveMode.LINE_RADIO);
                 break;
-            case R.id.cross_radio:
-                MainActivity.getMyView().setRemoveMode(RemoveMode.CROSS_RADIO);
-                break;
-            case R.id.window_radio:
-                MainActivity.getMyView().setRemoveMode(RemoveMode.WINDOW_RADIO);
-                break;
         }
     }
 }

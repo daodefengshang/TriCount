@@ -23,10 +23,12 @@ import com.szh.tricount.utils.RemoveMode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class MyView extends View {
 
     private RemoveMode removeMode = RemoveMode.CLICK_RADIO;
+    private List<Integer> listRemove = new ArrayList<>();
 
     private LinkedList<Integer> xs;
     private LinkedList<Integer> ys;
@@ -63,12 +65,16 @@ public class MyView extends View {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            LinkedList<Integer> removedX = DataList.getLinesX().remove(Contacts.n);
-                            LinkedList<Integer> removedY = DataList.getLinesY().remove(Contacts.n);
-                            Calculator.getInstance(getContext()).deleteExtra(removedX, removedY);
+                            int size = listRemove.size();
+                            for (int i = 0, j = 0; i < size; i++) {
+                                LinkedList<Integer> removedX = DataList.getLinesX().remove(listRemove.get(i).intValue() - j);
+                                LinkedList<Integer> removedY = DataList.getLinesY().remove(listRemove.get(i).intValue() - j);
+                                j++;
+                                Calculator.getInstance(getContext()).deleteExtra(removedX, removedY);
+                            }
                             xs = null;
-                            xs = null;
-                            Contacts.n = -1;
+                            ys = null;
+                            listRemove.clear();
                             invalidate();
                             MainActivity.showPathView();
                         }
@@ -77,7 +83,7 @@ public class MyView extends View {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            Contacts.n = -1;
+                            listRemove.clear();
                             invalidate();
                         }
                     })
@@ -85,7 +91,7 @@ public class MyView extends View {
                         @Override
                         public void onCancel(DialogInterface dialog) {
                             dialog.dismiss();
-                            Contacts.n = -1;
+                            listRemove.clear();
                             invalidate();
                         }
                     })
@@ -323,7 +329,7 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.saveLayer(this.getLeft(),this.getTop(),this.getRight(),this.getBottom(),paint,Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
         for (int i = 0; i < DataList.getLinesX().size(); i++) {
-            if (i == Contacts.n) {
+            if (MathUtil.hasSameNumber(i, listRemove)) {
                 canvas.drawLine(DataList.getLinesX().get(i).getFirst(),DataList.getLinesY().get(i).getFirst(),DataList.getLinesX().get(i).getLast(),DataList.getLinesY().get(i).getLast(),paintTmp);
             }else {
                 canvas.drawLine(DataList.getLinesX().get(i).getFirst(),DataList.getLinesY().get(i).getFirst(),DataList.getLinesX().get(i).getLast(),DataList.getLinesY().get(i).getLast(),paint);
@@ -355,29 +361,70 @@ public class MyView extends View {
                     xs.add(1,x);
                     ys.add(1,y);
                     MainActivity.showPathView(x, y);
+                } else {
+                    if (removeMode == RemoveMode.LINE_RADIO) {
+                        xs = new LinkedList<>();
+                        ys = new LinkedList<>();
+                        xs.add(0,x);
+                        ys.add(0,y);
+                        xs.add(1,x);
+                        ys.add(1,y);
+                        invalidate();
+                    }
                 }
                 break;
             case MotionEvent.ACTION_MOVE :
-                if (!Contacts.isAlter && xs != null && xs.size() == 2) {
-                    xs.set(1,x);
-                    ys.set(1,y);
-                    invalidate();
-                    MainActivity.showPathView(x, y);
+                if (!Contacts.isAlter) {
+                    if (xs != null && xs.size() == 2) {
+                        xs.set(1,x);
+                        ys.set(1,y);
+                        invalidate();
+                        MainActivity.showPathView(x, y);
+                    }
+                }else {
+                    if (removeMode == RemoveMode.LINE_RADIO) {
+                        if (xs != null && xs.size() == 2) {
+                            xs.set(1,x);
+                            ys.set(1,y);
+                            invalidate();
+                        }
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP :
                 if (Contacts.isAlter) {
-                    for (int i = 0; i < DataList.getLinesX().size(); i++) {
-                        Integer firstX = DataList.getLinesX().get(i).getFirst();
-                        Integer lastX = DataList.getLinesX().get(i).getLast();
-                        Integer firstY = DataList.getLinesY().get(i).getFirst();
-                        Integer lastY = DataList.getLinesY().get(i).getLast();
-                        if (MathUtil.pointToLine(firstX,firstY,lastX,lastY,x,y, this.getContext()) == 0) {
-                            Contacts.n = i;
-                            invalidate();
-                            dialog.show();
-                            break;
+                    if (removeMode == RemoveMode.CLICK_RADIO) {
+                        for (int i = 0; i < DataList.getLinesX().size(); i++) {
+                            Integer firstX = DataList.getLinesX().get(i).getFirst();
+                            Integer lastX = DataList.getLinesX().get(i).getLast();
+                            Integer firstY = DataList.getLinesY().get(i).getFirst();
+                            Integer lastY = DataList.getLinesY().get(i).getLast();
+                            if (MathUtil.pointToLine(firstX,firstY,lastX,lastY,x,y, this.getContext()) == 0) {
+                                listRemove.clear();
+                                listRemove.add(i);
+                                invalidate();
+                                dialog.show();
+                                break;
+                            }
                         }
+                    } else if (removeMode == RemoveMode.LINE_RADIO) {
+                        for (int i = 0; i < DataList.getLinesX().size(); i++) {
+                            Integer firstX = DataList.getLinesX().get(i).getFirst();
+                            Integer lastX = DataList.getLinesX().get(i).getLast();
+                            Integer firstY = DataList.getLinesY().get(i).getFirst();
+                            Integer lastY = DataList.getLinesY().get(i).getLast();
+                            boolean intersect = MathUtil.isIntersect(xs.get(0), ys.get(0), xs.get(1), ys.get(1), firstX, firstY, lastX, lastY);
+                            if (intersect) {
+                                listRemove.add(i);
+                            }
+                        }
+                        xs = null;
+                        ys = null;
+                        invalidate();
+                        if (listRemove.size() > 0) {
+                            dialog.show();
+                        }
+                        break;
                     }
                 }else if (xs != null){
                     if (xs.size() < 2) {
