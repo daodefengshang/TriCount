@@ -408,23 +408,24 @@ public class MyView extends View {
                             }
                         }
                     } else if (removeMode == RemoveMode.LINE_RADIO) {
-                        for (int i = 0; i < DataList.getLinesX().size(); i++) {
-                            Integer firstX = DataList.getLinesX().get(i).getFirst();
-                            Integer lastX = DataList.getLinesX().get(i).getLast();
-                            Integer firstY = DataList.getLinesY().get(i).getFirst();
-                            Integer lastY = DataList.getLinesY().get(i).getLast();
-                            boolean intersect = MathUtil.isIntersect(xs.get(0), ys.get(0), xs.get(1), ys.get(1), firstX, firstY, lastX, lastY);
-                            if (intersect) {
-                                listRemove.add(i);
+                        if (xs != null && ys != null && xs.size() == 2 && ys.size() == 2) {
+                            for (int i = 0; i < DataList.getLinesX().size(); i++) {
+                                Integer firstX = DataList.getLinesX().get(i).getFirst();
+                                Integer lastX = DataList.getLinesX().get(i).getLast();
+                                Integer firstY = DataList.getLinesY().get(i).getFirst();
+                                Integer lastY = DataList.getLinesY().get(i).getLast();
+                                boolean intersect = MathUtil.isIntersect(xs.get(0), ys.get(0), xs.get(1), ys.get(1), firstX, firstY, lastX, lastY);
+                                if (intersect) {
+                                    listRemove.add(i);
+                                }
+                            }
+                            xs = null;
+                            ys = null;
+                            invalidate();
+                            if (listRemove.size() > 0) {
+                                dialog.show();
                             }
                         }
-                        xs = null;
-                        ys = null;
-                        invalidate();
-                        if (listRemove.size() > 0) {
-                            dialog.show();
-                        }
-                        break;
                     }
                 }else if (xs != null){
                     if (xs.size() < 2) {
