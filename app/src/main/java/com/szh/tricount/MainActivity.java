@@ -9,20 +9,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.customview.MyView;
@@ -55,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private DrawerLayout mDrawerLayout;
     private CustomLinearLayout mContentLayout;
+    private CustomDrawerListener drawerListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         count.setOnClickListener(this);
         clear.setOnClickListener(this);
         pathView.setOnClickListener(this);
-        mDrawerLayout.addDrawerListener(new CustomDrawerListener(mDrawerLayout, mContentLayout));
+        drawerListener = new CustomDrawerListener(mDrawerLayout, mContentLayout);
+        mDrawerLayout.addDrawerListener(drawerListener);
     }
 
     @Override
@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myView.setYsNull();
         myView.clearHashMap();
         myView.clearLinkedLists();
+        mDrawerLayout.removeDrawerListener(drawerListener);
         handler.removeMessages(0);
         handler.removeMessages(1);
         handler.removeMessages(2);

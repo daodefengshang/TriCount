@@ -343,8 +343,7 @@ public class MyView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
+        int x = (int) event.getX();        int y = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN :
                 if (x < 50) {
