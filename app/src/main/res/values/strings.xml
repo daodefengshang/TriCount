@@ -24,4 +24,6 @@
     <string name="isosceles_triangle">等腰三角形</string>
     <string name="rectangular">长方形</string>
     <string name="square">正方形</string>
+    <string name="drawer_open">侧边栏打开</string>
+    <string name="drawer_close">侧边栏关闭</string>
 </resources>

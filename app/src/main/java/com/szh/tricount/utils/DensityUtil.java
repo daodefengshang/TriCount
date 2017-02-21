@@ -1,6 +1,10 @@
 package com.szh.tricount.utils;
 
 import android.content.Context;
+import android.util.Log;
+import android.util.TypedValue;
+
+import com.szh.tricount.R;
 
 /**
  * Created by szh on 2016/11/30.

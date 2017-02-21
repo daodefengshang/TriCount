@@ -12,13 +12,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private CustomLinearLayout mContentLayout;
     private CustomDrawerListener drawerListener;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerLayout);
         mContentLayout = (CustomLinearLayout) findViewById(R.id.content_layout);
         alter = (Button) findViewById(R.id.alter);
@@ -88,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         count.setOnClickListener(this);
         clear.setOnClickListener(this);
         pathView.setOnClickListener(this);
-        drawerListener = new CustomDrawerListener(mDrawerLayout, mContentLayout);
+        drawerListener = new CustomDrawerListener(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close, mContentLayout);
+        drawerListener.syncState();
         mDrawerLayout.addDrawerListener(drawerListener);
     }
 
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (dialogResult == null) {
             View viewMessage = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_result, null);
             textView = (TextView) viewMessage.findViewById(R.id.count);
-            dialogResult = new AlertDialog.Builder(this)
+            dialogResult = new AlertDialog.Builder(this, R.style.DialogTheme)
                     .setIcon(R.drawable.dialog_tittle)
                     .setTitle(R.string.result)
                     .setView(viewMessage)
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (dialogClear == null) {
             View viewClear = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_clear, null);
-            dialogClear = new AlertDialog.Builder(this)
+            dialogClear = new AlertDialog.Builder(this, R.style.DialogTheme)
                     .setView(viewClear)
                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                         @Override
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .create();
         }
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this);
+            progressDialog = new ProgressDialog(this, R.style.DialogTheme);
             progressDialog.setTitle(R.string.calculating);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }

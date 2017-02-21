@@ -59,7 +59,7 @@ public class MyView extends View {
         paintTmp.setAlpha(255);
         paintTmp.setColor(Color.RED);
         if (dialog == null) {
-            dialog = new AlertDialog.Builder(getContext())
+            dialog = new AlertDialog.Builder(getContext(), R.style.DialogTheme)
                     .setMessage(R.string.ensureRemove)
                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                         @Override
