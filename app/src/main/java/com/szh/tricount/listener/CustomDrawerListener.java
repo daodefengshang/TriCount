@@ -27,7 +27,7 @@ public class CustomDrawerListener implements DrawerLayout.DrawerListener {
             float leftScale = 1 - 0.3f * scale;
             drawerView.setScaleX(leftScale);
             drawerView.setScaleY(leftScale);
-            drawerView.setAlpha(0.6f + 0.4f * slideOffset);
+            drawerView.setAlpha(0.4f + 0.6f * slideOffset);
             mContent.setTranslationX(drawerView.getMeasuredWidth() * slideOffset * 0.6f);
             mContent.setPivotX(0);
             mContent.setPivotY(mContent.getMeasuredHeight()/2);

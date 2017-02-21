@@ -28,6 +28,7 @@ import com.szh.tricount.customview.PathView;
 import com.szh.tricount.fragment.LeftFragment;
 import com.szh.tricount.listener.CustomDrawerListener;
 import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.DrawerLayoutUtil;
 import com.szh.tricount.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clear = (Button) findViewById(R.id.clear);
         myView = (MyView) findViewById(R.id.myView);
         pathView = (PathView) findViewById(R.id.pathview);
+        DrawerLayoutUtil.setDrawerLeftEdgeSize(this, mDrawerLayout, 20);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.id_left_menu_container);
         if (fragment == null) {
