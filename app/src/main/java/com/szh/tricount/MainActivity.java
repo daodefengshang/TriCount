@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setTitle(R.string.result)
                     .setView(viewMessage)
                     .create();
+            dialogResult.getWindow().setWindowAnimations(R.style.ResultDialogWindowAnim);
         }
         if (dialogClear == null) {
             View viewClear = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_clear, null);
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     })
                     .create();
+            dialogClear.getWindow().setWindowAnimations(R.style.ClearDialogWindowAnim);
         }
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this, R.style.DialogTheme);

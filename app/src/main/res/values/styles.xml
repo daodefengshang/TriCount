@@ -11,4 +11,14 @@
     <style name="DialogTheme" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
 
     </style>
+
+    <style name="ResultDialogWindowAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/result_dialog_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/result_dialog_exit_anim</item>
+    </style>
+
+    <style name="ClearDialogWindowAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/clear_dialog_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/clear_dialog_exit_anim</item>
+    </style>
 </resources>
