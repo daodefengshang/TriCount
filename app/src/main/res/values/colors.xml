@@ -10,4 +10,6 @@
     <color name="zeroAlpha">#00000000</color>
     <color name="color_pink">#FF4081</color>
     <color name="color_dark_pink">#cc3060</color>
+    <color name="splash_background">#55d6ed</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

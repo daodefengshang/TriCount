@@ -19,4 +19,5 @@
     <dimen name="init_button_height">40dp</dimen>
     <dimen name="init_button_radius">20dp</dimen>
     <dimen name="left_width">260dp</dimen>
+    <dimen name="version_size">16sp</dimen>
 </resources>

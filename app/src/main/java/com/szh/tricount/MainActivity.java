@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -96,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
         if (dialogResult == null) {
             View viewMessage = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_result, null);
             textView = (TextView) viewMessage.findViewById(R.id.count);
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (dialogClear == null) {
             View viewClear = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_clear, null);
-            dialogClear = new AlertDialog.Builder(this, R.style.DialogTheme)
+            dialogClear = new AlertDialog.Builder(this, R.style.DialogLightTheme)
                     .setView(viewClear)
                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                         @Override

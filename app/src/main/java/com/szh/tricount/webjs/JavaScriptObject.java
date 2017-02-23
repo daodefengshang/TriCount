@@ -4,6 +4,7 @@ import android.content.Context;
 import android.webkit.JavascriptInterface;
 
 import com.szh.tricount.AboutActivity;
+import com.szh.tricount.utils.VersionUtil;
 
 /**
  * Created by szh on 2016/12/9.
@@ -17,7 +18,7 @@ public class JavaScriptObject {
 
     @JavascriptInterface
     public String getVersion() {
-        String version = activity.getVersion();
+        String version = VersionUtil.getVersion(activity);
         return version;
     }
 }

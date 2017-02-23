@@ -16,12 +16,14 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
 
     private DrawerLayout mDrawerLayout;
     private CustomLinearLayout mContentLayout;
+    private View mContent;
 
     public CustomDrawerListener(Activity activity, DrawerLayout mDrawerLayout, @StringRes int openDrawerContentDescRes,
                                 @StringRes int closeDrawerContentDescRes, CustomLinearLayout mContentLayout) {
         super(activity, mDrawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
         this.mDrawerLayout = mDrawerLayout;
         this.mContentLayout = mContentLayout;
+        this.mContent = mDrawerLayout.getChildAt(0);
     }
 
     public CustomDrawerListener(Activity activity, DrawerLayout mDrawerLayout, Toolbar toolbar,
@@ -29,12 +31,12 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
         super(activity, mDrawerLayout, toolbar, openDrawerContentDescRes, closeDrawerContentDescRes);
         this.mDrawerLayout = mDrawerLayout;
         this.mContentLayout = mContentLayout;
+        this.mContent = mDrawerLayout.getChildAt(0);
     }
 
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
         super.onDrawerSlide(drawerView, slideOffset);
-        View mContent = mDrawerLayout.getChildAt(0);
         float scale = 1 - slideOffset;
         float rightScale = 0.8f + scale * 0.2f;
         if (drawerView.getTag().equals("LEFT")) {
@@ -42,9 +44,7 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
             drawerView.setScaleX(leftScale);
             drawerView.setScaleY(leftScale);
             drawerView.setAlpha(0.4f + 0.6f * slideOffset);
-            mContent.setTranslationX(drawerView.getMeasuredWidth() * slideOffset * 0.6f);
-            mContent.setPivotX(0);
-            mContent.setPivotY(mContent.getMeasuredHeight()/2);
+            mContent.setTranslationX(drawerView.getWidth() * slideOffset * 0.5f);
             mContent.setScaleX(rightScale);
             mContent.setScaleY(rightScale);
         }

@@ -54,17 +54,4 @@ public class AboutActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    public String getVersion() {
-        String versionName = "";
-        PackageManager packageManager = this.getPackageManager();
-        try {
-            PackageInfo packageInfo = packageManager.getPackageInfo(this.getPackageName(), 0);
-            versionName = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }finally {
-            return versionName;
-        }
-    }
 }
