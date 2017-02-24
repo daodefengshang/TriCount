@@ -41,12 +41,12 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
         float rightScale = 0.8f + scale * 0.2f;
         if (drawerView.getTag().equals("LEFT")) {
             float leftScale = 1 - 0.3f * scale;
-            drawerView.setScaleX(leftScale);
-            drawerView.setScaleY(leftScale);
-            drawerView.setAlpha(0.4f + 0.6f * slideOffset);
             mContent.setTranslationX(drawerView.getWidth() * slideOffset * 0.5f);
             mContent.setScaleX(rightScale);
             mContent.setScaleY(rightScale);
+            drawerView.setScaleX(leftScale);
+            drawerView.setScaleY(leftScale);
+            drawerView.setAlpha(0.4f + 0.6f * slideOffset);
         }
     }
 

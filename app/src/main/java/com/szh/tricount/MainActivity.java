@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (dialogClear == null) {
             View viewClear = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_clear, null);
-            dialogClear = new AlertDialog.Builder(this, R.style.DialogLightTheme)
+            dialogClear = new AlertDialog.Builder(this, R.style.DialogTheme)
                     .setView(viewClear)
                     .setPositiveButton(R.string.positive, new DialogInterface.OnClickListener() {
                         @Override
