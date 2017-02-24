@@ -1,6 +1,5 @@
 package com.szh.tricount;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,13 +13,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private static MyView myView;
-    private ProgressDialog progressDialog;
+    private AlertDialog progressDialog;
 
     private TextView textView;
     private AlertDialog dialogResult;
@@ -139,9 +136,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dialogClear.getWindow().setWindowAnimations(R.style.ClearDialogWindowAnim);
         }
         if (progressDialog == null) {
-            progressDialog = new ProgressDialog(this, R.style.DialogTheme);
-            progressDialog.setTitle(R.string.calculating);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            View viewProgress = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_progress, null);
+            progressDialog = new AlertDialog.Builder(this, R.style.DialogTheme)
+                    .setTitle(R.string.calculating)
+                    .setView(viewProgress)
+                    .setCancelable(false)
+                    .create();
         }
     }
 
