@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myView.setYsNull();
         myView.clearHashMap();
         myView.clearLinkedLists();
+        myView.destroyDrawingCache();
         mDrawerLayout.removeDrawerListener(drawerListener);
         handler.removeMessages(0);
         handler.removeMessages(1);
