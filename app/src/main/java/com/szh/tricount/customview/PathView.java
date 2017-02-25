@@ -1,9 +1,5 @@
 package com.szh.tricount.customview;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,17 +9,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.szh.tricount.R;
 import com.szh.tricount.utils.Contacts;
 import com.szh.tricount.utils.DensityUtil;

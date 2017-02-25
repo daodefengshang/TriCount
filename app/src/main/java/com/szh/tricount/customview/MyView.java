@@ -36,7 +36,6 @@ public class MyView extends View {
 
     private AlertDialog dialog;
     private Paint paintTmp;
-    private int[] rect;
 
     public MyView(Context context) {
         super(context);
@@ -77,7 +76,7 @@ public class MyView extends View {
                             ys = null;
                             listRemove.clear();
                             MainActivity.showPathView();
-                            invalidate(rect[0], rect[1], rect[2], rect[3]);
+                            invalidate();
                         }
                     })
                     .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
@@ -85,7 +84,7 @@ public class MyView extends View {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             listRemove.clear();
-                            invalidate(rect[0], rect[1], rect[2], rect[3]);
+                            invalidate();
                         }
                     })
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -93,7 +92,7 @@ public class MyView extends View {
                         public void onCancel(DialogInterface dialog) {
                             dialog.dismiss();
                             listRemove.clear();
-                            invalidate(rect[0], rect[1], rect[2], rect[3]);
+                            invalidate();
                         }
                     })
                     .create();
@@ -354,8 +353,7 @@ public class MyView extends View {
                     xs.add(1,x);
                     ys.add(1,y);
                     MainActivity.showPathView(x, y);
-                    int[] rectRefresh = MathUtil.getRect(xs, ys);
-                    invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
+                    invalidate();
                 } else {
                     if (removeMode == RemoveMode.LINE_RADIO) {
                         xs = new LinkedList<>();
@@ -364,8 +362,7 @@ public class MyView extends View {
                         ys.add(0,y);
                         xs.add(1,x);
                         ys.add(1,y);
-                        int[] rectRefresh = MathUtil.getRect(xs, ys);
-                        invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
+                        invalidate();
                     }
                 }
                 break;
@@ -376,16 +373,14 @@ public class MyView extends View {
                         ys.set(1,y);
                         invalidate();
                         MainActivity.showPathView(x, y);
-                        int[] rectRefresh = MathUtil.getRect(xs, ys);
-                        invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
+                        invalidate();
                     }
                 }else {
                     if (removeMode == RemoveMode.LINE_RADIO) {
                         if (xs != null && xs.size() == 2) {
                             xs.set(1,x);
                             ys.set(1,y);
-                            int[] rectRefresh = MathUtil.getRect(xs, ys);
-                            invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
+                            invalidate();
                         }
                     }
                 }
@@ -401,8 +396,7 @@ public class MyView extends View {
                             if (MathUtil.pointToLine(firstX,firstY,lastX,lastY,x,y, this.getContext()) == 0) {
                                 listRemove.clear();
                                 listRemove.add(i);
-                                rect = MathUtil.getRect(listRemove);
-                                invalidate(rect[0], rect[1], rect[2], rect[3]);
+                                invalidate();
                                 dialog.show();
                                 break;
                             }
@@ -419,14 +413,9 @@ public class MyView extends View {
                                     listRemove.add(i);
                                 }
                             }
-                            int[] rectRefresh = MathUtil.getRect(xs, ys);
                             xs = null;
                             ys = null;
-                            this.rect = MathUtil.getRect(listRemove);
-                            invalidate(rectRefresh[0] < this.rect[0] ? rectRefresh[0] : this.rect[0],
-                                    rectRefresh[1] < this.rect[1] ? rectRefresh[1] : this.rect[1],
-                                    rectRefresh[2] > this.rect[2] ? rectRefresh[2] : this.rect[2],
-                                    rectRefresh[3] > this.rect[3] ? rectRefresh[3] : this.rect[3]);
+                            invalidate();
                             if (listRemove.size() > 0) {
                                 dialog.show();
                             }
@@ -442,18 +431,16 @@ public class MyView extends View {
                         ys.set(1,ints[1]);
                         if (MathUtil.pointToPoint(xs.get(0), ys.get(0), xs.get(1), ys.get(1)) < DensityUtil.dip2px(this.getContext(), 15)
                                 || MathUtil.isCoincideLines(xs.get(0), ys.get(0), xs.get(1), ys.get(1), this.getContext())) {
-                            int[] rectRefresh = MathUtil.getRect(xs, ys);
                             xs = null;
                             ys = null;
-                            invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
+                            invalidate();
                             return true;
                         }
                         DataList.getLinesX().add(xs);
                         DataList.getLinesY().add(ys);
-                        int[] rectRefresh = MathUtil.getRect(xs, ys);
                         xs = null;
                         ys = null;
-                        invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
+                        invalidate();
                         Calculator.getInstance(getContext()).increasePoint();
                     }
                 }
