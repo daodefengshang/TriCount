@@ -176,10 +176,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.alter :
                 Contacts.isAlter = !Contacts.isAlter;
                 if (Contacts.isAlter) {
-                    alter.setText(R.string.draw);
                     alter.setBackgroundResource(R.color.normalGray);
                 }else {
-                    alter.setText(R.string.alter);
                     alter.setBackgroundResource(R.color.lightGray);
                 }
                 break;

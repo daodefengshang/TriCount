@@ -1,6 +1,7 @@
 package com.szh.tricount.utils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.szh.tricount.datas.DataList;
 
@@ -109,6 +110,80 @@ public class MathUtil {
             }
         }
         return flag;
+    }
+
+    /**
+     * NOTE: 请在Lines删除元素前使用该方法
+     * @param list 将要删除的Lines中LinkedList的位置的list集合
+     * @return rect坐标
+     */
+    public static int[] getRect(List<Integer> list) {
+        boolean flag = false;
+        int[] ints = new int[4];
+        for (Integer code : list) {
+            LinkedList<Integer> listX = DataList.getLinesX().get(code);
+            LinkedList<Integer> listY = DataList.getLinesY().get(code);
+            Integer firstX = listX.getFirst() - 1;
+            Integer lastX = listX.getLast() + 1;
+            if (firstX > lastX) {
+                int tmp = firstX;
+                firstX = lastX;
+                lastX = tmp;
+            }
+            Integer firstY = listY.getFirst() - 1;
+            Integer lastY = listY.getLast() + 1;
+            if (firstY > lastY) {
+                int tmp = firstY;
+                firstY = lastY;
+                lastY = tmp;
+            }
+            if (!flag) {
+                ints[0] = firstX;
+                ints[1] = firstY;
+                ints[2] = lastX;
+                ints[3] = lastY;
+                flag = true;
+            }else {
+                if (firstX < ints[0]) {
+                    ints[0] = firstX;
+                }
+                if (firstY < ints[1]) {
+                    ints[1] = firstY;
+                }
+                if (lastX > ints[2]) {
+                    ints[2] = lastX;
+                }
+                if (lastY > ints[3]) {
+                    ints[3] = lastY;
+                }
+            }
+        }
+        return ints;
+    }
+
+    /**
+     * NOTE: 该方法划线时使用
+     * @param listX 划线时的X坐标
+     * @param listY 划线时的Y坐标
+     * @return rect坐标
+     */
+    public static int[] getRect(@NonNull List<Integer> listX, @NonNull List<Integer> listY) {
+        int[] ints = new int[4];
+        if (listX.get(0) < listX.get(1)) {
+            ints[0] = listX.get(0) - 1;
+            ints[2] = listX.get(1) + 1;
+        }else {
+            ints[0] = listX.get(1) - 1;
+            ints[2] = listX.get(0) + 1;
+        }
+        if (listY.get(0) < listY.get(1)) {
+            ints[1] = listY.get(0) - 1;
+            ints[3] = listY.get(1) + 1;
+        }else {
+            ints[1] = listY.get(1) - 1;
+            ints[3] = listY.get(0) + 1;
+        }
+        return ints;
     }
 
 }

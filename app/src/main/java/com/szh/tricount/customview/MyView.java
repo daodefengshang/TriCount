@@ -36,6 +36,7 @@ public class MyView extends View {
 
     private AlertDialog dialog;
     private Paint paintTmp;
+    private int[] rect;
 
     public MyView(Context context) {
         super(context);
@@ -67,16 +68,16 @@ public class MyView extends View {
                             dialog.dismiss();
                             int size = listRemove.size();
                             for (int i = 0, j = 0; i < size; i++) {
-                                LinkedList<Integer> removedX = DataList.getLinesX().remove(listRemove.get(i).intValue() - j);
-                                LinkedList<Integer> removedY = DataList.getLinesY().remove(listRemove.get(i).intValue() - j);
+                                LinkedList<Integer> removedX = DataList.getLinesX().remove(listRemove.get(i) - j);
+                                LinkedList<Integer> removedY = DataList.getLinesY().remove(listRemove.get(i) - j);
                                 j++;
                                 Calculator.getInstance(getContext()).deleteExtra(removedX, removedY);
                             }
                             xs = null;
                             ys = null;
                             listRemove.clear();
-                            invalidate();
                             MainActivity.showPathView();
+                            invalidate(rect[0], rect[1], rect[2], rect[3]);
                         }
                     })
                     .setNegativeButton(R.string.negative, new DialogInterface.OnClickListener() {
@@ -84,7 +85,7 @@ public class MyView extends View {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             listRemove.clear();
-                            invalidate();
+                            invalidate(rect[0], rect[1], rect[2], rect[3]);
                         }
                     })
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -92,7 +93,7 @@ public class MyView extends View {
                         public void onCancel(DialogInterface dialog) {
                             dialog.dismiss();
                             listRemove.clear();
-                            invalidate();
+                            invalidate(rect[0], rect[1], rect[2], rect[3]);
                         }
                     })
                     .create();
@@ -121,16 +122,8 @@ public class MyView extends View {
         this.removeMode = removeMode;
     }
 
-    public ArrayList<LinkedList<Integer>> getLinesX() {
-        return DataList.getLinesX();
-    }
-
     public void clearLinesX() {
         DataList.getLinesX().clear();
-    }
-
-    public ArrayList<LinkedList<Integer>> getLinesY() {
-        return DataList.getLinesY();
     }
 
     public void clearLinesY() {
@@ -343,7 +336,8 @@ public class MyView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();        int y = (int) event.getY();
+        int x = (int) event.getX();
+        int y = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN :
                 if (x < 50) {
@@ -360,6 +354,8 @@ public class MyView extends View {
                     xs.add(1,x);
                     ys.add(1,y);
                     MainActivity.showPathView(x, y);
+                    int[] rectRefresh = MathUtil.getRect(xs, ys);
+                    invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
                 } else {
                     if (removeMode == RemoveMode.LINE_RADIO) {
                         xs = new LinkedList<>();
@@ -368,7 +364,8 @@ public class MyView extends View {
                         ys.add(0,y);
                         xs.add(1,x);
                         ys.add(1,y);
-                        invalidate();
+                        int[] rectRefresh = MathUtil.getRect(xs, ys);
+                        invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
                     }
                 }
                 break;
@@ -379,13 +376,16 @@ public class MyView extends View {
                         ys.set(1,y);
                         invalidate();
                         MainActivity.showPathView(x, y);
+                        int[] rectRefresh = MathUtil.getRect(xs, ys);
+                        invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
                     }
                 }else {
                     if (removeMode == RemoveMode.LINE_RADIO) {
                         if (xs != null && xs.size() == 2) {
                             xs.set(1,x);
                             ys.set(1,y);
-                            invalidate();
+                            int[] rectRefresh = MathUtil.getRect(xs, ys);
+                            invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
                         }
                     }
                 }
@@ -401,7 +401,8 @@ public class MyView extends View {
                             if (MathUtil.pointToLine(firstX,firstY,lastX,lastY,x,y, this.getContext()) == 0) {
                                 listRemove.clear();
                                 listRemove.add(i);
-                                invalidate();
+                                rect = MathUtil.getRect(listRemove);
+                                invalidate(rect[0], rect[1], rect[2], rect[3]);
                                 dialog.show();
                                 break;
                             }
@@ -418,9 +419,14 @@ public class MyView extends View {
                                     listRemove.add(i);
                                 }
                             }
+                            int[] rectRefresh = MathUtil.getRect(xs, ys);
                             xs = null;
                             ys = null;
-                            invalidate();
+                            this.rect = MathUtil.getRect(listRemove);
+                            invalidate(rectRefresh[0] < this.rect[0] ? rectRefresh[0] : this.rect[0],
+                                    rectRefresh[1] < this.rect[1] ? rectRefresh[1] : this.rect[1],
+                                    rectRefresh[2] > this.rect[2] ? rectRefresh[2] : this.rect[2],
+                                    rectRefresh[3] > this.rect[3] ? rectRefresh[3] : this.rect[3]);
                             if (listRemove.size() > 0) {
                                 dialog.show();
                             }
@@ -436,18 +442,19 @@ public class MyView extends View {
                         ys.set(1,ints[1]);
                         if (MathUtil.pointToPoint(xs.get(0), ys.get(0), xs.get(1), ys.get(1)) < DensityUtil.dip2px(this.getContext(), 15)
                                 || MathUtil.isCoincideLines(xs.get(0), ys.get(0), xs.get(1), ys.get(1), this.getContext())) {
+                            int[] rectRefresh = MathUtil.getRect(xs, ys);
                             xs = null;
                             ys = null;
-                            invalidate();
+                            invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
                             return true;
                         }
                         DataList.getLinesX().add(xs);
                         DataList.getLinesY().add(ys);
+                        int[] rectRefresh = MathUtil.getRect(xs, ys);
                         xs = null;
                         ys = null;
-                        invalidate();
+                        invalidate(rectRefresh[0], rectRefresh[1], rectRefresh[2], rectRefresh[3]);
                         Calculator.getInstance(getContext()).increasePoint();
-                        MainActivity.showPathView(x, y);
                     }
                 }
                 break;
