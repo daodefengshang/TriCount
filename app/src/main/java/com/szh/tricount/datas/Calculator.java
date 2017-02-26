@@ -2,7 +2,7 @@ package com.szh.tricount.datas;
 
 import android.content.Context;
 
-import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
 import com.szh.tricount.utils.MathUtil;
 
@@ -70,11 +70,14 @@ public class Calculator {
                 Integer lastX = linkedListX.getLast();
                 Integer lastY = linkedListY.getLast();
                 for (int j = 0; j < sizeChild; j++) {
-                    if (MathUtil.pointToPoint(linkedListX.get(j), linkedListY.get(j), x, y) < DensityUtil.dip2px(mContext, 15)) {
+                    if (MathUtil.pointToPoint(linkedListX.get(j), linkedListY.get(j), x, y) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
                         intCheck[0] = linkedListX.get(j);
                         intCheck[1] = linkedListY.get(j);
                         return intCheck;
-                    }else if (MathUtil.pointToLine(firstX, firstY, lastX, lastY, x, y, mContext) == 0) {
+                    }
+                }
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToLine(firstX, firstY, lastX, lastY, x, y, mContext) == 0) {
                         int[] point = MathUtil.getPoint(firstX, firstY, lastX, lastY, x, y);
                         intCheck[0] = point[0];
                         intCheck[1] = point[1];
@@ -211,19 +214,19 @@ public class Calculator {
             LinkedList<Integer> listX = DataList.getLinesX().get(i);
             LinkedList<Integer> listY = DataList.getLinesY().get(i);
             int sizeList = listX.size();
-            Contacts.prei = 0;
+            Contants.prei = 0;
             for (int j = 0; j < sizeList; j++) {
                 Integer integerX = listX.get(j);
                 Integer integerY = listY.get(j);
                 if (linkedList.size() == 0) {
                     int mapNum = findMapNum(integerX, integerY);
                     linkedList.add(mapNum);
-                    Contacts.prei++;
+                    Contants.prei++;
                 }else {
                     int mapNum = findMapNum(integerX, integerY);
-                    if (mapNum != linkedList.get(Contacts.prei - 1)) {
+                    if (mapNum != linkedList.get(Contants.prei - 1)) {
                         linkedList.add(mapNum);
-                        Contacts.prei++;
+                        Contants.prei++;
                     }
                 }
             }
@@ -235,7 +238,7 @@ public class Calculator {
         int size = hashMap.size();
         for (int i = 0; i < size; i++) {
             int[] ints = hashMap.get(i);
-            if (MathUtil.pointToPoint(ints[0], ints[1], integerX, integerY) < DensityUtil.dip2px(mContext, 15)) {
+            if (MathUtil.pointToPoint(ints[0], ints[1], integerX, integerY) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
                 return i;
             }
         }
@@ -246,7 +249,7 @@ public class Calculator {
         int size = hashMap.size();
         for (int i = 0; i < size; i++) {
             int[] ints = hashMap.get(i);
-            if (MathUtil.pointToPoint(ints[0], ints[1], integerX, integerY) < DensityUtil.dip2px(mContext, 15)) {
+            if (MathUtil.pointToPoint(ints[0], ints[1], integerX, integerY) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
                 return true;
             }
         }

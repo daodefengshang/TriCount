@@ -16,12 +16,12 @@ import android.widget.RelativeLayout;
 
 import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
-import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
 import com.szh.tricount.utils.ToastUtil;
 
 /**
- * 放大镜
+ * 放大镜类
  * Created by szh on 2016/12/9.
  */
 public class PathView extends View implements GestureDetector.OnGestureListener {
@@ -63,7 +63,7 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     }
 
     private void init() {
-        Contacts.pathViewLayout = 0;
+        Contants.pathViewLayout = 0;
         mPath.addCircle(DensityUtil.dip2px(this.getContext(), 10 + RADIUS),
                 DensityUtil.dip2px(this.getContext(), 10 + RADIUS),
                 DensityUtil.dip2px(this.getContext(), RADIUS), Path.Direction.CW);
@@ -105,20 +105,20 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (Contacts.pathViewLayout == 1) {
+        if (Contants.pathViewLayout == 1) {
             invalidate();
             layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
-            if (Contacts.parent == 0) {
+            if (Contants.parent == 0) {
                 RelativeLayout parent =  (RelativeLayout) this.getParent();
                 width = this.getWidth();
                 height = this.getHeight();
                 marginX = parent.getWidth() - width;
                 marginY = parent.getHeight() - height;
-                Contacts.parent = 1;
+                Contants.parent = 1;
             }
-            Contacts.pathViewLayout = 0;
+            Contants.pathViewLayout = 0;
         }
-        Contacts.pathViewLayout = 1;
+        Contants.pathViewLayout = 1;
     }
 
     @Override
@@ -203,9 +203,9 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     @Override
     public void onLongPress(MotionEvent e) {
         if (isTable) {
-            MainActivity.getMyView().setBackgroundResource(android.R.color.white);
+            MainActivity.getDrawView().setBackgroundResource(android.R.color.white);
         }else {
-            MainActivity.getMyView().setBackgroundResource(R.drawable.bitmap_bg);
+            MainActivity.getDrawView().setBackgroundResource(R.drawable.bitmap_bg);
         }
         isTable = !isTable;
     }

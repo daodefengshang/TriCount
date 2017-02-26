@@ -15,10 +15,10 @@ public class RadioCheckedChangeListener implements RadioGroup.OnCheckedChangeLis
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.click_radio:
-                MainActivity.getMyView().setRemoveMode(RemoveMode.CLICK_RADIO);
+                MainActivity.getDrawView().setRemoveMode(RemoveMode.CLICK_RADIO);
                 break;
             case R.id.line_radio:
-                MainActivity.getMyView().setRemoveMode(RemoveMode.LINE_RADIO);
+                MainActivity.getDrawView().setRemoveMode(RemoveMode.LINE_RADIO);
                 break;
         }
     }

@@ -1,7 +1,6 @@
 package com.szh.tricount.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.szh.tricount.datas.DataList;
 
@@ -30,7 +29,7 @@ public class MathUtil {
         double mod2 = ((x0 - x1) * 1.0 * (x - x1) + (y0 - y1) * (y - y1))/Math.hypot(x1 - x0, y1 - y0)/l2;
         if (mod1 > 0 && mod2 > 0) {
             double mod0 = Math.sqrt(1 - Math.pow(mod1, 2)) * l1;
-            if (mod0 < DensityUtil.dip2px(context, 15)) {
+            if (mod0 < DensityUtil.dip2px(context, Contants.FUZZY_CONSTANT)) {
                 n = 0;
             }
         }
@@ -41,7 +40,7 @@ public class MathUtil {
         int n = 100;
         int m = (y1 - y0) * x + (x0 - x1) * y + x1 * y0 - x0 * y1;
         double l = Math.hypot(y1 - y0, x1 - x0);
-        if (Math.abs(m / l) < DensityUtil.dip2px(context, 15)) {
+        if (Math.abs(m / l) < DensityUtil.dip2px(context, Contants.FUZZY_CONSTANT)) {
             n = 0;
         }
         return n;

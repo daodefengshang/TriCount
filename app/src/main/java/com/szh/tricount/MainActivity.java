@@ -22,11 +22,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.szh.tricount.customview.CustomLinearLayout;
-import com.szh.tricount.customview.MyView;
+import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.customview.PathView;
 import com.szh.tricount.fragment.LeftFragment;
 import com.szh.tricount.listener.CustomDrawerListener;
-import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DrawerLayoutUtil;
 import com.szh.tricount.utils.ToastUtil;
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button clear;
 
 
-    private static MyView myView;
+    private static DrawView drawView;
     private AlertDialog progressDialog;
 
     private TextView textView;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alter = (Button) findViewById(R.id.alter);
         count = (Button) findViewById(R.id.count);
         clear = (Button) findViewById(R.id.clear);
-        myView = (MyView) findViewById(R.id.myView);
+        drawView = (DrawView) findViewById(R.id.myView);
         pathView = (PathView) findViewById(R.id.pathview);
         DrawerLayoutUtil.setDrawerLeftEdgeSize(this, mDrawerLayout, 20);
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -84,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initEvents() {
         pathView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        myView.setDrawingCacheEnabled(true);
-        myView.buildDrawingCache();
+        drawView.setDrawingCacheEnabled(true);
+        drawView.buildDrawingCache();
         alter.setOnClickListener(this);
         count.setOnClickListener(this);
         clear.setOnClickListener(this);
@@ -116,12 +116,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialogClear.dismiss();
-                            myView.clearLinesX();
-                            myView.clearLinesY();
-                            myView.setXsNull();
-                            myView.setYsNull();
-                            myView.invalidate();
-                            Contacts.isAlter = false;
+                            drawView.clearLinesX();
+                            drawView.clearLinesY();
+                            drawView.setXsNull();
+                            drawView.setYsNull();
+                            drawView.invalidate();
+                            Contants.isAlter = false;
                             alter.setText(R.string.alter);
                             alter.setBackgroundResource(R.color.lightGray);
                         }
@@ -150,14 +150,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return mDrawerLayout;
     }
 
-    public static MyView getMyView() {
-        return myView;
+    public static DrawView getDrawView() {
+        return drawView;
     }
 
     public static void showPathView() {
         pathView.setmCurrentX(-500);
         pathView.setmCurrentY(-500);
-        Bitmap bitmap = myView.getDrawingCache();
+        Bitmap bitmap = drawView.getDrawingCache();
         pathView.setBitmap(bitmap);
         pathView.invalidate();
     }
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static void showPathView(int x, int y) {
         pathView.setmCurrentX(x);
         pathView.setmCurrentY(y);
-        Bitmap bitmap = myView.getDrawingCache();
+        Bitmap bitmap = drawView.getDrawingCache();
         pathView.setBitmap(bitmap);
         pathView.invalidate();
     }
@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.alter :
-                Contacts.isAlter = !Contacts.isAlter;
-                if (Contacts.isAlter) {
+                Contants.isAlter = !Contants.isAlter;
+                if (Contants.isAlter) {
                     alter.setBackgroundResource(R.color.normalGray);
                 }else {
                     alter.setBackgroundResource(R.color.lightGray);
@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            myView.check();
-                            int count = myView.calculate();
+                            drawView.check();
+                            int count = drawView.calculate();
                             handler.sendEmptyMessage(1);
                             Message message = Message.obtain();
                             message.what = 2;
@@ -225,13 +225,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        myView.clearLinesX();
-        myView.clearLinesY();
-        myView.setXsNull();
-        myView.setYsNull();
-        myView.clearHashMap();
-        myView.clearLinkedLists();
-        myView.destroyDrawingCache();
+        drawView.clearLinesX();
+        drawView.clearLinesY();
+        drawView.setXsNull();
+        drawView.setYsNull();
+        drawView.clearHashMap();
+        drawView.clearLinkedLists();
+        drawView.destroyDrawingCache();
         mDrawerLayout.removeDrawerListener(drawerListener);
         handler.removeMessages(0);
         handler.removeMessages(1);
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialogResult = null;
         progressDialog.dismiss();
         progressDialog = null;
-        Contacts.isAlter = false;
+        Contants.isAlter = false;
     }
 
     @Override

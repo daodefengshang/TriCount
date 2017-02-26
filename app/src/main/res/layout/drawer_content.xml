@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
-        <com.szh.tricount.customview.MyView
+        <com.szh.tricount.customview.DrawView
             android:id="@+id/myView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

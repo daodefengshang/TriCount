@@ -16,7 +16,7 @@ import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.datas.Calculator;
 import com.szh.tricount.datas.DataList;
-import com.szh.tricount.utils.Contacts;
+import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
 import com.szh.tricount.utils.MathUtil;
 import com.szh.tricount.utils.RemoveMode;
@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MyView extends View {
+/**
+ * 绘图类
+ */
+public class DrawView extends View {
 
     private RemoveMode removeMode = RemoveMode.CLICK_RADIO;
     private List<Integer> listRemove = new ArrayList<>();
@@ -37,18 +40,18 @@ public class MyView extends View {
     private AlertDialog dialog;
     private Paint paintTmp;
 
-    public MyView(Context context) {
+    public DrawView(Context context) {
         super(context);
         init();
     }
 
-    public MyView(Context context, AttributeSet attrs) {
+    public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
     private void init() {
-        Contacts.countLayout = 0;
+        Contants.countLayout = 0;
         paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setAlpha(180);
@@ -140,13 +143,13 @@ public class MyView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (Contacts.countLayout == 1) {
+        if (Contants.countLayout == 1) {
             if (DataList.getLinesX() == null || DataList.getLinesX().size() == 0) {
                 initDrawIsosceles(left, top, right, bottom);
             }
-            Contacts.countLayout = 0;
+            Contants.countLayout = 0;
         }
-        Contacts.countLayout = 1;
+        Contants.countLayout = 1;
     }
     //画等腰三角形
     public void initDrawIsosceles(int left, int top, int right, int bottom) {
@@ -342,7 +345,7 @@ public class MyView extends View {
                 if (x < 50) {
                     return true;
                 }
-                if (!Contacts.isAlter) {
+                if (!Contants.isAlter) {
                     xs = new LinkedList<>();
                     ys = new LinkedList<>();
                     xs.add(0,x);
@@ -367,7 +370,7 @@ public class MyView extends View {
                 }
                 break;
             case MotionEvent.ACTION_MOVE :
-                if (!Contacts.isAlter) {
+                if (!Contants.isAlter) {
                     if (xs != null && xs.size() == 2) {
                         xs.set(1,x);
                         ys.set(1,y);
@@ -386,7 +389,7 @@ public class MyView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP :
-                if (Contacts.isAlter) {
+                if (Contants.isAlter) {
                     if (removeMode == RemoveMode.CLICK_RADIO) {
                         for (int i = 0; i < DataList.getLinesX().size(); i++) {
                             Integer firstX = DataList.getLinesX().get(i).getFirst();
@@ -429,7 +432,7 @@ public class MyView extends View {
                         int[] ints = Calculator.getInstance(getContext()).checkPosition(x, y);
                         xs.set(1,ints[0]);
                         ys.set(1,ints[1]);
-                        if (MathUtil.pointToPoint(xs.get(0), ys.get(0), xs.get(1), ys.get(1)) < DensityUtil.dip2px(this.getContext(), 15)
+                        if (MathUtil.pointToPoint(xs.get(0), ys.get(0), xs.get(1), ys.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
                                 || MathUtil.isCoincideLines(xs.get(0), ys.get(0), xs.get(1), ys.get(1), this.getContext())) {
                             xs = null;
                             ys = null;
