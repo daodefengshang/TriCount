@@ -202,10 +202,11 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
 
     @Override
     public void onLongPress(MotionEvent e) {
+        DrawView drawView = MainActivity.getDrawView();
         if (isTable) {
-            MainActivity.getDrawView().setBackgroundResource(android.R.color.white);
+            drawView.setBackgroundResource(android.R.color.white);
         }else {
-            MainActivity.getDrawView().setBackgroundResource(R.drawable.bitmap_bg);
+            drawView.setBackgroundResource(R.drawable.bitmap_bg);
         }
         isTable = !isTable;
     }

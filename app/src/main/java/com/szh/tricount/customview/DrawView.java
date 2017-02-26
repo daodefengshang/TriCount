@@ -322,6 +322,7 @@ public class DrawView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         canvas.saveLayer(this.getLeft(),this.getTop(),this.getRight(),this.getBottom(),paint,Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
         for (int i = 0; i < DataList.getLinesX().size(); i++) {
             if (MathUtil.hasSameNumber(i, listRemove)) {

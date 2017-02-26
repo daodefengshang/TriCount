@@ -25,5 +25,8 @@
     <string name="square">正方形</string>
     <string name="drawer_open">侧边栏打开</string>
     <string name="drawer_close">侧边栏关闭</string>
+    <string name="setting">设置</string>
+    <string name="save">收藏</string>
+    <string name="browse">查看</string>
 
 </resources>
