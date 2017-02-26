@@ -13,6 +13,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+
+import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.utils.Contacts;
 import com.szh.tricount.utils.DensityUtil;
@@ -39,6 +41,8 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     private int marginY;
     private int width;
     private int height;
+
+    private boolean isTable = true;
 
     //手势识别
     private GestureDetector gestureDetector = new GestureDetector(this.getContext(), this);
@@ -198,6 +202,12 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
 
     @Override
     public void onLongPress(MotionEvent e) {
+        if (isTable) {
+            MainActivity.getMyView().setBackgroundResource(android.R.color.white);
+        }else {
+            MainActivity.getMyView().setBackgroundResource(R.drawable.bitmap_bg);
+        }
+        isTable = !isTable;
     }
 
     @Override

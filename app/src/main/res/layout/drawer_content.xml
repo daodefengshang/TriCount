@@ -14,7 +14,7 @@
             android:id="@+id/myView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/background_light"/>
+            android:background="@drawable/bitmap_bg"/>
         <com.szh.tricount.customview.PathView
             android:id="@+id/pathview"
             android:layout_width="@dimen/pathview_size"
