@@ -1,7 +1,9 @@
 package com.szh.tricount;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
@@ -25,6 +27,7 @@ import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.customview.PathView;
 import com.szh.tricount.fragment.LeftFragment;
+import com.szh.tricount.listener.AnimSharedPreferenceChangeListener;
 import com.szh.tricount.listener.CustomDrawerListener;
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DrawerLayoutUtil;
@@ -35,6 +38,9 @@ import java.lang.ref.WeakReference;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private long exitTime = 0;
+
+    private static final String SPNAME = "drawer_animation";
+    private static final String ISANIMATION = "isAnimation";
 
     private Button alter;
     private Button count;
@@ -55,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CustomLinearLayout mContentLayout;
     private CustomDrawerListener drawerListener;
     private Toolbar mToolbar;
+    private AnimSharedPreferenceChangeListener animSharedPreferenceChangeListener;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +106,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
+        createDialog();
+        sharedPreferences = getSharedPreferences(SPNAME, Activity.MODE_PRIVATE);
+        boolean isAnimation = sharedPreferences.getBoolean(ISANIMATION, true);
+        drawerListener.setAnimation(isAnimation);
+        animSharedPreferenceChangeListener = new AnimSharedPreferenceChangeListener(mContentLayout, drawerListener);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(animSharedPreferenceChangeListener);
+    }
+
+    private void createDialog() {
         if (dialogResult == null) {
             View viewMessage = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_result, null);
             textView = (TextView) viewMessage.findViewById(R.id.count);
@@ -234,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawView.destroyDrawingCache();
         drawView.setDrawingCacheEnabled(false);
         mDrawerLayout.removeDrawerListener(drawerListener);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(animSharedPreferenceChangeListener);
         handler.removeMessages(0);
         handler.removeMessages(1);
         handler.removeMessages(2);

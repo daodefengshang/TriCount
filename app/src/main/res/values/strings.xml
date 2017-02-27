@@ -28,5 +28,7 @@
     <string name="setting">设置</string>
     <string name="save">收藏</string>
     <string name="browse">查看</string>
+    <string name="avail_animation">使用侧滑动画</string>
+    <string name="inavail_animation">禁用侧滑动画</string>
 
 </resources>

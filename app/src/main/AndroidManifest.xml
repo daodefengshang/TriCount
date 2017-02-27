@@ -21,11 +21,11 @@
         <activity
             android:name=".MainActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".AboutActivity"
             android:label="@string/about_name" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>

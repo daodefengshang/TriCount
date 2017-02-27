@@ -1,21 +1,23 @@
 package com.szh.tricount.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
+import com.szh.tricount.SettingActivity;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.datas.DataList;
-import com.szh.tricount.listener.RadioCheckedChangeListener;
+import com.szh.tricount.listener.RemoveRadioCheckedChangeListener;
 import com.szh.tricount.utils.ToastUtil;
 
 /**
@@ -23,13 +25,14 @@ import com.szh.tricount.utils.ToastUtil;
  */
 public class LeftFragment extends Fragment implements View.OnClickListener {
 
-    private DrawerLayout mDrawerLayout;
-
     private Button equilateralButton;
     private Button isocelesButton;
     private Button rectangularButton;
     private Button squareButton;
     private RadioGroup radioRemoveGroup;
+    private TextView setting;
+    private TextView collection;
+    private TextView browse;
 
     @Nullable
     @Override
@@ -50,14 +53,20 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         isocelesButton = (Button) view.findViewById(R.id.button_isosceles);
         rectangularButton = (Button) view.findViewById(R.id.button_rectangular);
         squareButton = (Button) view.findViewById(R.id.square);
+        setting = (TextView) view.findViewById(R.id.set);
+        collection = (TextView) view.findViewById(R.id.collection);
+        browse = (TextView) view.findViewById(R.id.browse);
     }
 
     private void initEvents() {
-        radioRemoveGroup.setOnCheckedChangeListener(new RadioCheckedChangeListener());
+        radioRemoveGroup.setOnCheckedChangeListener(new RemoveRadioCheckedChangeListener());
         equilateralButton.setOnClickListener(this);
         isocelesButton.setOnClickListener(this);
         rectangularButton.setOnClickListener(this);
         squareButton.setOnClickListener(this);
+        setting.setOnClickListener(this);
+        collection.setOnClickListener(this);
+        browse.setOnClickListener(this);
     }
 
     @Override
@@ -95,6 +104,13 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 }
                 ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
                 drawView.initDrawSquare(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
+                break;
+            case R.id.set:
+                startActivity(new Intent(getContext(), SettingActivity.class));
+                break;
+            case R.id.collection:
+                break;
+            case R.id.browse:
                 break;
         }
     }

@@ -9,7 +9,7 @@ import com.szh.tricount.utils.RemoveMode;
 /**
  * Created by szh on 2017/2/19.
  */
-public class RadioCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
+public class RemoveRadioCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
