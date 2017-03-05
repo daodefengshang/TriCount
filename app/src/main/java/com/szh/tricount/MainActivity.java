@@ -133,10 +133,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialogClear.dismiss();
-                            drawView.clearLinesX();
-                            drawView.clearLinesY();
-                            drawView.setXsNull();
-                            drawView.setYsNull();
+                            drawView.clearLines();
+                            drawView.setSsNull();
                             drawView.invalidate();
                             Contants.isAlter = false;
                             alter.setText(R.string.alter);
@@ -242,10 +240,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        drawView.clearLinesX();
-        drawView.clearLinesY();
-        drawView.setXsNull();
-        drawView.setYsNull();
+        drawView.clearLines();
+        drawView.setSsNull();
         drawView.clearHashMap();
         drawView.clearLinkedLists();
         drawView.destroyDrawingCache();

@@ -1,6 +1,7 @@
 package com.szh.tricount.datas;
 
 import android.content.Context;
+import android.graphics.Point;
 
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
@@ -18,7 +19,7 @@ public class Calculator {
     private Context mContext;
     private static volatile Calculator calculator;
 
-    private HashMap<Integer, int[]> hashMap;
+    private HashMap<Integer, Point> hashMap;
 
     //用于计算
     private LinkedList<LinkedList<Integer>> linkedLists;
@@ -40,11 +41,11 @@ public class Calculator {
         return calculator;
     }
 
-    public void setHashMap(HashMap<Integer, int[]> hashMap) {
+    public void setHashMap(HashMap<Integer, Point> hashMap) {
         this.hashMap = hashMap;
     }
 
-    public HashMap<Integer, int[]> getHashMap() {
+    public HashMap<Integer, Point> getHashMap() {
         return hashMap;
 
     }
@@ -57,56 +58,48 @@ public class Calculator {
         this.linkedLists = linkedLists;
     }
     //检查并更新点的坐标
-    public int[] checkPosition(int x, int y) {
-        int[] intCheck = new int[2];
-        int size = DataList.getLinesX().size();
-        for (int i = 0; i < size; i++) {
-            LinkedList<Integer> linkedListX = DataList.getLinesX().get(i);
-            LinkedList<Integer> linkedListY = DataList.getLinesY().get(i);
-            if (linkedListX != null) {
-                int sizeChild = linkedListX.size();
-                Integer firstX = linkedListX.getFirst();
-                Integer firstY = linkedListY.getFirst();
-                Integer lastX = linkedListX.getLast();
-                Integer lastY = linkedListY.getLast();
+    public Point checkPosition(Point point0) {
+        Point point = new Point();
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> linkedList : lines) {
+            if (linkedList != null) {
+                int sizeChild = linkedList.size();
+                Point first = linkedList.getFirst();
+                Point last = linkedList.getLast();
                 for (int j = 0; j < sizeChild; j++) {
-                    if (MathUtil.pointToPoint(linkedListX.get(j), linkedListY.get(j), x, y) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
-                        intCheck[0] = linkedListX.get(j);
-                        intCheck[1] = linkedListY.get(j);
-                        return intCheck;
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+                        point.x = linkedList.get(j).x;
+                        point.y = linkedList.get(j).y;
+                        return point;
                     }
                 }
                 for (int j = 0; j < sizeChild; j++) {
-                    if (MathUtil.pointToLine(firstX, firstY, lastX, lastY, x, y, mContext) == 0) {
-                        int[] point = MathUtil.getPoint(firstX, firstY, lastX, lastY, x, y);
-                        intCheck[0] = point[0];
-                        intCheck[1] = point[1];
-                        return intCheck;
+                    if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
+                        point = MathUtil.getPoint(first, last, point0);
+                        return point;
                     }
                 }
             }
         }
-        intCheck[0] = x;
-        intCheck[1] = y;
-        return intCheck;
+        point.x = point0.x;
+        point.y = point0.y;
+        return point;
     }
 
     //添加与最后一条直线的交点
     public void increasePoint() {
-        int size = DataList.getLinesX().size();
-        LinkedList<Integer> listLastX = DataList.getLinesX().get(size - 1);
-        LinkedList<Integer> listLastY = DataList.getLinesY().get(size - 1);
-        Integer firstX = listLastX.getFirst();
-        Integer firstY = listLastY.getFirst();
-        Integer lastX = listLastX.getLast();
-        Integer lastY = listLastY.getLast();
+        int size = DataList.getLines().size();
+        LinkedList<Point> listLast = DataList.getLines().get(size - 1);
+        int firstX = listLast.getFirst().x;
+        int firstY = listLast.getFirst().y;
+        int lastX = listLast.getLast().x;
+        int lastY = listLast.getLast().y;
         for (int i = 0; i < size - 1; i++) {
-            LinkedList<Integer> listX = DataList.getLinesX().get(i);
-            LinkedList<Integer> listY = DataList.getLinesY().get(i);
-            Integer firstForX = listX.getFirst();
-            Integer firstForY = listY.getFirst();
-            Integer lastForX = listX.getLast();
-            Integer lastForY = listY.getLast();
+            LinkedList<Point> list = DataList.getLines().get(i);
+            int firstForX = list.getFirst().x;
+            int firstForY = list.getFirst().y;
+            int lastForX = list.getLast().x;
+            int lastForY = list.getLast().y;
             int i1 = (firstY - lastY) * (firstForX - lastForX);
             int i2 = (firstForY - lastForY) * (firstX - lastX);
             if (i1 != i2) {
@@ -114,24 +107,22 @@ public class Calculator {
                 int y0 = (lastY * i2 - lastForY * i1 - (lastX - lastForX) * (firstY - lastY) * (firstForY - lastForY)) / (i2 - i1);
                 if (x0 > firstForX && x0 < lastForX || x0 < firstForX && x0 > lastForX
                         || y0 > firstForY && y0 < lastForY || y0 < firstForY && y0 > lastForY) {
-                    int sizeX = listX.size();
-                    for (int j = 0; j < sizeX - 1; j++) {
-                        if (x0 > listX.get(j) && x0 < listX.get(j + 1) || x0 < listX.get(j) && x0 > listX.get(j + 1)
-                                || y0 > listY.get(j) && y0 < listY.get(j + 1) || y0 < listY.get(j) && y0 > listY.get(j + 1)) {
-                            listX.add(j + 1, x0);
-                            listY.add(j + 1, y0);
+                    int sizeXY = list.size();
+                    for (int j = 0; j < sizeXY - 1; j++) {
+                        if (x0 > list.get(j).x && x0 < list.get(j + 1).x || x0 < list.get(j).x && x0 > list.get(j + 1).x
+                                || y0 > list.get(j).y && y0 < list.get(j + 1).y || y0 < list.get(j).y && y0 > list.get(j + 1).y) {
+                            list.add(j + 1, new Point(x0, y0));
                             break;
                         }
                     }
                 }
                 if (x0 > firstX && x0 < lastX || x0 < firstX && x0 > lastX
                         || y0 > firstY && y0 < lastY || y0 < firstY && y0 > lastY) {
-                    int sizeLastX = listLastX.size();
-                    for (int j = 0; j < sizeLastX - 1; j++) {
-                        if (x0 > listLastX.get(j) && x0 < listLastX.get(j + 1) || x0 < listLastX.get(j) && x0 > listLastX.get(j + 1)
-                                || y0 > listLastY.get(j) && y0 < listLastY.get(j + 1) || y0 < listLastY.get(j) && y0 > listLastY.get(j + 1)) {
-                            listLastX.add(j + 1, x0);
-                            listLastY.add(j + 1, y0);
+                    int sizeLast = listLast.size();
+                    for (int j = 0; j < sizeLast - 1; j++) {
+                        if (x0 > listLast.get(j).x && x0 < listLast.get(j + 1).x || x0 < listLast.get(j).x && x0 > listLast.get(j + 1).x
+                                || y0 > listLast.get(j).y && y0 < listLast.get(j + 1).y || y0 < listLast.get(j).y && y0 > listLast.get(j + 1).y) {
+                            listLast.add(j + 1, new Point(x0, y0));
                             break;
                         }
                     }
@@ -141,27 +132,24 @@ public class Calculator {
     }
 
     //删除多余的坐标点
-    public void deleteExtra(LinkedList<Integer> removedX, LinkedList<Integer> removedY) {
-        int size = removedX.size();
+    public void deleteExtra(LinkedList<Point> removed) {
+        int size = removed.size();
         loop :
         for (int i = 0; i < size; i++) {
             int count = 0;
             int lines = 0;
             int links = 0;
-            Integer deleteX = removedX.get(i);
-            Integer deleteY = removedY.get(i);
-            int sizeLines = DataList.getLinesX().size();
+            Point delete = removed.get(i);
+            int sizeLines = DataList.getLines().size();
             for (int j = 0; j < sizeLines; j++) {
-                LinkedList<Integer> linkedListX = DataList.getLinesX().get(j);
-                LinkedList<Integer> linkedListY = DataList.getLinesY().get(j);
-                if (Math.abs(linkedListX.getFirst() - deleteX) <= 2 && Math.abs(linkedListY.getFirst() - deleteY) <= 2 || Math.abs(linkedListX.getLast() - deleteX) <= 2 && Math.abs(linkedListY.getLast() - deleteY) <= 2) {
+                LinkedList<Point> linkedList = DataList.getLines().get(j);
+                if (Math.abs(linkedList.getFirst().x - delete.x) <= 2 && Math.abs(linkedList.getFirst().y - delete.y) <= 2 || Math.abs(linkedList.getLast().x - delete.x) <= 2 && Math.abs(linkedList.getLast().y - delete.y) <= 2) {
                     continue loop;
                 }
-                int sizeList = linkedListX.size();
+                int sizeList = linkedList.size();
                 for (int p = 1; p < sizeList - 1; p++) {
-                    Integer integerX = linkedListX.get(p);
-                    Integer integerY = linkedListY.get(p);
-                    if (Math.abs(integerX - deleteX) <= 2 && Math.abs(integerY - deleteY) <= 2) {
+                    Point point = linkedList.get(p);
+                    if (Math.abs(point.x - delete.x) <= 2 && Math.abs(point.y - delete.y) <= 2) {
                         count++;
                         lines = j;
                         links = p;
@@ -172,8 +160,7 @@ public class Calculator {
                 }
             }
             if (count == 1) {
-                DataList.getLinesX().get(lines).remove(links);
-                DataList.getLinesY().get(lines).remove(links);
+                DataList.getLines().get(lines).remove(links);
             }
         }
     }
@@ -188,19 +175,11 @@ public class Calculator {
         if (hashMap == null) {
             hashMap = new HashMap<>();
         }
-        int size = DataList.getLinesX().size();
-        for (int i = 0; i < size; i++) {
-            LinkedList<Integer> listX = DataList.getLinesX().get(i);
-            LinkedList<Integer> listY = DataList.getLinesY().get(i);
-            int sizeList = listX.size();
-            for (int j = 0; j < sizeList; j++) {
-                Integer integerX = listX.get(j);
-                Integer integerY = listY.get(j);
-                if (!hasSame(integerX, integerY)) {
-                    int[] ints = new int[2];
-                    ints[0] = integerX;
-                    ints[1] = integerY;
-                    hashMap.put(hashMap.size(), ints);
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> list : lines) {
+            for (Point point : list) {
+                if (!hasSame(point)) {
+                    hashMap.put(hashMap.size(), point);
                 }
             }
         }
@@ -208,22 +187,17 @@ public class Calculator {
 
     private void createNewList() {
         linkedLists = new LinkedList<>();
-        int size = DataList.getLinesX().size();
-        for (int i = 0; i < size; i++) {
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> list : lines) {
             LinkedList<Integer> linkedList = new LinkedList<>();
-            LinkedList<Integer> listX = DataList.getLinesX().get(i);
-            LinkedList<Integer> listY = DataList.getLinesY().get(i);
-            int sizeList = listX.size();
             Contants.prei = 0;
-            for (int j = 0; j < sizeList; j++) {
-                Integer integerX = listX.get(j);
-                Integer integerY = listY.get(j);
+            for (Point point : list) {
                 if (linkedList.size() == 0) {
-                    int mapNum = findMapNum(integerX, integerY);
+                    int mapNum = findMapNum(point);
                     linkedList.add(mapNum);
                     Contants.prei++;
                 }else {
-                    int mapNum = findMapNum(integerX, integerY);
+                    int mapNum = findMapNum(point);
                     if (mapNum != linkedList.get(Contants.prei - 1)) {
                         linkedList.add(mapNum);
                         Contants.prei++;
@@ -234,22 +208,22 @@ public class Calculator {
         }
     }
 
-    private int findMapNum(Integer integerX, Integer integerY) {
+    private int findMapNum(Point point) {
         int size = hashMap.size();
         for (int i = 0; i < size; i++) {
-            int[] ints = hashMap.get(i);
-            if (MathUtil.pointToPoint(ints[0], ints[1], integerX, integerY) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+            Point pointMap = hashMap.get(i);
+            if (MathUtil.pointToPoint(pointMap, point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
                 return i;
             }
         }
         return -1;
     }
 
-    private boolean hasSame(Integer integerX, Integer integerY) {
+    private boolean hasSame(Point point) {
         int size = hashMap.size();
         for (int i = 0; i < size; i++) {
-            int[] ints = hashMap.get(i);
-            if (MathUtil.pointToPoint(ints[0], ints[1], integerX, integerY) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+            Point pointMap = hashMap.get(i);
+            if (MathUtil.pointToPoint(pointMap, point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
                 return true;
             }
         }

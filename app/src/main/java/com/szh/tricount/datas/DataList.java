@@ -1,5 +1,7 @@
 package com.szh.tricount.datas;
 
+import android.graphics.Point;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -7,30 +9,18 @@ import java.util.LinkedList;
  * Created by szh on 2016/12/11.
  */
 public class DataList {
-    private static volatile ArrayList<LinkedList<Integer>> linesX;
-    private static volatile ArrayList<LinkedList<Integer>> linesY;
+    private static volatile ArrayList<LinkedList<Point>> lines;
 
     private DataList(){}
 
-    public static ArrayList<LinkedList<Integer>> getLinesX() {
-        if (linesX == null) {
+    public static ArrayList<LinkedList<Point>> getLines() {
+        if (lines == null) {
             synchronized (DataList.class) {
-                if (linesX == null) {
-                    linesX = new ArrayList<>();
+                if (lines == null) {
+                    lines = new ArrayList<>();
                 }
             }
         }
-        return linesX;
-    }
-
-    public static ArrayList<LinkedList<Integer>> getLinesY() {
-        if (linesY == null) {
-            synchronized (DataList.class) {
-                if (linesY == null) {
-                    linesY = new ArrayList<>();
-                }
-            }
-        }
-        return linesY;
+        return lines;
     }
 }

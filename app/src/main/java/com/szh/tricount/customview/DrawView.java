@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -33,8 +34,7 @@ public class DrawView extends View {
     private RemoveMode removeMode = RemoveMode.CLICK_RADIO;
     private List<Integer> listRemove = new ArrayList<>();
 
-    private LinkedList<Integer> xs;
-    private LinkedList<Integer> ys;
+    private LinkedList<Point> ss;
     private Paint paint;
 
     private AlertDialog dialog;
@@ -70,13 +70,11 @@ public class DrawView extends View {
                             dialog.dismiss();
                             int size = listRemove.size();
                             for (int i = 0, j = 0; i < size; i++) {
-                                LinkedList<Integer> removedX = DataList.getLinesX().remove(listRemove.get(i) - j);
-                                LinkedList<Integer> removedY = DataList.getLinesY().remove(listRemove.get(i) - j);
+                                LinkedList<Point> removed = DataList.getLines().remove(listRemove.get(i) - j);
                                 j++;
-                                Calculator.getInstance(getContext()).deleteExtra(removedX, removedY);
+                                Calculator.getInstance(getContext()).deleteExtra(removed);
                             }
-                            xs = null;
-                            ys = null;
+                            ss = null;
                             listRemove.clear();
                             MainActivity.showPathView();
                             invalidate();
@@ -124,27 +122,19 @@ public class DrawView extends View {
         this.removeMode = removeMode;
     }
 
-    public void clearLinesX() {
-        DataList.getLinesX().clear();
+    public void clearLines() {
+        DataList.getLines().clear();
     }
 
-    public void clearLinesY() {
-        DataList.getLinesY().clear();
-    }
-
-    public void setXsNull() {
-        this.xs = null;
-    }
-
-    public void setYsNull() {
-        this.ys = null;
+    public void setSsNull() {
+        this.ss = null;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (Contants.countLayout == 1) {
-            if (DataList.getLinesX() == null || DataList.getLinesX().size() == 0) {
+            if (DataList.getLines() == null || DataList.getLines().size() == 0) {
                 initDrawIsosceles(left, top, right, bottom);
             }
             Contants.countLayout = 0;
@@ -153,36 +143,21 @@ public class DrawView extends View {
     }
     //画等腰三角形
     public void initDrawIsosceles(int left, int top, int right, int bottom) {
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,(left + right)/2);
-        ys.add(0,top + 60);
-        xs.add(1,left + 60);
-        ys.add(1,bottom - 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,(left + right)/2);
-        ys.add(0,top + 60);
-        xs.add(1,right - 60);
-        ys.add(1,bottom - 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,left + 60);
-        ys.add(0,bottom - 60);
-        xs.add(1,right - 60);
-        ys.add(1,bottom - 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point((left + right)/2, top + 60));
+        ss.add(1, new Point(left + 60,bottom - 60));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point((left + right)/2, top + 60));
+        ss.add(1, new Point(right - 60, bottom - 60));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(left + 60, bottom - 60));
+        ss.add(1, new Point(right - 60, bottom - 60));
+        DataList.getLines().add(ss);
+        ss = null;
         invalidate();
     }
     //画等边三角形
@@ -194,80 +169,45 @@ public class DrawView extends View {
         int height1 = (int)((bottom - top) * 2 * Math.sqrt(3) / 3);
         int distanceHorizental = (width < height1) ? width / 2 - 60 : height / 2 - 60;
         int distanceVertical = (int)(distanceHorizental * Math.sqrt(3) / 2);
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX);
-        ys.add(0,centerY - distanceVertical);
-        xs.add(1,centerX - distanceHorizental);
-        ys.add(1,centerY + distanceVertical);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX);
-        ys.add(0,centerY - distanceVertical);
-        xs.add(1,centerX + distanceHorizental);
-        ys.add(1,centerY + distanceVertical);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX - distanceHorizental);
-        ys.add(0,centerY + distanceVertical);
-        xs.add(1,centerX + distanceHorizental);
-        ys.add(1,centerY + distanceVertical);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX, centerY - distanceVertical));
+        ss.add(1, new Point(centerX - distanceHorizental, centerY + distanceVertical));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX, centerY - distanceVertical));
+        ss.add(1, new Point(centerX + distanceHorizental, centerY + distanceVertical));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX - distanceHorizental, centerY + distanceVertical));
+        ss.add(1, new Point(centerX + distanceHorizental, centerY + distanceVertical));
+        DataList.getLines().add(ss);
+        ss = null;
         invalidate();
     }
     //画矩形
     public void initDrawRectangular(int left, int top, int right, int bottom) {
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,left + 60);
-        ys.add(0,top + 60);
-        xs.add(1,left + 60);
-        ys.add(1,bottom - 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,left + 60);
-        ys.add(0,bottom - 60);
-        xs.add(1,right - 60);
-        ys.add(1,bottom - 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,left + 60);
-        ys.add(0,top + 60);
-        xs.add(1,right - 60);
-        ys.add(1,top + 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,right - 60);
-        ys.add(0,top + 60);
-        xs.add(1,right - 60);
-        ys.add(1,bottom - 60);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(left + 60, top + 60));
+        ss.add(1, new Point(left + 60, bottom - 60));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(left + 60, bottom - 60));
+        ss.add(1, new Point(right - 60, bottom - 60));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(left + 60, top + 60));
+        ss.add(1, new Point(right - 60, top + 60));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(right - 60, top + 60));
+        ss.add(1, new Point(right - 60, bottom - 60));
+        DataList.getLines().add(ss);
+        ss = null;
         invalidate();
     }
     //画正方形
@@ -277,46 +217,26 @@ public class DrawView extends View {
         int width = right - left;
         int height = bottom - top;
         int distance = (width < height) ? width / 2 - 60 : height / 2 - 60;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX - distance);
-        ys.add(0,centerY - distance);
-        xs.add(1,centerX + distance);
-        ys.add(1,centerY - distance);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX - distance);
-        ys.add(0,centerY - distance);
-        xs.add(1,centerX - distance);
-        ys.add(1,centerY + distance);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX - distance);
-        ys.add(0,centerY + distance);
-        xs.add(1,centerX + distance);
-        ys.add(1,centerY + distance);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
-        xs = new LinkedList<>();
-        ys = new LinkedList<>();
-        xs.add(0,centerX + distance);
-        ys.add(0,centerY - distance);
-        xs.add(1,centerX + distance);
-        ys.add(1,centerY + distance);
-        DataList.getLinesX().add(xs);
-        DataList.getLinesY().add(ys);
-        xs = null;
-        ys = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX - distance, centerY - distance));
+        ss.add(1, new Point(centerX + distance, centerY - distance));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX - distance, centerY - distance));
+        ss.add(1, new Point(centerX - distance, centerY + distance));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX - distance, centerY + distance));
+        ss.add(1, new Point(centerX + distance, centerY + distance));
+        DataList.getLines().add(ss);
+        ss = null;
+        ss = new LinkedList<>();
+        ss.add(0, new Point(centerX + distance, centerY - distance));
+        ss.add(1, new Point(centerX + distance, centerY + distance));
+        DataList.getLines().add(ss);
+        ss = null;
         invalidate();
     }
 
@@ -324,15 +244,15 @@ public class DrawView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.saveLayer(this.getLeft(),this.getTop(),this.getRight(),this.getBottom(),paint,Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
-        for (int i = 0; i < DataList.getLinesX().size(); i++) {
+        for (int i = 0; i < DataList.getLines().size(); i++) {
             if (MathUtil.hasSameNumber(i, listRemove)) {
-                canvas.drawLine(DataList.getLinesX().get(i).getFirst(),DataList.getLinesY().get(i).getFirst(),DataList.getLinesX().get(i).getLast(),DataList.getLinesY().get(i).getLast(),paintTmp);
+                canvas.drawLine(DataList.getLines().get(i).getFirst().x, DataList.getLines().get(i).getFirst().y, DataList.getLines().get(i).getLast().x, DataList.getLines().get(i).getLast().y, paintTmp);
             }else {
-                canvas.drawLine(DataList.getLinesX().get(i).getFirst(),DataList.getLinesY().get(i).getFirst(),DataList.getLinesX().get(i).getLast(),DataList.getLinesY().get(i).getLast(),paint);
+                canvas.drawLine(DataList.getLines().get(i).getFirst().x, DataList.getLines().get(i).getFirst().y, DataList.getLines().get(i).getLast().x, DataList.getLines().get(i).getLast().y,paint);
             }
         }
-        if (xs != null && ys != null) {
-            canvas.drawLine(xs.getFirst(),ys.getFirst(),xs.getLast(),ys.getLast(),paint);
+        if (ss != null) {
+            canvas.drawLine(ss.getFirst().x,ss.getFirst().y,ss.getLast().x,ss.getLast().y,paint);
         }
         canvas.restore();
     }
@@ -341,49 +261,41 @@ public class DrawView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
+        Point point0 = new Point(x, y);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN :
                 if (x < 50) {
                     return true;
                 }
                 if (!Contants.isAlter) {
-                    xs = new LinkedList<>();
-                    ys = new LinkedList<>();
-                    xs.add(0,x);
-                    ys.add(0,y);
-                    int[] ints = Calculator.getInstance(getContext()).checkPosition(xs.get(0), ys.get(0));
-                    xs.set(0,ints[0]);
-                    ys.set(0,ints[1]);
-                    xs.add(1,x);
-                    ys.add(1,y);
+                    ss = new LinkedList<>();
+                    ss.add(0, point0);
+                    Point point = Calculator.getInstance(getContext()).checkPosition(ss.get(0));
+                    ss.set(0,point);
+                    ss.add(1, point0);
                     MainActivity.showPathView(x, y);
                     invalidate();
                 } else {
                     if (removeMode == RemoveMode.LINE_RADIO) {
-                        xs = new LinkedList<>();
-                        ys = new LinkedList<>();
-                        xs.add(0,x);
-                        ys.add(0,y);
-                        xs.add(1,x);
-                        ys.add(1,y);
+                        ss = new LinkedList<>();
+                        ss.add(0, point0);
+                        ss.add(1, point0);
                         invalidate();
                     }
                 }
                 break;
             case MotionEvent.ACTION_MOVE :
                 if (!Contants.isAlter) {
-                    if (xs != null && xs.size() == 2) {
-                        xs.set(1,x);
-                        ys.set(1,y);
+                    if (ss != null && ss.size() == 2) {
+                        ss.set(1, point0);
                         invalidate();
                         MainActivity.showPathView(x, y);
                         invalidate();
                     }
                 }else {
                     if (removeMode == RemoveMode.LINE_RADIO) {
-                        if (xs != null && xs.size() == 2) {
-                            xs.set(1,x);
-                            ys.set(1,y);
+                        if (ss != null && ss.size() == 2) {
+                            ss.set(1, point0);
                             invalidate();
                         }
                     }
@@ -392,12 +304,10 @@ public class DrawView extends View {
             case MotionEvent.ACTION_UP :
                 if (Contants.isAlter) {
                     if (removeMode == RemoveMode.CLICK_RADIO) {
-                        for (int i = 0; i < DataList.getLinesX().size(); i++) {
-                            Integer firstX = DataList.getLinesX().get(i).getFirst();
-                            Integer lastX = DataList.getLinesX().get(i).getLast();
-                            Integer firstY = DataList.getLinesY().get(i).getFirst();
-                            Integer lastY = DataList.getLinesY().get(i).getLast();
-                            if (MathUtil.pointToLine(firstX,firstY,lastX,lastY,x,y, this.getContext()) == 0) {
+                        for (int i = 0; i < DataList.getLines().size(); i++) {
+                            Point first = DataList.getLines().get(i).getFirst();
+                            Point last = DataList.getLines().get(i).getLast();
+                            if (MathUtil.pointToLine(first,last,point0, this.getContext()) == 0) {
                                 listRemove.clear();
                                 listRemove.add(i);
                                 invalidate();
@@ -406,44 +316,36 @@ public class DrawView extends View {
                             }
                         }
                     } else if (removeMode == RemoveMode.LINE_RADIO) {
-                        if (xs != null && ys != null && xs.size() == 2 && ys.size() == 2) {
-                            for (int i = 0; i < DataList.getLinesX().size(); i++) {
-                                Integer firstX = DataList.getLinesX().get(i).getFirst();
-                                Integer lastX = DataList.getLinesX().get(i).getLast();
-                                Integer firstY = DataList.getLinesY().get(i).getFirst();
-                                Integer lastY = DataList.getLinesY().get(i).getLast();
-                                boolean intersect = MathUtil.isIntersect(xs.get(0), ys.get(0), xs.get(1), ys.get(1), firstX, firstY, lastX, lastY);
+                        if (ss != null && ss.size() == 2) {
+                            for (int i = 0; i < DataList.getLines().size(); i++) {
+                                Point first = DataList.getLines().get(i).getFirst();
+                                Point last = DataList.getLines().get(i).getLast();
+                                boolean intersect = MathUtil.isIntersect(ss.get(0), ss.get(1), first, last);
                                 if (intersect) {
                                     listRemove.add(i);
                                 }
                             }
-                            xs = null;
-                            ys = null;
+                            ss = null;
                             invalidate();
                             if (listRemove.size() > 0) {
                                 dialog.show();
                             }
                         }
                     }
-                }else if (xs != null){
-                    if (xs.size() < 2) {
-                        xs = null;
-                        ys = null;
+                }else if (ss != null){
+                    if (ss.size() < 2) {
+                        ss = null;
                     } else {
-                        int[] ints = Calculator.getInstance(getContext()).checkPosition(x, y);
-                        xs.set(1,ints[0]);
-                        ys.set(1,ints[1]);
-                        if (MathUtil.pointToPoint(xs.get(0), ys.get(0), xs.get(1), ys.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
-                                || MathUtil.isCoincideLines(xs.get(0), ys.get(0), xs.get(1), ys.get(1), this.getContext())) {
-                            xs = null;
-                            ys = null;
+                        Point point = Calculator.getInstance(getContext()).checkPosition(point0);
+                        ss.set(1, point);
+                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
+                                || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
+                            ss = null;
                             invalidate();
                             return true;
                         }
-                        DataList.getLinesX().add(xs);
-                        DataList.getLinesY().add(ys);
-                        xs = null;
-                        ys = null;
+                        DataList.getLines().add(ss);
+                        ss = null;
                         invalidate();
                         Calculator.getInstance(getContext()).increasePoint();
                     }

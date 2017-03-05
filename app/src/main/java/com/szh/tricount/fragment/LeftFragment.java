@@ -75,7 +75,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         DrawView drawView = MainActivity.getDrawView();
         switch (v.getId()) {
             case R.id.button_equilateral:
-                if (DataList.getLinesX().size() != 0 || DataList.getLinesY().size() != 0) {
+                if (DataList.getLines().size() != 0) {
                     toastAndClose();
                     return;
                 }
@@ -83,7 +83,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 drawView.initDrawEquilateral(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.button_isosceles:
-                if (DataList.getLinesX().size() != 0 || DataList.getLinesY().size() != 0) {
+                if (DataList.getLines().size() != 0) {
                     toastAndClose();
                     return;
                 }
@@ -91,7 +91,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 drawView.initDrawIsosceles(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.button_rectangular:
-                if (DataList.getLinesX().size() != 0 || DataList.getLinesY().size() != 0) {
+                if (DataList.getLines().size() != 0) {
                     toastAndClose();
                     return;
                 }
@@ -99,7 +99,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 drawView.initDrawRectangular(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.square:
-                if (DataList.getLinesX().size() != 0 || DataList.getLinesY().size() != 0) {
+                if (DataList.getLines().size() != 0) {
                     toastAndClose();
                     return;
                 }
