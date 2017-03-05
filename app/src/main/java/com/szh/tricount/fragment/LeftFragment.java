@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.szh.tricount.BrowseActivity;
 import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.SettingActivity;
@@ -107,10 +108,13 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.set:
                 startActivity(new Intent(getContext(), SettingActivity.class));
+                getActivity().overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             case R.id.collection:
                 break;
             case R.id.browse:
+                startActivity(new Intent(getContext(), BrowseActivity.class));
+                getActivity().overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
         }
     }

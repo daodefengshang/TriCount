@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">三角形计算器</string>
     <string name="about_name">关于</string>
+    <string name="setting_name">设置</string>
+    <string name="browse_name">查看</string>
     <string name="result">计算结果：</string>
     <string name="calculating">正在计算请稍候…</string>
     <string name="alter">修 改</string>
