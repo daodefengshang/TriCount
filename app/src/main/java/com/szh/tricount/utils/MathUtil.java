@@ -1,9 +1,9 @@
 package com.szh.tricount.utils;
 
 import android.content.Context;
-import android.graphics.Point;
 
 import com.szh.tricount.datas.DataList;
+import com.szh.tricount.datas.Point;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

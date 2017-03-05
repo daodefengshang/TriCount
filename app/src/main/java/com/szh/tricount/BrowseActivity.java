@@ -13,6 +13,7 @@ import com.szh.tricount.adapter.ListItemTouchCallback;
 import com.szh.tricount.adapter.RecyclerAdapter;
 import com.szh.tricount.datas.RecyclerViewItem;
 import com.szh.tricount.listener.OnRecyclerItemClickListener;
+import com.szh.tricount.utils.ObjectSerializeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,7 @@ public class BrowseActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.browse_recyclerview);
-        List<RecyclerViewItem> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            RecyclerViewItem item = new RecyclerViewItem("aaaa" + i);
-            list.add(item);
-        }
+        List<RecyclerViewItem> list = ObjectSerializeUtil.findFiles(this);
         recyclerAdapter = new RecyclerAdapter(list);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);

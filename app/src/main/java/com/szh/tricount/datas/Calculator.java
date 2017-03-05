@@ -1,7 +1,6 @@
 package com.szh.tricount.datas;
 
 import android.content.Context;
-import android.graphics.Point;
 
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;

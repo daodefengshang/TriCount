@@ -1,7 +1,5 @@
 package com.szh.tricount.datas;
 
-import android.graphics.Point;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 

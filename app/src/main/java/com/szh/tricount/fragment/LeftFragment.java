@@ -19,6 +19,7 @@ import com.szh.tricount.SettingActivity;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.datas.DataList;
 import com.szh.tricount.listener.RemoveRadioCheckedChangeListener;
+import com.szh.tricount.utils.ObjectSerializeUtil;
 import com.szh.tricount.utils.ToastUtil;
 
 /**
@@ -32,9 +33,10 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private Button squareButton;
     private RadioGroup radioRemoveGroup;
     private TextView setting;
-    private TextView collection;
-    private TextView browse;
 
+    private TextView collection;
+
+    private TextView browse;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,6 +70,10 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         setting.setOnClickListener(this);
         collection.setOnClickListener(this);
         browse.setOnClickListener(this);
+    }
+
+    public TextView getCollection() {
+        return collection;
     }
 
     @Override
@@ -111,6 +117,8 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 getActivity().overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             case R.id.collection:
+                ObjectSerializeUtil.serializeList(getContext());
+                collection.setEnabled(false);
                 break;
             case R.id.browse:
                 startActivity(new Intent(getContext(), BrowseActivity.class));

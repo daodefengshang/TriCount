@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Toolbar mToolbar;
     private AnimSharedPreferenceChangeListener animSharedPreferenceChangeListener;
     private SharedPreferences sharedPreferences;
+    private LeftFragment leftFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.id_left_menu_container);
         if (fragment == null) {
-            fragmentManager.beginTransaction().add(R.id.id_left_menu_container, new LeftFragment()).commit();
+            leftFragment = new LeftFragment();
+            fragmentManager.beginTransaction().add(R.id.id_left_menu_container, leftFragment).commit();
         }
     }
 
@@ -112,6 +114,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerListener.setAnimation(isAnimation);
         animSharedPreferenceChangeListener = new AnimSharedPreferenceChangeListener(mContentLayout, drawerListener);
         sharedPreferences.registerOnSharedPreferenceChangeListener(animSharedPreferenceChangeListener);
+    }
+
+    public LeftFragment getLeftFragment() {
+        return leftFragment;
     }
 
     private void createDialog() {

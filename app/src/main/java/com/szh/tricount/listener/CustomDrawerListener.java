@@ -7,13 +7,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.szh.tricount.MainActivity;
 import com.szh.tricount.customview.CustomLinearLayout;
+import com.szh.tricount.fragment.LeftFragment;
 
 /**
  * Created by szh on 2017/2/18.
  */
 public class CustomDrawerListener extends ActionBarDrawerToggle {
 
+    private Activity activity;
     private DrawerLayout mDrawerLayout;
     private CustomLinearLayout mContentLayout;
 
@@ -22,6 +25,7 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
     public CustomDrawerListener(Activity activity, DrawerLayout mDrawerLayout, @StringRes int openDrawerContentDescRes,
                                 @StringRes int closeDrawerContentDescRes, CustomLinearLayout mContentLayout) {
         super(activity, mDrawerLayout, openDrawerContentDescRes, closeDrawerContentDescRes);
+        this.activity = activity;
         this.mDrawerLayout = mDrawerLayout;
         this.mContentLayout = mContentLayout;
     }
@@ -29,6 +33,7 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
     public CustomDrawerListener(Activity activity, DrawerLayout mDrawerLayout, Toolbar toolbar,
                                 @StringRes int openDrawerContentDescRes, @StringRes int closeDrawerContentDescRes, CustomLinearLayout mContentLayout) {
         super(activity, mDrawerLayout, toolbar, openDrawerContentDescRes, closeDrawerContentDescRes);
+        this.activity = activity;
         this.mDrawerLayout = mDrawerLayout;
         this.mContentLayout = mContentLayout;
     }
@@ -65,6 +70,10 @@ public class CustomDrawerListener extends ActionBarDrawerToggle {
     public void onDrawerClosed(View drawerView) {
         super.onDrawerClosed(drawerView);
         mContentLayout.setIntercept(false);
+        LeftFragment leftFragment = ((MainActivity) activity).getLeftFragment();
+        if (leftFragment != null) {
+            leftFragment.getCollection().setEnabled(true);
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.szh.tricount.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 import com.szh.tricount.R;
 import com.szh.tricount.datas.RecyclerViewItem;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,7 +37,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.MyViewHolder holder, int position) {
-        holder.textView.setText(list.get(position).getName());
+        CharSequence format = DateFormat.format("yyyy-MM-dd HH:mm:ss", Long.parseLong(list.get(position).getName()));
+        holder.textView.setText(format);
     }
 
     @Override
@@ -61,7 +65,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onSwiped(int position) {
-        list.remove(position);
+        if (list.get(position).getFile().delete()) {
+            list.remove(position);
+        }
         notifyItemRemoved(position);
     }
 

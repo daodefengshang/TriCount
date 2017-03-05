@@ -1,5 +1,6 @@
 package com.szh.tricount.datas;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -8,9 +9,11 @@ import java.io.Serializable;
 public class RecyclerViewItem implements Serializable {
 
     private String name;
+    private File file;
 
-    public RecyclerViewItem(String name) {
-        this.name = name;
+    public RecyclerViewItem(File file) {
+        this.file = file;
+        this.name = file.getName();
     }
 
     public String getName() {
@@ -19,5 +22,13 @@ public class RecyclerViewItem implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }
