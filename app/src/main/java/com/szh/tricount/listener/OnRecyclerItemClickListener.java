@@ -42,7 +42,8 @@ public class OnRecyclerItemClickListener implements RecyclerView.OnItemTouchList
             View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
             if (child != null) {
                 RecyclerView.ViewHolder childViewHolder = recyclerView.getChildViewHolder(child);
-                onItemClick(childViewHolder);
+                int position = recyclerView.getChildAdapterPosition(child);
+                onItemClick(childViewHolder, position);
             }
             return true;
         }
@@ -52,12 +53,13 @@ public class OnRecyclerItemClickListener implements RecyclerView.OnItemTouchList
             View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
             if (child != null) {
                 RecyclerView.ViewHolder childViewHolder = recyclerView.getChildViewHolder(child);
-                onLongClick(childViewHolder);
+                int position = recyclerView.getChildAdapterPosition(child);
+                onLongClick(childViewHolder, position);
             }
             super.onLongPress(e);
         }
     }
 
-    public void onLongClick(RecyclerView.ViewHolder vh) {}
-    public void onItemClick(RecyclerView.ViewHolder vh) {}
+    public void onLongClick(RecyclerView.ViewHolder vh, int position) {}
+    public void onItemClick(RecyclerView.ViewHolder vh, int position) {}
 }

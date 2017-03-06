@@ -21,4 +21,8 @@ public class DataList {
         }
         return lines;
     }
+    //反序列化时使用
+    public static void setLines(ArrayList<LinkedList<Point>> lines) {
+        DataList.lines = lines;
+    }
 }
