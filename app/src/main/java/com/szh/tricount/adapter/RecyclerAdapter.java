@@ -37,7 +37,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(RecyclerAdapter.MyViewHolder holder, int position) {
-        CharSequence format = DateFormat.format("yyyy-MM-dd HH:mm:ss", Long.parseLong(list.get(position).getName()));
+        CharSequence format = DateFormat.format("yyyy-MM-dd kk:mm:ss", Long.parseLong(list.get(position).getName()));
         holder.textView.setText(format);
     }
 
