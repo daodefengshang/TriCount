@@ -2,6 +2,7 @@ package com.szh.tricount.utils;
 
 import android.content.Context;
 
+import com.szh.tricount.R;
 import com.szh.tricount.adapter.RecyclerAdapter;
 import com.szh.tricount.datas.DataList;
 import com.szh.tricount.datas.Point;
@@ -37,13 +38,12 @@ public class ObjectSerializeUtil {
             fileOutputStream = new FileOutputStream(dirPath + File.separator + dateString);
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(DataList.getLines());
-            ToastUtil.toast(context, "文件保存成功");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            ToastUtil.toast(context, "文件未找到");
+            ToastUtil.toast(context, R.string.file_not_found);
         } catch (IOException e) {
             e.printStackTrace();
-            ToastUtil.toast(context, "文件序列化错误");
+            ToastUtil.toast(context, R.string.file_write_exception);
         } finally {
             try {
                 if (objectOutputStream != null) {
@@ -85,13 +85,12 @@ public class ObjectSerializeUtil {
             DataList.setLines(lines);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            ToastUtil.toast(context, "文件未找到");
+            ToastUtil.toast(context, R.string.file_not_found);
         } catch (IOException e) {
             e.printStackTrace();
-            ToastUtil.toast(context, "文件读写错误");
+            ToastUtil.toast(context, R.string.file_read_exception);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            ToastUtil.toast(context, "类未找到");
         } finally {
             try {
                 if (objectInputStream != null) {

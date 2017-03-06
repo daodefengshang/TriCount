@@ -14,6 +14,7 @@
     <dimen name="message_padding_bottom">20dp</dimen>
     <dimen name="pathview_size">118dp</dimen>
     <dimen name="bg_stroke">4dp</dimen>
+    <dimen name="animbg_stroke">8dp</dimen>
     <dimen name="init_button_width">180dp</dimen>
     <dimen name="init_button_height">40dp</dimen>
     <dimen name="init_button_radius">20dp</dimen>

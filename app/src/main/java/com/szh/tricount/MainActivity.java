@@ -20,6 +20,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AnimSharedPreferenceChangeListener animSharedPreferenceChangeListener;
     private SharedPreferences sharedPreferences;
     private LeftFragment leftFragment;
+    private View animView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clear = (Button) findViewById(R.id.clear);
         drawView = (DrawView) findViewById(R.id.myView);
         pathView = (PathView) findViewById(R.id.pathview);
+        animView = findViewById(R.id.anim_view);
         DrawerLayoutUtil.setDrawerLeftEdgeSize(this, mDrawerLayout, 20);
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.id_left_menu_container);
@@ -307,5 +312,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
             }
         }
+    }
+
+    public void collectionAnim(TextView collection) {
+        ViewGroup parent = (ViewGroup) collection.getParent();
+        float h = parent.getX() + collection.getX() + collection.getWidth() / 2;
+        float v = parent.getY() + collection.getY() + collection.getHeight() / 2;
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 0.01f, 1.0f, 0.01f, h, v);
+        scaleAnimation.setDuration(400);
+        scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                animView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                animView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        animView.setAnimation(scaleAnimation);
+        animView.startAnimation(scaleAnimation);
     }
 }

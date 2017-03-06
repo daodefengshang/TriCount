@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import com.szh.tricount.datas.DataList;
 import com.szh.tricount.listener.RemoveRadioCheckedChangeListener;
 import com.szh.tricount.utils.ObjectSerializeUtil;
 import com.szh.tricount.utils.ToastUtil;
+
+import javax.xml.datatype.Duration;
 
 /**
  * Created by szh on 2017/2/17.
@@ -118,6 +121,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.collection:
                 ObjectSerializeUtil.serializeList(getContext());
+                ((MainActivity) getActivity()).collectionAnim(collection);
                 collection.setEnabled(false);
                 break;
             case R.id.browse:

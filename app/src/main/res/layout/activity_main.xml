@@ -6,5 +6,15 @@
     android:orientation="vertical"
     tools:context="com.szh.tricount.MainActivity">
     <include layout="@layout/toolbar_layout"/>
-    <include layout="@layout/drawer_layout"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <include layout="@layout/drawer_layout"/>
+        <View
+            android:id="@+id/anim_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@drawable/animview_bg"/>
+    </FrameLayout>
 </LinearLayout>
