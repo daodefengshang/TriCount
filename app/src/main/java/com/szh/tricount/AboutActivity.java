@@ -1,7 +1,5 @@
 package com.szh.tricount;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,18 +12,15 @@ import com.szh.tricount.webjs.JavaScriptObject;
 
 public class AboutActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar;
-    private WebView webView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        webView = (WebView) findViewById(R.id.web);
+        WebView webView = (WebView) findViewById(R.id.web);
         webView.setHorizontalScrollBarEnabled(false);//水平不显示
         webView.setVerticalScrollBarEnabled(false); //垂直不显示
         WebSettings settings = webView.getSettings();

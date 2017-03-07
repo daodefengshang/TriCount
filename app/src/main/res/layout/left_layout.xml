@@ -103,7 +103,8 @@
             android:gravity="center"
             android:text="@string/setting"
             android:textSize="@dimen/left_fixed_font_size"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:background="@drawable/text_button_selector"/>
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -117,7 +118,8 @@
             android:drawablePadding="@dimen/drawable_padding"
             android:gravity="center"
             android:textSize="@dimen/left_fixed_font_size"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:background="@drawable/text_button_selector"/>
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -131,7 +133,8 @@
             android:drawablePadding="@dimen/drawable_padding"
             android:gravity="center"
             android:textSize="@dimen/left_fixed_font_size"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:background="@drawable/text_button_selector"/>
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
