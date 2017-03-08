@@ -21,7 +21,7 @@ public class ListItemTouchCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        return false;
+        return true;
     }
 
     @Override
@@ -33,6 +33,9 @@ public class ListItemTouchCallback extends ItemTouchHelper.Callback {
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+        if (viewHolder instanceof RecyclerAdapter.HeaderViewHolder || viewHolder instanceof RecyclerAdapter.FooterViewHolder) {
+            return makeMovementFlags(0, 0);
+        }
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 
