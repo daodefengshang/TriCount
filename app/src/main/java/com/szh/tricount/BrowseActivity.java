@@ -9,10 +9,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.szh.tricount.adapter.ListItemTouchCallback;
 import com.szh.tricount.adapter.RecyclerAdapter;
 import com.szh.tricount.datas.RecyclerViewItem;
-import com.szh.tricount.listener.OnAdapterScrollListener;
 import com.szh.tricount.listener.OnRecyclerItemClickListener;
 import com.szh.tricount.utils.ObjectSerializeUtil;
 
@@ -45,8 +45,9 @@ public class BrowseActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerListDecoration(this, DividerListDecoration.VERTICAL_LIST));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        linearLayoutManager.scrollToPosition(1);
         recyclerView.setLayoutManager(linearLayoutManager);
+        TwinklingRefreshLayout refreshLayout = (TwinklingRefreshLayout) findViewById(R.id.refresh);
+        refreshLayout.setPureScrollModeOn(true);
     }
 
     private void initEvents() {
@@ -60,19 +61,17 @@ public class BrowseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh, int position) {
                 super.onItemClick(vh, position);
-                ObjectSerializeUtil.deserializeList(getApplicationContext(), list.get(position - 1));
+                ObjectSerializeUtil.deserializeList(getApplicationContext(), list.get(position));
                 MainActivity.getDrawView().invalidate();
                 BrowseActivity.this.finish();
                 overridePendingTransition(R.anim.anim_access, R.anim.anim_return);
             }
         });
-        recyclerView.addOnScrollListener(new OnAdapterScrollListener(recyclerView));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        recyclerView.clearOnScrollListeners();
     }
 
     @Override

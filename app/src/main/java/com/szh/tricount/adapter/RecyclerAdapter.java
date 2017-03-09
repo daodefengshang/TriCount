@@ -22,10 +22,6 @@ import java.util.List;
  */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ListItemTouchCallback.ItemTouchAdapter{
 
-    private static final int TYPE_ITEM = 0; // 普通Item View
-    private static final int TYPE_HEADER_EMPTY = 1; // 顶部空白View
-    private static final int TYPE_FOOTER_EMPTY = 2; // 底部空白View
-
     private Context context;
     private List<RecyclerViewItem> list;
 
@@ -36,61 +32,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         this.context = parent.getContext();
-        if (viewType == TYPE_ITEM) {
-            View itemView = LayoutInflater.from(context).inflate(R.layout.recyclerview_item, parent, false);
-            return new MyViewHolder(itemView);
-        } else if (viewType == TYPE_HEADER_EMPTY) {
-            View headerView = LayoutInflater.from(context).inflate(R.layout.recyclerview_header_item, parent, false);
-            return new HeaderViewHolder(headerView);
-        } else if (viewType == TYPE_FOOTER_EMPTY) {
-            View footerview = LayoutInflater.from(context).inflate(R.layout.recyclerview_footer_item, parent, false);
-            return new FooterViewHolder(footerview);
-        }
-        return null;
+        View itemView = LayoutInflater.from(context).inflate(R.layout.recyclerview_item, parent, false);
+        return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MyViewHolder) {
-            CharSequence format = DateFormat.format("yyyy-MM-dd kk:mm:ss", Long.parseLong(list.get(position - 1).getName()));
-            ((MyViewHolder)holder).textView.setText(format);
-        } else if (holder instanceof HeaderViewHolder) {
-            ((HeaderViewHolder) holder).view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        } else if (holder instanceof FooterViewHolder) {
-            ((FooterViewHolder) holder).view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        }
+        CharSequence format = DateFormat.format("yyyy-MM-dd kk:mm:ss", Long.parseLong(list.get(position).getName()));
+        ((MyViewHolder)holder).textView.setText(format);
     }
 
     @Override
     public int getItemCount() {
-        return list.size() + 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == 0) {
-            return TYPE_HEADER_EMPTY;
-        }else if (position == getItemCount() - 1) {
-            return TYPE_FOOTER_EMPTY;
-        }else {
-            return TYPE_ITEM;
-        }
+        return list.size();
     }
 
     @Override
     public void onMove(int fromPosition, int toPosition) {
-        if (fromPosition <= 0 || fromPosition >= getItemCount() - 1){
-            return;
-        }
-        if (toPosition <= 0 || toPosition >= getItemCount() - 1){
-            return;
-        }
         if (fromPosition < toPosition) {
-            for (int i = fromPosition - 1; i < toPosition - 1; i++) {
+            for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(list, i, i + 1);
             }
         } else {
-            for (int i = fromPosition - 1; i > toPosition - 1; i--) {
+            for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(list, i, i - 1);
             }
         }
@@ -99,8 +63,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onSwiped(int position) {
-        if (list.get(position - 1).getFile().delete()) {
-            list.remove(position - 1);
+        if (list.get(position).getFile().delete()) {
+            list.remove(position);
         }
         notifyItemRemoved(position);
     }
@@ -111,22 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public MyViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.file_name);
-        }
-    }
-
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public View view;
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            view = itemView.findViewById(R.id.headerview);
-        }
-    }
-
-    public static class FooterViewHolder extends RecyclerView.ViewHolder {
-        public View view;
-        public FooterViewHolder(View itemView) {
-            super(itemView);
-            view = itemView.findViewById(R.id.footerview);
         }
     }
 }

@@ -40,15 +40,6 @@ public class OnRecyclerItemClickListener implements RecyclerView.OnItemTouchList
     }
 
     private class ItemTouchHelperGestureListener extends GestureDetector.SimpleOnGestureListener {
-        private static final int TYPE_ITEM = 0; // 普通Item View
-
-        private float downY;
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            downY = e.getY();
-            return false;
-        }
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
@@ -74,39 +65,6 @@ public class OnRecyclerItemClickListener implements RecyclerView.OnItemTouchList
                 }
             }
             super.onLongPress(e);
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-            if (layoutManager instanceof LinearLayoutManager) {
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-                int itemCount = linearLayoutManager.getItemCount();
-                RecyclerView.ViewHolder recycledView = recyclerView.getRecycledViewPool().getRecycledView(TYPE_ITEM);
-                int decoratedMeasuredHeight = 0;
-                if (recycledView != null) {
-                    View itemView = recycledView.itemView;
-                    if (itemView != null) {
-                        decoratedMeasuredHeight = linearLayoutManager.getDecoratedMeasuredHeight(itemView);
-                    }
-                }
-                int height = (itemCount - 2) * decoratedMeasuredHeight;
-                int firstItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
-                int lastItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                if (linearLayoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
-                    int last = linearLayoutManager.getItemCount() - 1;
-                    if (height > linearLayoutManager.getHeight()) {
-                        if (firstItemPosition == 0) {
-                            linearLayoutManager.scrollToPositionWithOffset(1, (int) (e2.getY()/2 - downY/2));
-                        }else if (lastItemPosition == last) {
-                            linearLayoutManager.scrollToPositionWithOffset(last, (int) (e2.getY()/2 - downY/2 + recyclerView.getHeight()));
-                        }
-                    } else {
-                        linearLayoutManager.scrollToPositionWithOffset(1, (int) (e2.getY()/2 - downY/2));
-                    }
-                }
-            }
-            return true;
         }
     }
 

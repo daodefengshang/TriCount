@@ -1,7 +1,6 @@
 package com.szh.tricount.adapter;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -33,9 +32,6 @@ public class ListItemTouchCallback extends ItemTouchHelper.Callback {
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-        if (viewHolder instanceof RecyclerAdapter.HeaderViewHolder || viewHolder instanceof RecyclerAdapter.FooterViewHolder) {
-            return makeMovementFlags(0, 0);
-        }
         return makeMovementFlags(dragFlags, swipeFlags);
     }
 
