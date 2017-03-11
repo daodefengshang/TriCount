@@ -1,6 +1,7 @@
 package com.szh.tricount.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -116,11 +117,12 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 drawView.initDrawSquare(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.set:
-                startActivity(new Intent(getContext(), SettingActivity.class));
+                Intent intent = new Intent(getContext(), SettingActivity.class);
+                startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             case R.id.collection:
-                ObjectSerializeUtil.serializeList(getContext());
+                ObjectSerializeUtil.serializeList(getContext(), MainActivity.getDrawView().getDrawingCache());
                 ((MainActivity) getActivity()).collectionAnim(collection);
                 collection.setEnabled(false);
                 break;

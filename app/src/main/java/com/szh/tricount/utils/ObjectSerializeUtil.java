@@ -1,6 +1,7 @@
 package com.szh.tricount.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.szh.tricount.R;
 import com.szh.tricount.adapter.RecyclerAdapter;
@@ -28,8 +29,8 @@ import java.util.List;
  */
 public class ObjectSerializeUtil {
 
-    public static void serializeList(Context context) {
-        String dirPath = context.getFilesDir().getPath();
+    public static void serializeList(Context context, Bitmap bitmap) {
+        String dirPath =  context.getFilesDir().getPath();
         Date date = new Date();
         String dateString = String.valueOf(date.getTime());
         FileOutputStream fileOutputStream = null;
@@ -38,6 +39,7 @@ public class ObjectSerializeUtil {
             fileOutputStream = new FileOutputStream(dirPath + File.separator + dateString);
             objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(DataList.getLines());
+            saveBitmap(dirPath + File.separator + dateString + ".webp", bitmap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             ToastUtil.toast(context, R.string.file_not_found);
@@ -58,9 +60,30 @@ public class ObjectSerializeUtil {
         }
     }
 
+    private static void saveBitmap(String bitmapPath, Bitmap bitmap) {
+        if (bitmap == null) {
+            return;
+        }
+        FileOutputStream outputStream = null;
+        try {
+            outputStream = new FileOutputStream(bitmapPath);
+            bitmap.compress(Bitmap.CompressFormat.WEBP, 20, outputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static List<RecyclerViewItem> findFiles(Context context) {
         ArrayList<RecyclerViewItem> list = new ArrayList<>();
-        String dirPath = context.getFilesDir().getPath() + File.separator;
+        String dirPath = context.getFilesDir().getPath();
         File dir = new File(dirPath);
         File[] files = null;
         if (dir.exists() && dir.isDirectory()) {
@@ -68,7 +91,9 @@ public class ObjectSerializeUtil {
         }
         if (files != null) {
             for (File file : files) {
-                list.add(new RecyclerViewItem(file));
+                if (!file.getName().endsWith(".webp")) {
+                    list.add(new RecyclerViewItem(file));
+                }
             }
         }
         return list;
