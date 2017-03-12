@@ -122,6 +122,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 getActivity().overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;
             case R.id.collection:
+                MainActivity.getDrawView().destroyDrawingCache();
                 ObjectSerializeUtil.serializeList(getContext(), MainActivity.getDrawView().getDrawingCache());
                 ((MainActivity) getActivity()).collectionAnim(collection);
                 collection.setEnabled(false);
