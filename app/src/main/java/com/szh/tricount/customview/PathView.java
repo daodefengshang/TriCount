@@ -124,7 +124,7 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (bitmap != null) {
+        if (bitmap != null && !bitmap.isRecycled()) {
             // 底图
             canvas.drawBitmap(bitmap, DensityUtil.dip2px(this.getContext(), marginX), DensityUtil.dip2px(this.getContext(), marginY), null);
             // 剪切

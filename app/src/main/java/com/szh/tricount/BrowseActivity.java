@@ -40,7 +40,7 @@ public class BrowseActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.browse_recyclerview);
         list = ObjectSerializeUtil.findFiles(this);
-        recyclerAdapter = new RecyclerAdapter(list);
+        recyclerAdapter = new RecyclerAdapter(this, list);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -71,6 +71,7 @@ public class BrowseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        list.clear();
     }
 
     @Override

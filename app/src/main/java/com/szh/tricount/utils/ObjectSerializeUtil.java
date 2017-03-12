@@ -2,9 +2,9 @@ package com.szh.tricount.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 
 import com.szh.tricount.R;
-import com.szh.tricount.adapter.RecyclerAdapter;
 import com.szh.tricount.datas.DataList;
 import com.szh.tricount.datas.Point;
 import com.szh.tricount.datas.RecyclerViewItem;
@@ -16,10 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,25 +58,33 @@ public class ObjectSerializeUtil {
         }
     }
 
-    private static void saveBitmap(String bitmapPath, Bitmap bitmap) {
+    private static void saveBitmap(final String bitmapPath,Bitmap bitmap) {
         if (bitmap == null) {
             return;
         }
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(bitmapPath);
-            bitmap.compress(Bitmap.CompressFormat.WEBP, 20, outputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (outputStream != null) {
-                    outputStream.close();
+        final WeakReference<Bitmap> bitmapWeakReference = new WeakReference<>(bitmap);
+        new Thread() {
+            @Override
+            public void run() {
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(bitmapPath);
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bitmapWeakReference.get(), bitmapWeakReference.get().getWidth() / 4, bitmapWeakReference.get().getHeight() / 4);
+                    thumbnail.compress(Bitmap.CompressFormat.WEBP, 50, outputStream);
+                    thumbnail.recycle();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
+        }.start();
     }
 
     public static List<RecyclerViewItem> findFiles(Context context) {
@@ -103,8 +109,9 @@ public class ObjectSerializeUtil {
         ArrayList<LinkedList<Point>> lines = null;
         FileInputStream fileInputStream = null;
         ObjectInputStream objectInputStream = null;
+        String path = context.getFilesDir().getPath() + File.separator + recyclerViewItem.getName();
         try {
-            fileInputStream = new FileInputStream(recyclerViewItem.getFile());
+            fileInputStream = new FileInputStream(path);
             objectInputStream = new ObjectInputStream(fileInputStream);
             lines = (ArrayList<LinkedList<Point>>) objectInputStream.readObject();
             DataList.setLines(lines);

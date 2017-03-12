@@ -32,13 +32,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private List<RecyclerViewItem> list;
 
-    public RecyclerAdapter(List<RecyclerViewItem> list) {
+    public RecyclerAdapter(Context context, List<RecyclerViewItem> list) {
+        this.context = context;
         this.list = list;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        this.context = parent.getContext();
         View itemView = LayoutInflater.from(context).inflate(R.layout.recyclerview_item, parent, false);
         return new MyViewHolder(itemView);
     }
@@ -74,12 +74,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onSwiped(int position) {
-        RecyclerViewItem recyclerViewItem = list.get(position);
-        if (recyclerViewItem.getFile().delete()) {
+        String path = context.getFilesDir().getPath() + File.separator + list.get(position).getName();
+        File serializedFile = new File(path);
+        if (serializedFile.delete()) {
             list.remove(position);
         }
         notifyItemRemoved(position);
-        File file = new File(context.getFilesDir().getPath() + File.separator + recyclerViewItem.getName() + ".webp");
+        File file = new File(path + ".webp");
         if (file.exists()) {
             file.delete();
         }
