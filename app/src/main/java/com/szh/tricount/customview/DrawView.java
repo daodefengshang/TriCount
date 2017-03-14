@@ -259,98 +259,10 @@ public class DrawView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int x = (int) event.getX();
-        int y = (int) event.getY();
-        Point point0 = new Point(x, y);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN :
-                if (x < 50) {
-                    return true;
-                }
-                if (!Contants.isAlter) {
-                    ss = new LinkedList<>();
-                    ss.add(0, point0);
-                    Point point = Calculator.getInstance(getContext()).checkPosition(ss.get(0));
-                    ss.set(0,point);
-                    ss.add(1, point0);
-                    MainActivity.showPathView(x, y);
-                    invalidate();
-                } else {
-                    if (removeMode == RemoveMode.LINE_RADIO) {
-                        ss = new LinkedList<>();
-                        ss.add(0, point0);
-                        ss.add(1, point0);
-                        invalidate();
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_MOVE :
-                if (!Contants.isAlter) {
-                    if (ss != null && ss.size() == 2) {
-                        ss.set(1, point0);
-                        invalidate();
-                        MainActivity.showPathView(x, y);
-                        invalidate();
-                    }
-                }else {
-                    if (removeMode == RemoveMode.LINE_RADIO) {
-                        if (ss != null && ss.size() == 2) {
-                            ss.set(1, point0);
-                            invalidate();
-                        }
-                    }
-                }
-                break;
-            case MotionEvent.ACTION_UP :
-                if (Contants.isAlter) {
-                    if (removeMode == RemoveMode.CLICK_RADIO) {
-                        for (int i = 0; i < DataList.getLines().size(); i++) {
-                            Point first = DataList.getLines().get(i).getFirst();
-                            Point last = DataList.getLines().get(i).getLast();
-                            if (MathUtil.pointToLine(first,last,point0, this.getContext()) == 0) {
-                                listRemove.clear();
-                                listRemove.add(i);
-                                invalidate();
-                                dialog.show();
-                                break;
-                            }
-                        }
-                    } else if (removeMode == RemoveMode.LINE_RADIO) {
-                        if (ss != null && ss.size() == 2) {
-                            for (int i = 0; i < DataList.getLines().size(); i++) {
-                                Point first = DataList.getLines().get(i).getFirst();
-                                Point last = DataList.getLines().get(i).getLast();
-                                boolean intersect = MathUtil.isIntersect(ss.get(0), ss.get(1), first, last);
-                                if (intersect) {
-                                    listRemove.add(i);
-                                }
-                            }
-                            ss = null;
-                            invalidate();
-                            if (listRemove.size() > 0) {
-                                dialog.show();
-                            }
-                        }
-                    }
-                }else if (ss != null){
-                    if (ss.size() < 2) {
-                        ss = null;
-                    } else {
-                        Point point = Calculator.getInstance(getContext()).checkPosition(point0);
-                        ss.set(1, point);
-                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
-                                || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
-                            ss = null;
-                            invalidate();
-                            return true;
-                        }
-                        DataList.getLines().add(ss);
-                        ss = null;
-                        invalidate();
-                        Calculator.getInstance(getContext()).increasePoint();
-                    }
-                }
-                break;
+        if (Contants.isAlter) {
+            alter(event);
+        } else {
+            drawMotionEvent(event);
         }
         return true;
     }
@@ -361,5 +273,109 @@ public class DrawView extends View {
 
     public int calculate() {
         return Calculator.getInstance(getContext()).calculate();
+    }
+
+    //修改
+    private void alter(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        Point point0 = new Point(x, y);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN :
+                if (removeMode == RemoveMode.LINE_RADIO) {
+                    ss = new LinkedList<>();
+                    ss.add(0, point0);
+                    ss.add(1, point0);
+                    invalidate();
+                }
+                break;
+            case MotionEvent.ACTION_MOVE :
+                if (removeMode == RemoveMode.LINE_RADIO) {
+                    if (ss != null && ss.size() == 2) {
+                        ss.set(1, point0);
+                        invalidate();
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP :
+                if (removeMode == RemoveMode.CLICK_RADIO) {
+                    for (int i = 0; i < DataList.getLines().size(); i++) {
+                        Point first = DataList.getLines().get(i).getFirst();
+                        Point last = DataList.getLines().get(i).getLast();
+                        if (MathUtil.pointToLine(first,last,point0, this.getContext()) == 0) {
+                            listRemove.clear();
+                            listRemove.add(i);
+                            invalidate();
+                            dialog.show();
+                            break;
+                        }
+                    }
+                } else if (removeMode == RemoveMode.LINE_RADIO) {
+                    if (ss != null && ss.size() == 2) {
+                        for (int i = 0; i < DataList.getLines().size(); i++) {
+                            Point first = DataList.getLines().get(i).getFirst();
+                            Point last = DataList.getLines().get(i).getLast();
+                            boolean intersect = MathUtil.isIntersect(ss.get(0), ss.get(1), first, last);
+                            if (intersect) {
+                                listRemove.add(i);
+                            }
+                        }
+                        ss = null;
+                        invalidate();
+                        if (listRemove.size() > 0) {
+                            dialog.show();
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    //绘制
+    private void drawMotionEvent(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        Point point0 = new Point(x, y);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN :
+                if (x < 50) {
+                    return;
+                }
+                ss = new LinkedList<>();
+                ss.add(0, point0);
+                Point point = Calculator.getInstance(getContext()).checkPosition(ss.get(0));
+                ss.set(0,point);
+                ss.add(1, point0);
+                invalidate();
+                MainActivity.showPathView(x, y);
+                break;
+            case MotionEvent.ACTION_MOVE :
+                if (ss != null && ss.size() == 2) {
+                    ss.set(1, point0);
+                    invalidate();
+                    MainActivity.showPathView(x, y);
+                }
+                break;
+            case MotionEvent.ACTION_UP :
+                if (ss != null) {
+                    if (ss.size() < 2) {
+                        ss = null;
+                    } else {
+                        Point point1 = Calculator.getInstance(getContext()).checkPosition(point0);
+                        ss.set(1, point1);
+                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
+                                || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
+                            ss = null;
+                            invalidate();
+                            return;
+                        }
+                        DataList.getLines().add(ss);
+                        ss = null;
+                        invalidate();
+                        Calculator.getInstance(getContext()).increasePoint();
+                    }
+                }
+                break;
+        }
     }
 }
