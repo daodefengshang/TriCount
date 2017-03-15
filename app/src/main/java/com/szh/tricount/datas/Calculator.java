@@ -10,11 +10,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by szh on 2016/12/24.
  */
 public class Calculator {
+    //首顶点是否为定点
+    private boolean isFirstFixed = true;
+    //若为首顶点为动点，则动点所在线段最近两个点
+    private Point headPoint = new Point(-1, -1);
+    private Point footPoint = new Point(-1, -1);
+    //正在绘制线段中间第一吸附点
+    private Point tmpFirstPoint = new Point(-1, -1);
+    //正在绘制线段中间第二吸附点，当isFirstFixed == false时使用
+    private Point tmpSecondPoint = new Point(-1, -1);
+
     private Context mContext;
     private static volatile Calculator calculator;
 
@@ -40,6 +52,58 @@ public class Calculator {
         return calculator;
     }
 
+    public boolean isFirstFixed() {
+        return isFirstFixed;
+    }
+
+    public void setFirstFixed(boolean firstFixed) {
+        isFirstFixed = firstFixed;
+    }
+
+    public Point getHeadPoint() {
+        return headPoint;
+    }
+
+    public void setHeadPoint(Point headPoint) {
+        this.headPoint = headPoint;
+    }
+
+    public Point getFootPoint() {
+        return footPoint;
+    }
+
+    public void setFootPoint(Point footPoint) {
+        this.footPoint = footPoint;
+    }
+
+    public Point getTmpFirstPoint() {
+        return tmpFirstPoint;
+    }
+
+    public void setTmpFirstPoint(Point tmpFirstPoint) {
+        this.tmpFirstPoint = tmpFirstPoint;
+    }
+
+    public Point getTmpSecondPoint() {
+        return tmpSecondPoint;
+    }
+
+    public void setTmpSecondPoint(Point tmpSecondPoint) {
+        this.tmpSecondPoint = tmpSecondPoint;
+    }
+    //还原
+    public void reduction() {
+        isFirstFixed = true;
+        headPoint.x = -1;
+        headPoint.y = -1;
+        footPoint.x = -1;
+        footPoint.y = -1;
+        tmpFirstPoint.x = -1;
+        tmpFirstPoint.y = -1;
+        tmpSecondPoint.x = -1;
+        tmpSecondPoint.y = -1;
+    }
+
     public void setHashMap(HashMap<Integer, Point> hashMap) {
         this.hashMap = hashMap;
     }
@@ -56,6 +120,42 @@ public class Calculator {
     public void setLinkedLists(LinkedList<LinkedList<Integer>> linkedLists) {
         this.linkedLists = linkedLists;
     }
+
+    //检查并更新点的坐标,只在MotionEvent.ACTION_DOWN中调用
+    public Point checkInitPosition(Point point0) {
+        isFirstFixed = true;
+        Point point = new Point();
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> linkedList : lines) {
+            if (linkedList != null) {
+                int sizeChild = linkedList.size();
+                Point first = linkedList.getFirst();
+                Point last = linkedList.getLast();
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+                        point.x = linkedList.get(j).x;
+                        point.y = linkedList.get(j).y;
+                        return point;
+                    }
+                }
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
+                        point = MathUtil.getPoint(first, last, point0);
+                        isFirstFixed = false;
+                        headPoint.x = first.x;
+                        headPoint.y = first.y;
+                        footPoint.x = last.x;
+                        footPoint.y = last.y;
+                        return point;
+                    }
+                }
+            }
+        }
+        point.x = point0.x;
+        point.y = point0.y;
+        return point;
+    }
+
     //检查并更新点的坐标
     public Point checkPosition(Point point0) {
         Point point = new Point();
@@ -75,6 +175,49 @@ public class Calculator {
                 for (int j = 0; j < sizeChild; j++) {
                     if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
                         point = MathUtil.getPoint(first, last, point0);
+                        return point;
+                    }
+                }
+            }
+        }
+        point.x = point0.x;
+        point.y = point0.y;
+        return point;
+    }
+
+    //只在MotionEvent.ACTION_MOVE中调用
+    public Point checkPoint(Point point0) {
+        Point point = new Point();
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> linkedList : lines) {
+            if (linkedList != null) {
+                int sizeChild = linkedList.size();
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+                        point.x = linkedList.get(j).x;
+                        point.y = linkedList.get(j).y;
+                        return point;
+                    }
+                }
+            }
+        }
+        point.x = point0.x;
+        point.y = point0.y;
+        return point;
+    }
+
+    //只在MotionEvent.ACTION_UP中调用
+    public Point checkLine(Point point0) {
+        Point point = new Point();
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> linkedList : lines) {
+            if (linkedList != null) {
+                int sizeChild = linkedList.size();
+                Point first = linkedList.getFirst();
+                Point last = linkedList.getLast();
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
+                        point = MathUtil.getIntersection(first, last, tmpFirstPoint, point0);
                         return point;
                     }
                 }
@@ -142,7 +285,8 @@ public class Calculator {
             int sizeLines = DataList.getLines().size();
             for (int j = 0; j < sizeLines; j++) {
                 LinkedList<Point> linkedList = DataList.getLines().get(j);
-                if (Math.abs(linkedList.getFirst().x - delete.x) <= 2 && Math.abs(linkedList.getFirst().y - delete.y) <= 2 || Math.abs(linkedList.getLast().x - delete.x) <= 2 && Math.abs(linkedList.getLast().y - delete.y) <= 2) {
+                if (Math.abs(linkedList.getFirst().x - delete.x) <= 2 && Math.abs(linkedList.getFirst().y - delete.y) <= 2
+                        || Math.abs(linkedList.getLast().x - delete.x) <= 2 && Math.abs(linkedList.getLast().y - delete.y) <= 2) {
                     continue loop;
                 }
                 int sizeList = linkedList.size();
@@ -209,20 +353,19 @@ public class Calculator {
 
     private int findMapNum(Point point) {
         int size = hashMap.size();
-        for (int i = 0; i < size; i++) {
-            Point pointMap = hashMap.get(i);
-            if (MathUtil.pointToPoint(pointMap, point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
-                return i;
+        Set<Map.Entry<Integer, Point>> entries = hashMap.entrySet();
+        for (Map.Entry<Integer, Point> entry : entries) {
+            if (MathUtil.pointToPoint(entry.getValue(), point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CALCULAR_CONSTANT)) {
+                return entry.getKey();
             }
         }
         return -1;
     }
 
     private boolean hasSame(Point point) {
-        int size = hashMap.size();
-        for (int i = 0; i < size; i++) {
-            Point pointMap = hashMap.get(i);
-            if (MathUtil.pointToPoint(pointMap, point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+        Set<Map.Entry<Integer, Point>> entries = hashMap.entrySet();
+        for (Map.Entry<Integer, Point> entry : entries) {
+            if (MathUtil.pointToPoint(entry.getValue(), point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CALCULAR_CONSTANT)) {
                 return true;
             }
         }
@@ -333,5 +476,13 @@ public class Calculator {
             }
         }
         return -1;
+    }
+
+    //改变tmpPoint为tmpPoint到直线point0与tmpFirstPoint的垂足
+    public Point changePoint(Point point0, Point tmpPoint) {
+        if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
+            return tmpPoint;
+        }
+        return MathUtil.getPoint(point0, tmpFirstPoint, tmpPoint);
     }
 }

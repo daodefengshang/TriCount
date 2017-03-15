@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -337,32 +338,140 @@ public class DrawView extends View {
         int y = (int) event.getY();
         Point point0 = new Point(x, y);
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN :
+            case MotionEvent.ACTION_DOWN:
                 if (x < 50) {
                     return;
                 }
                 ss = new LinkedList<>();
                 ss.add(0, point0);
-                Point point = Calculator.getInstance(getContext()).checkPosition(ss.get(0));
-                ss.set(0,point);
-                ss.add(1, point0);
+                Point point = Calculator.getInstance(getContext()).checkInitPosition(ss.get(0));
+                ss.set(0, point);
+                ss.add(1, point);
                 invalidate();
                 MainActivity.showPathView(x, y);
                 break;
-            case MotionEvent.ACTION_MOVE :
+            case MotionEvent.ACTION_MOVE:
                 if (ss != null && ss.size() == 2) {
-                    ss.set(1, point0);
+                    if (Calculator.getInstance(getContext()).isFirstFixed()) {
+                        Point tmpPoint = Calculator.getInstance(getContext()).checkPoint(point0);
+                        if (tmpPoint.equals(point0)) {
+                            Point tmpFirstPoint = Calculator.getInstance(getContext()).getTmpFirstPoint();
+                            if (tmpFirstPoint.x != -1 && tmpFirstPoint.y != -1) {
+                                tmpPoint = Calculator.getInstance(getContext()).changePoint(ss.get(0), tmpPoint);
+                            }
+                        } else {
+                            if (MathUtil.pointToPoint(tmpPoint, ss.get(0)) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)) {
+                                Calculator.getInstance(getContext()).setTmpFirstPoint(tmpPoint);
+                            }
+                        }
+                        ss.set(1, tmpPoint);
+                    } else {
+                        Point tmpFirstPoint = Calculator.getInstance(getContext()).getTmpFirstPoint();
+                        Point tmpPoint = null;
+                        if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
+                            tmpPoint = Calculator.getInstance(getContext()).checkPoint(point0);
+                        } else {
+                            boolean restrict = MathUtil.isRestrict(tmpFirstPoint, Calculator.getInstance(getContext()).getHeadPoint(),
+                                    Calculator.getInstance(getContext()).getFootPoint(), point0);
+                            if (restrict) {
+                                tmpPoint = Calculator.getInstance(getContext()).checkPoint(point0);
+                            } else {
+                                tmpPoint = point0;
+                            }
+                        }
+                        if (tmpPoint.equals(point0)) {
+                            Point tmpSecondPoint = Calculator.getInstance(getContext()).getTmpSecondPoint();
+                            if (tmpSecondPoint.x == -1 && tmpSecondPoint.y == -1) {
+                                if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
+                                    ss.set(1, tmpPoint);
+                                } else {
+                                    if (MathUtil.isRestrict(tmpFirstPoint, Calculator.getInstance(getContext()).getHeadPoint(),
+                                            Calculator.getInstance(getContext()).getFootPoint(), tmpPoint)) {
+                                        ss.set(1, tmpPoint);
+                                        Point intersection = MathUtil.getIntersection(tmpPoint, tmpFirstPoint, Calculator.getInstance(getContext()).getHeadPoint(),
+                                                Calculator.getInstance(getContext()).getFootPoint());
+                                        if (intersection != null) {
+                                            ss.set(0, intersection);
+                                        }
+                                    }
+                                }
+                            } else {
+                                tmpPoint = Calculator.getInstance(getContext()).changePoint(tmpSecondPoint, tmpPoint);
+                                ss.set(1, tmpPoint);
+                                Point intersection = MathUtil.getIntersection(tmpSecondPoint, Calculator.getInstance(getContext()).getTmpFirstPoint(),
+                                        Calculator.getInstance(getContext()).getHeadPoint(), Calculator.getInstance(getContext()).getFootPoint());
+                                if (intersection != null) {
+                                    ss.set(0, intersection);
+                                }
+                            }
+                        } else {
+                            if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
+                                Calculator.getInstance(getContext()).setTmpFirstPoint(tmpPoint);
+                                ss.set(1, tmpPoint);
+                            } else {
+                                if (MathUtil.pointToPoint(tmpPoint, tmpFirstPoint) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)) {
+                                    Calculator.getInstance(getContext()).setTmpSecondPoint(tmpPoint);
+                                }
+                                ss.set(1, tmpPoint);
+                                Point intersection = MathUtil.getIntersection(tmpPoint, tmpFirstPoint,
+                                        Calculator.getInstance(getContext()).getHeadPoint(), Calculator.getInstance(getContext()).getFootPoint());
+                                if (intersection != null) {
+                                    ss.set(0, intersection);
+                                }
+                            }
+                        }
+                    }
                     invalidate();
                     MainActivity.showPathView(x, y);
                 }
                 break;
-            case MotionEvent.ACTION_UP :
+            case MotionEvent.ACTION_UP:
                 if (ss != null) {
                     if (ss.size() < 2) {
                         ss = null;
                     } else {
-                        Point point1 = Calculator.getInstance(getContext()).checkPosition(point0);
-                        ss.set(1, point1);
+                        Point tmpFirstPoint = Calculator.getInstance(getContext()).getTmpFirstPoint();
+                        if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
+                            Point point1 = Calculator.getInstance(getContext()).checkPosition(ss.get(1));
+                            ss.set(1, point1);
+                        } else {
+                            Point tmpSecondPoint = Calculator.getInstance(getContext()).getTmpSecondPoint();
+                            if (tmpSecondPoint.x == -1 && tmpSecondPoint.y == -1) {
+                                Point point1 = Calculator.getInstance(getContext()).checkLine(ss.get(1));
+                                if (point1 == null) {
+                                    ss.set(1, Calculator.getInstance(getContext()).checkPoint(point0));
+                                }else {
+                                    ss.set(1, point1);
+                                    if (!Calculator.getInstance(getContext()).isFirstFixed()) {
+                                        Point intersection = MathUtil.getIntersection(point1, tmpFirstPoint,
+                                                Calculator.getInstance(getContext()).getHeadPoint(),
+                                                Calculator.getInstance(getContext()).getFootPoint());
+                                        if (intersection != null) {
+                                            ss.set(0, intersection);
+                                        }
+                                    }
+                                }
+                            }else {
+                                Point checkPoint = Calculator.getInstance(getContext()).checkPoint(ss.get(1));
+                                if (checkPoint.equals(ss.get(1))) {
+                                    Point checkLine = Calculator.getInstance(getContext()).checkLine(checkPoint);
+                                    if (checkLine == null) {
+                                        ss.set(1, Calculator.getInstance(getContext()).checkPoint(point0));
+                                    }else {
+                                        ss.set(1, checkLine);
+                                    }
+                                }else {
+                                    ss.set(1, checkPoint);
+                                    Point intersection = MathUtil.getIntersection(checkPoint, tmpFirstPoint,
+                                            Calculator.getInstance(getContext()).getHeadPoint(),
+                                            Calculator.getInstance(getContext()).getFootPoint());
+                                    if (intersection != null) {
+                                        ss.set(0, intersection);
+                                    }
+                                }
+                            }
+                        }
+                        Calculator.getInstance(getContext()).reduction();
                         if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
                                 || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
                             ss = null;

@@ -16,4 +16,6 @@ public class Contants {
 
     public static final int FUZZY_CONSTANT = 12;
 
+    public static final int FUZZY_CALCULAR_CONSTANT = 8;
+
 }

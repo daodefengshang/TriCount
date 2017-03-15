@@ -108,16 +108,68 @@ public class MathUtil {
     //判断两线段(1,2)、(3,4)是否相交
     public static boolean isIntersect(Point point1, Point point2, Point point3, Point point4) {
         boolean flag = false;
-        double d = (point2.x-point1.x)*(point4.y-point3.y) - (point2.y-point1.y)*(point4.x-point3.x);
+        int d = (point2.x-point1.x)*(point4.y-point3.y) - (point2.y-point1.y)*(point4.x-point3.x);
         if(d!=0)
         {
-            double r = ((point1.y-point3.y)*(point4.x-point3.x)-(point1.x-point3.x)*(point4.y-point3.y))/d;
-            double s = ((point1.y-point3.y)*(point2.x-point1.x)-(point1.x-point3.x)*(point2.y-point1.y))/d;
+            double r = ((point1.y-point3.y)*(point4.x-point3.x)-(point1.x-point3.x)*(point4.y-point3.y)) * 1.0/d;
+            double s = ((point1.y-point3.y)*(point2.x-point1.x)-(point1.x-point3.x)*(point2.y-point1.y)) * 1.0/d;
             if((r>=0) && (r <= 1) && (s >=0) && (s<=1))
             {
                 flag = true;
             }
         }
         return flag;
+    }
+
+    /**
+     * 判断点point是否在扫射范围内
+     * @param point0 支点
+     * @param headPoint 炮点1
+     * @param footPoint 炮点2
+     * @param point 目标点
+     * @return true if point在炮击范围内
+     */
+    public static boolean isRestrict(Point point0, Point headPoint, Point footPoint, Point point) {
+        double v0 = vectorCos(headPoint, point0, footPoint, point0);
+        double v1 = vectorCos(headPoint, point0, point0, point);
+        double v2 = vectorCos(footPoint, point0, point0, point);
+        if (v0 < v1 && v0 < v2) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 求两向量夹角
+     * @param point1 向量1起点
+     * @param point2 向量1终点
+     * @param point3 向量2起点
+     * @param point4 向量2终点
+     * @return 两向量夹角余玄值
+     */
+    private static double vectorCos(Point point1, Point point2, Point point3, Point point4) {
+        double a = (point2.x - point1.x) * (point4.x - point3.x) + (point2.y - point1.y) * (point4.y - point3.y);
+        double b = pointToPoint(point2, point1) * pointToPoint(point4, point3);
+        return a / b;
+    }
+
+    /**
+     * 求两直线交点坐标
+     * @param point1 (1,2)
+     * @param point2 (1,2)
+     * @param point3 (3,4)
+     * @param point4 (3,4)
+     * @return
+     */
+    public static Point getIntersection(Point point1, Point point2, Point point3, Point point4) {
+        Point point = null;
+        int i1 = (point2.x-point1.x)*(point4.y-point3.y);
+        int i2 = (point2.y-point1.y)*(point4.x-point3.x);
+        if (i1 != i2) {
+            point = new Point();
+            point.x = (point3.x * i1 - point1.x * i2 - (point3.y - point1.y) * (point4.x-point3.x) * (point2.x-point1.x)) / (i1 - i2);
+            point.y = (point3.y * i2 - point1.y * i1 - (point3.x - point1.x) * (point4.y-point3.y) * (point2.y-point1.y)) / (i2 - i1);
+        }
+        return point;
     }
 }
