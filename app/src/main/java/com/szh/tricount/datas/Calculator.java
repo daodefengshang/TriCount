@@ -245,8 +245,8 @@ public class Calculator {
             int i1 = (firstY - lastY) * (firstForX - lastForX);
             int i2 = (firstForY - lastForY) * (firstX - lastX);
             if (i1 != i2) {
-                int x0 = (lastX * i1 - lastForX * i2 - (lastY - lastForY) * (firstX - lastX) * (firstForX - lastForX)) / (i1 - i2);
-                int y0 = (lastY * i2 - lastForY * i1 - (lastX - lastForX) * (firstY - lastY) * (firstForY - lastForY)) / (i2 - i1);
+                int x0 = Math.round((lastX * i1 - lastForX * i2 - (lastY - lastForY) * (firstX - lastX) * (firstForX - lastForX)) * 1.0f / (i1 - i2));
+                int y0 = Math.round((lastY * i2 - lastForY * i1 - (lastX - lastForX) * (firstY - lastY) * (firstForY - lastForY)) * 1.0f / (i2 - i1));
                 if (x0 > firstForX && x0 < lastForX || x0 < firstForX && x0 > lastForX
                         || y0 > firstForY && y0 < lastForY || y0 < firstForY && y0 > lastForY) {
                     int sizeXY = list.size();

@@ -1,10 +1,12 @@
 package com.szh.tricount.customview;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -51,7 +53,19 @@ public class DrawView extends View {
         init();
     }
 
+    public DrawView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public DrawView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
     private void init() {
+        setWillNotDraw(false);
         Contants.countLayout = 0;
         paint = new Paint();
         paint.setColor(Color.BLACK);

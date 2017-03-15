@@ -91,8 +91,8 @@ public class MathUtil {
             double mod2 = (point1.x - point0.x) * 1.0/(point1.y - point0.y);
             double x2 = (mod1 * point0.x + mod2 * point.x - point0.y + point.y)/(mod1 + mod2);
             double y2 = mod1 * (x2 - point0.x) + point0.y;
-            footPoint.x = (int) x2;
-            footPoint.y = (int) y2;
+            footPoint.x = (int)Math.round(x2);
+            footPoint.y = (int) Math.round(y2);
         }
         return footPoint;
     }
@@ -167,8 +167,8 @@ public class MathUtil {
         int i2 = (point2.y-point1.y)*(point4.x-point3.x);
         if (i1 != i2) {
             point = new Point();
-            point.x = (point3.x * i1 - point1.x * i2 - (point3.y - point1.y) * (point4.x-point3.x) * (point2.x-point1.x)) / (i1 - i2);
-            point.y = (point3.y * i2 - point1.y * i1 - (point3.x - point1.x) * (point4.y-point3.y) * (point2.y-point1.y)) / (i2 - i1);
+            point.x = Math.round((point3.x * i1 - point1.x * i2 - (point3.y - point1.y) * (point4.x-point3.x) * (point2.x-point1.x)) * 1.0f / (i1 - i2));
+            point.y = Math.round((point3.y * i2 - point1.y * i1 - (point3.x - point1.x) * (point4.y-point3.y) * (point2.y-point1.y)) * 1.0f / (i2 - i1));
         }
         return point;
     }

@@ -1,5 +1,6 @@
 package com.szh.tricount.customview;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Region;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -59,6 +61,12 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
 
     public PathView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public PathView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
