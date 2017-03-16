@@ -19,14 +19,14 @@
             <RadioGroup
                 android:id="@+id/radio_remove_group"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/click_radio">
                 <RadioButton
                     android:id="@+id/click_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/click_remove"
-                    android:textColor="@android:color/black"
-                    android:checked="true"/>
+                    android:textColor="@android:color/black"/>
                 <RadioButton
                     android:id="@+id/line_radio"
                     android:layout_width="wrap_content"

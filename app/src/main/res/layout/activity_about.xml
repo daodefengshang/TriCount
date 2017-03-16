@@ -1,12 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activity.AboutActivity">
     <include layout="@layout/toolbar_layout"/>
-    <WebView
-        android:id="@+id/web"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"/>
+        android:background="@color/splash_background"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <View
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+        <ImageView
+            android:layout_width="280dp"
+            android:layout_height="60dp"
+            android:src="@drawable/title"/>
+        <ImageView
+            android:layout_width="280dp"
+            android:layout_height="60dp"
+            android:src="@drawable/scription"/>
+        <View
+            android:layout_weight="7"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/author"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/message_size"/>
+        <View
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+    </LinearLayout>
 </LinearLayout>

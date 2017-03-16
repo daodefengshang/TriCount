@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.szh.tricount.MainActivity;
+import com.szh.tricount.activity.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;

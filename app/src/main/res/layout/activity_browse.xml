@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.szh.tricount.BrowseActivity">
+    tools:context=".activity.BrowseActivity">
     <include layout="@layout/toolbar_layout"/>
     <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
         android:id="@+id/refresh"

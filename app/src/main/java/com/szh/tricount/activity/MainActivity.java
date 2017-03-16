@@ -1,4 +1,4 @@
-package com.szh.tricount;
+package com.szh.tricount.activity;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -26,6 +26,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.szh.tricount.R;
 import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.customview.PathView;
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_about :
-                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                Intent intent = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
                 break;

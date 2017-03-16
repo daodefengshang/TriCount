@@ -1,4 +1,4 @@
-package com.szh.tricount;
+package com.szh.tricount.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.szh.tricount.R;
 import com.szh.tricount.utils.VersionUtil;
 
 public class SplashActivity extends AppCompatActivity {

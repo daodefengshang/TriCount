@@ -1,4 +1,4 @@
-package com.szh.tricount;
+package com.szh.tricount.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.szh.tricount.R;
 import com.szh.tricount.adapter.ListItemTouchCallback;
 import com.szh.tricount.adapter.RecyclerAdapter;
 import com.szh.tricount.datas.RecyclerViewItem;
@@ -60,10 +61,10 @@ public class BrowseActivity extends AppCompatActivity {
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh, int position) {
                 super.onItemClick(vh, position);
-                ObjectSerializeUtil.deserializeList(getApplicationContext(), list.get(position));
-                MainActivity.getDrawView().invalidate();
                 BrowseActivity.this.finish();
                 overridePendingTransition(R.anim.anim_access, R.anim.anim_return);
+                ObjectSerializeUtil.deserializeList(getApplicationContext(), list.get(position));
+                MainActivity.getDrawView().invalidate();
             }
         });
     }

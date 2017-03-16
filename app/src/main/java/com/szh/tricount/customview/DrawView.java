@@ -9,13 +9,12 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.szh.tricount.MainActivity;
+import com.szh.tricount.activity.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.datas.Calculator;
 import com.szh.tricount.datas.DataList;

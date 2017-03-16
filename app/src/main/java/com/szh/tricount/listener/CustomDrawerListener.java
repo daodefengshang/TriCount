@@ -7,7 +7,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.szh.tricount.MainActivity;
+import com.szh.tricount.activity.MainActivity;
 import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.fragment.LeftFragment;
 

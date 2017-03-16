@@ -1,7 +1,6 @@
 package com.szh.tricount.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,22 +8,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.szh.tricount.BrowseActivity;
-import com.szh.tricount.MainActivity;
+import com.szh.tricount.activity.BrowseActivity;
+import com.szh.tricount.activity.MainActivity;
 import com.szh.tricount.R;
-import com.szh.tricount.SettingActivity;
+import com.szh.tricount.activity.SettingActivity;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.datas.DataList;
 import com.szh.tricount.listener.RemoveRadioCheckedChangeListener;
 import com.szh.tricount.utils.ObjectSerializeUtil;
 import com.szh.tricount.utils.ToastUtil;
-
-import javax.xml.datatype.Duration;
 
 /**
  * Created by szh on 2017/2/17.

@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">三角形计算器</string>
-    <string name="about_name">关于</string>
+    <string name="help_name">帮助</string>
     <string name="setting_name">设置</string>
     <string name="browse_name">查看</string>
+    <string name="prompt">提示</string>
     <string name="result">计算结果：</string>
     <string name="calculating">正在计算请稍候…</string>
     <string name="alter">修 改</string>
@@ -35,5 +36,10 @@
     <string name="file_not_found">文件未找到</string>
     <string name="file_read_exception">文件读取异常</string>
     <string name="file_write_exception">文件写入异常</string>
-
+    <string name="clear_file">清除缓存</string>
+    <string name="update">版本更新</string>
+    <string name="help">查看帮助</string>
+    <string name="about">关于作者</string>
+    <string name="author">QQ:1107637961</string>
+    <string name="clear_cache"><font color="gray">确定要删除所有缓存吗？所有收藏的内容均会被清除。</font></string>
 </resources>

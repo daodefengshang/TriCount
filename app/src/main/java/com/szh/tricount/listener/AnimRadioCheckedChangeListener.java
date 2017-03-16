@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.RadioGroup;
 
-import com.szh.tricount.MainActivity;
 import com.szh.tricount.R;
-import com.szh.tricount.utils.RemoveMode;
 
 /**
  * Created by szh on 2017/2/19.

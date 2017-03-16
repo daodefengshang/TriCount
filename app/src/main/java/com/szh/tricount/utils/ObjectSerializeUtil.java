@@ -136,4 +136,16 @@ public class ObjectSerializeUtil {
             }
         }
     }
+
+    public static void deleteAllFiles(Context context) {
+        String dirPath = context.getFilesDir().getPath();
+        File dir = new File(dirPath);
+        if (dir.exists() && dir.isDirectory()) {
+            File files[] = dir.listFiles();
+            if (files != null)
+                for (File f : files) {
+                    f.delete();
+                }
+        }
+    }
 }

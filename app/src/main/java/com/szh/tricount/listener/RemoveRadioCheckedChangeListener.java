@@ -2,7 +2,7 @@ package com.szh.tricount.listener;
 
 import android.widget.RadioGroup;
 
-import com.szh.tricount.MainActivity;
+import com.szh.tricount.activity.MainActivity;
 import com.szh.tricount.R;
 import com.szh.tricount.utils.RemoveMode;
 
