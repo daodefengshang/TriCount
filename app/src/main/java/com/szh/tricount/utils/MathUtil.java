@@ -36,7 +36,7 @@ public class MathUtil {
                         /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l2;
         if (mod1 > 0 && mod2 > 0) {
             double mod0 = Math.sqrt(1 - Math.pow(mod1, 2)) * l1;
-            if (mod0 < DensityUtil.dip2px(context, Contants.FUZZY_CONSTANT)) {
+            if (mod0 < DensityUtil.dip2px(context, Contants.FUZZY_CONTANT)) {
                 n = 0;
             }
         }
@@ -47,7 +47,7 @@ public class MathUtil {
         int n = 100;
         int m = (point1.y - point0.y) * point.x + (point0.x - point1.x) * point.y + point1.x * point0.y - point0.x * point1.y;
         double l = Math.hypot(point1.y - point0.y, point1.x - point0.x);
-        if (Math.abs(m / l) < DensityUtil.dip2px(context, Contants.FUZZY_CONSTANT)) {
+        if (Math.abs(m / l) < DensityUtil.dip2px(context, Contants.FUZZY_CONTANT)) {
             n = 0;
         }
         return n;

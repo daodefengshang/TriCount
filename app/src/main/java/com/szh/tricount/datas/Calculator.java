@@ -1,6 +1,7 @@
 package com.szh.tricount.datas;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
@@ -17,6 +18,11 @@ import java.util.Set;
  * Created by szh on 2016/12/24.
  */
 public class Calculator {
+
+    private int fuzzyContant;
+    private int fuzzyCalcularContant;
+    private int fuzzyIncreaseContant;
+    private int fuzzyDeleteContant;
     //首顶点是否为定点
     private boolean isFirstFixed = true;
     //若为首顶点为动点，则动点所在线段最近两个点
@@ -46,6 +52,10 @@ public class Calculator {
             synchronized (Calculator.class) {
                 if (calculator == null) {
                     calculator = new Calculator(context);
+                    calculator.fuzzyContant = DensityUtil.dip2px(context, Contants.FUZZY_CONTANT);
+                    calculator.fuzzyCalcularContant = DensityUtil.dip2px(context, Contants.FUZZY_CALCULAR_CONTANT);
+                    calculator.fuzzyIncreaseContant = DensityUtil.dip2px(context, Contants.FUZZY_INCREASE_CONTANT);
+                    calculator.fuzzyDeleteContant = DensityUtil.dip2px(context, Contants.FUZZY_DELETE_CONTANT);
                 }
             }
         }
@@ -132,7 +142,7 @@ public class Calculator {
                 Point first = linkedList.getFirst();
                 Point last = linkedList.getLast();
                 for (int j = 0; j < sizeChild; j++) {
-                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < fuzzyContant) {
                         point.x = linkedList.get(j).x;
                         point.y = linkedList.get(j).y;
                         return point;
@@ -166,7 +176,7 @@ public class Calculator {
                 Point first = linkedList.getFirst();
                 Point last = linkedList.getLast();
                 for (int j = 0; j < sizeChild; j++) {
-                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < fuzzyContant) {
                         point.x = linkedList.get(j).x;
                         point.y = linkedList.get(j).y;
                         return point;
@@ -193,7 +203,7 @@ public class Calculator {
             if (linkedList != null) {
                 int sizeChild = linkedList.size();
                 for (int j = 0; j < sizeChild; j++) {
-                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < DensityUtil.dip2px(mContext, Contants.FUZZY_CONSTANT)) {
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < fuzzyContant) {
                         point.x = linkedList.get(j).x;
                         point.y = linkedList.get(j).y;
                         return point;
@@ -247,23 +257,30 @@ public class Calculator {
             if (i1 != i2) {
                 int x0 = Math.round((lastX * i1 - lastForX * i2 - (lastY - lastForY) * (firstX - lastX) * (firstForX - lastForX)) * 1.0f / (i1 - i2));
                 int y0 = Math.round((lastY * i2 - lastForY * i1 - (lastX - lastForX) * (firstY - lastY) * (firstForY - lastForY)) * 1.0f / (i2 - i1));
-                if (x0 > firstForX && x0 < lastForX || x0 < firstForX && x0 > lastForX
-                        || y0 > firstForY && y0 < lastForY || y0 < firstForY && y0 > lastForY) {
+                if ((x0 > firstForX - fuzzyIncreaseContant/2 && x0 < lastForX + fuzzyIncreaseContant/2
+                        || x0 < firstForX + fuzzyIncreaseContant/2 && x0 > lastForX - fuzzyIncreaseContant/2
+                        || y0 > firstForY - fuzzyIncreaseContant/2 && y0 < lastForY + fuzzyIncreaseContant/2
+                        || y0 < firstForY + fuzzyIncreaseContant/2 && y0 > lastForY - fuzzyIncreaseContant/2)
+                        && (x0 > firstX - fuzzyIncreaseContant/2 && x0 < lastX + fuzzyIncreaseContant/2
+                        || x0 < firstX + fuzzyIncreaseContant/2 && x0 > lastX - fuzzyIncreaseContant/2
+                        || y0 > firstY - fuzzyIncreaseContant/2 && y0 < lastY + fuzzyIncreaseContant/2
+                        || y0 < firstY + fuzzyIncreaseContant/2 && y0 > lastY - fuzzyIncreaseContant/2)) {
                     int sizeXY = list.size();
                     for (int j = 0; j < sizeXY - 1; j++) {
-                        if (x0 > list.get(j).x && x0 < list.get(j + 1).x || x0 < list.get(j).x && x0 > list.get(j + 1).x
-                                || y0 > list.get(j).y && y0 < list.get(j + 1).y || y0 < list.get(j).y && y0 > list.get(j + 1).y) {
+                        if (x0 > list.get(j).x + fuzzyIncreaseContant && x0 < list.get(j + 1).x - fuzzyIncreaseContant
+                                || x0 < list.get(j).x - fuzzyIncreaseContant && x0 > list.get(j + 1).x + fuzzyIncreaseContant
+                                || y0 > list.get(j).y + fuzzyIncreaseContant && y0 < list.get(j + 1).y - fuzzyIncreaseContant
+                                || y0 < list.get(j).y && y0 - fuzzyIncreaseContant > list.get(j + 1).y + fuzzyIncreaseContant) {
                             list.add(j + 1, new Point(x0, y0));
                             break;
                         }
                     }
-                }
-                if (x0 > firstX && x0 < lastX || x0 < firstX && x0 > lastX
-                        || y0 > firstY && y0 < lastY || y0 < firstY && y0 > lastY) {
                     int sizeLast = listLast.size();
                     for (int j = 0; j < sizeLast - 1; j++) {
-                        if (x0 > listLast.get(j).x && x0 < listLast.get(j + 1).x || x0 < listLast.get(j).x && x0 > listLast.get(j + 1).x
-                                || y0 > listLast.get(j).y && y0 < listLast.get(j + 1).y || y0 < listLast.get(j).y && y0 > listLast.get(j + 1).y) {
+                        if (x0 > listLast.get(j).x + fuzzyIncreaseContant && x0 < listLast.get(j + 1).x - fuzzyIncreaseContant
+                                || x0 < listLast.get(j).x - fuzzyIncreaseContant && x0 > listLast.get(j + 1).x + fuzzyIncreaseContant
+                                || y0 > listLast.get(j).y + fuzzyIncreaseContant && y0 < listLast.get(j + 1).y - fuzzyIncreaseContant
+                                || y0 < listLast.get(j).y - fuzzyIncreaseContant && y0 > listLast.get(j + 1).y + fuzzyIncreaseContant) {
                             listLast.add(j + 1, new Point(x0, y0));
                             break;
                         }
@@ -275,24 +292,25 @@ public class Calculator {
 
     //删除多余的坐标点
     public void deleteExtra(LinkedList<Point> removed) {
-        int size = removed.size();
         loop :
-        for (int i = 0; i < size; i++) {
+        for (Point delete : removed) {
             int count = 0;
             int lines = 0;
             int links = 0;
-            Point delete = removed.get(i);
             int sizeLines = DataList.getLines().size();
             for (int j = 0; j < sizeLines; j++) {
                 LinkedList<Point> linkedList = DataList.getLines().get(j);
-                if (Math.abs(linkedList.getFirst().x - delete.x) <= 2 && Math.abs(linkedList.getFirst().y - delete.y) <= 2
-                        || Math.abs(linkedList.getLast().x - delete.x) <= 2 && Math.abs(linkedList.getLast().y - delete.y) <= 2) {
+                if (Math.abs(linkedList.getFirst().x - delete.x) <= fuzzyDeleteContant
+                        && Math.abs(linkedList.getFirst().y - delete.y) <= fuzzyDeleteContant
+                        || Math.abs(linkedList.getLast().x - delete.x) <= fuzzyDeleteContant
+                        && Math.abs(linkedList.getLast().y - delete.y) <= fuzzyDeleteContant) {
                     continue loop;
                 }
                 int sizeList = linkedList.size();
                 for (int p = 1; p < sizeList - 1; p++) {
                     Point point = linkedList.get(p);
-                    if (Math.abs(point.x - delete.x) <= 2 && Math.abs(point.y - delete.y) <= 2) {
+                    if (Math.abs(point.x - delete.x) <= fuzzyDeleteContant
+                            && Math.abs(point.y - delete.y) <= fuzzyDeleteContant) {
                         count++;
                         lines = j;
                         links = p;
@@ -355,7 +373,7 @@ public class Calculator {
         int size = hashMap.size();
         Set<Map.Entry<Integer, Point>> entries = hashMap.entrySet();
         for (Map.Entry<Integer, Point> entry : entries) {
-            if (MathUtil.pointToPoint(entry.getValue(), point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CALCULAR_CONSTANT)) {
+            if (MathUtil.pointToPoint(entry.getValue(), point) < fuzzyCalcularContant) {
                 return entry.getKey();
             }
         }
@@ -365,7 +383,7 @@ public class Calculator {
     private boolean hasSame(Point point) {
         Set<Map.Entry<Integer, Point>> entries = hashMap.entrySet();
         for (Map.Entry<Integer, Point> entry : entries) {
-            if (MathUtil.pointToPoint(entry.getValue(), point) < DensityUtil.dip2px(mContext, Contants.FUZZY_CALCULAR_CONSTANT)) {
+            if (MathUtil.pointToPoint(entry.getValue(), point) < fuzzyCalcularContant) {
                 return true;
             }
         }
@@ -390,10 +408,10 @@ public class Calculator {
             for (LinkedList<Integer> list : linkedLists) {
                 list.remove(Integer.valueOf(point));
             }
-            for (int i = 0; i < linkedLists.size(); i++) {
+            int size1 = linkedLists.size();
+            for (int i = size1 - 1; i >= 0; i--) {
                 if (linkedLists.get(i).size() < 2) {
                     linkedLists.remove(i);
-                    i--;
                 }
             }
             if (linkedLists.size() < 3) {
@@ -443,7 +461,7 @@ public class Calculator {
 
     private int findFirstPoint() {
         for (LinkedList<Integer> list : linkedLists) {
-            Integer first = list.getFirst();
+            int first = list.getFirst();
             int size = linkedLists.size();
             int i = 0;
             loopFirst :
@@ -451,7 +469,7 @@ public class Calculator {
                 LinkedList<Integer> list1 = linkedLists.get(i);
                 int size1 = list1.size();
                 for (int j = 1; j < size1 - 1; j++) {
-                    if (first != null && first.equals(list1.get(j))) {
+                    if (first == list1.get(j)) {
                         break loopFirst;
                     }
                 }
@@ -459,14 +477,14 @@ public class Calculator {
             if (i == size) {
                 return first;
             }
-            Integer last = list.getLast();
+            int last = list.getLast();
             i = 0;
             loopLast :
             for (; i < size; i++) {
                 LinkedList<Integer> list1 = linkedLists.get(i);
                 int size1 = list1.size();
                 for (int j = 1; j < size1 - 1; j++) {
-                    if (last != null && last.equals(list1.get(j))) {
+                    if (last == list1.get(j)) {
                         break loopLast;
                     }
                 }

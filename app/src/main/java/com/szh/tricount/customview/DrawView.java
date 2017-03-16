@@ -76,6 +76,10 @@ public class DrawView extends View {
         paintTmp = new Paint(this.paint);
         paintTmp.setAlpha(255);
         paintTmp.setColor(Color.RED);
+        createDeleteDialog();
+    }
+
+    private void createDeleteDialog() {
         if (dialog == null) {
             dialog = new AlertDialog.Builder(getContext(), R.style.DialogLightTheme)
                     .setMessage(R.string.ensureRemove)
@@ -313,12 +317,13 @@ public class DrawView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP :
+                listRemove.clear();
                 if (removeMode == RemoveMode.CLICK_RADIO) {
-                    for (int i = 0; i < DataList.getLines().size(); i++) {
+                    int size = DataList.getLines().size();
+                    for (int i = size - 1; i >= 0; i--) {
                         Point first = DataList.getLines().get(i).getFirst();
                         Point last = DataList.getLines().get(i).getLast();
                         if (MathUtil.pointToLine(first,last,point0, this.getContext()) == 0) {
-                            listRemove.clear();
                             listRemove.add(i);
                             invalidate();
                             dialog.show();
@@ -327,7 +332,8 @@ public class DrawView extends View {
                     }
                 } else if (removeMode == RemoveMode.LINE_RADIO) {
                     if (ss != null && ss.size() == 2) {
-                        for (int i = 0; i < DataList.getLines().size(); i++) {
+                        int size = DataList.getLines().size();
+                        for (int i = 0; i < size; i++) {
                             Point first = DataList.getLines().get(i).getFirst();
                             Point last = DataList.getLines().get(i).getLast();
                             boolean intersect = MathUtil.isIntersect(ss.get(0), ss.get(1), first, last);
@@ -374,7 +380,7 @@ public class DrawView extends View {
                                 tmpPoint = Calculator.getInstance(getContext()).changePoint(ss.get(0), tmpPoint);
                             }
                         } else {
-                            if (MathUtil.pointToPoint(tmpPoint, ss.get(0)) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)) {
+                            if (MathUtil.pointToPoint(tmpPoint, ss.get(0)) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)) {
                                 Calculator.getInstance(getContext()).setTmpFirstPoint(tmpPoint);
                             }
                         }
@@ -423,7 +429,7 @@ public class DrawView extends View {
                                 Calculator.getInstance(getContext()).setTmpFirstPoint(tmpPoint);
                                 ss.set(1, tmpPoint);
                             } else {
-                                if (MathUtil.pointToPoint(tmpPoint, tmpFirstPoint) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)) {
+                                if (MathUtil.pointToPoint(tmpPoint, tmpFirstPoint) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)) {
                                     Calculator.getInstance(getContext()).setTmpSecondPoint(tmpPoint);
                                 }
                                 ss.set(1, tmpPoint);
@@ -486,7 +492,7 @@ public class DrawView extends View {
                             }
                         }
                         Calculator.getInstance(getContext()).reduction();
-                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONSTANT)
+                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)
                                 || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
                             ss = null;
                             invalidate();

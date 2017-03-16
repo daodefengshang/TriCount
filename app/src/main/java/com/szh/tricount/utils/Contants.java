@@ -14,8 +14,12 @@ public class Contants {
 
     public static int parent = 0;
 
-    public static final int FUZZY_CONSTANT = 12;
+    public static final int FUZZY_CONTANT = 12;
 
-    public static final int FUZZY_CALCULAR_CONSTANT = 8;
+    public static final int FUZZY_CALCULAR_CONTANT = 8;
+
+    public static final int FUZZY_INCREASE_CONTANT = 4;
+
+    public static final int FUZZY_DELETE_CONTANT = 3;
 
 }
