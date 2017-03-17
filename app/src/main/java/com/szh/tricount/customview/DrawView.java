@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -289,8 +290,8 @@ public class DrawView extends View {
         Calculator.getInstance(getContext()).check();
     }
 
-    public int calculate() {
-        return Calculator.getInstance(getContext()).calculate();
+    public int calculate(Handler handler) {
+        return Calculator.getInstance(getContext()).calculate(handler);
     }
 
     //修改
@@ -386,7 +387,7 @@ public class DrawView extends View {
                         ss.set(1, tmpPoint);
                     } else {
                         Point tmpFirstPoint = Calculator.getInstance(getContext()).getTmpFirstPoint();
-                        Point tmpPoint = null;
+                        Point tmpPoint;
                         if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
                             tmpPoint = Calculator.getInstance(getContext()).checkPoint(point0);
                         } else {

@@ -1,6 +1,8 @@
 package com.szh.tricount.datas;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.szh.tricount.utils.Contants;
@@ -42,6 +44,7 @@ public class Calculator {
     private LinkedList<LinkedList<Integer>> linkedLists;
     private final ArrayList<LinkedList<Integer>> arrayLists0 = new ArrayList<>();
     private final ArrayList<LinkedList<Integer>> arrayLists1 = new ArrayList<>();
+    private int pointCount = 0;
 
     private Calculator(Context context) {
         mContext = context;
@@ -344,6 +347,10 @@ public class Calculator {
                 }
             }
         }
+        pointCount = hashMap.size() - 3;
+        if (pointCount < 1) {
+            pointCount = 1;
+        }
     }
 
     private void createNewList() {
@@ -370,7 +377,6 @@ public class Calculator {
     }
 
     private int findMapNum(Point point) {
-        int size = hashMap.size();
         Set<Map.Entry<Integer, Point>> entries = hashMap.entrySet();
         for (Map.Entry<Integer, Point> entry : entries) {
             if (MathUtil.pointToPoint(entry.getValue(), point) < fuzzyCalcularContant) {
@@ -390,9 +396,15 @@ public class Calculator {
         return false;
     }
 
-    public int calculate() {
+    public int calculate(Handler handler) {
         int count = 0;
+        int once = 0;
         while (true) {
+            Message message = Message.obtain();
+            message.what = 4;
+            message.arg1 = (int) ((Math.pow(once - pointCount, 3) / Math.pow(pointCount, 2) + pointCount) * 100 / pointCount);
+            handler.sendMessage(message);
+            once++;
             int point = findFirstPoint();
             classify(point);
             int size = arrayLists0.size();

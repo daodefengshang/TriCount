@@ -1,23 +1,13 @@
 package com.szh.tricount.activity;
 
 import android.os.Bundle;
+import android.support.v4.view.WindowCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.szh.tricount.R;
-import com.szh.tricount.adapter.ListItemTouchCallback;
-import com.szh.tricount.adapter.RecyclerAdapter;
-import com.szh.tricount.datas.RecyclerViewItem;
-import com.szh.tricount.listener.OnRecyclerItemClickListener;
-import com.szh.tricount.utils.ObjectSerializeUtil;
-
-import java.util.List;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -26,6 +16,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         setContentView(R.layout.activity_about);
         initViews();
     }

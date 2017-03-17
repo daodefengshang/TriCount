@@ -38,6 +38,7 @@ import com.szh.tricount.utils.DrawerLayoutUtil;
 import com.szh.tricount.utils.ToastUtil;
 
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SharedPreferences sharedPreferences;
     private LeftFragment leftFragment;
     private View animView;
+    private TextView progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setTitle(R.string.result)
                     .setView(viewMessage)
                     .create();
+            dialogResult.setCanceledOnTouchOutside(false);
             dialogResult.getWindow().setWindowAnimations(R.style.ResultDialogWindowAnim);
         }
         if (dialogClear == null) {
@@ -164,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (progressDialog == null) {
             View viewProgress = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_progress, null);
+            progress = (TextView) viewProgress.findViewById(R.id.progress);
             progressDialog = new AlertDialog.Builder(this, R.style.DialogTheme)
                     .setTitle(R.string.calculating)
                     .setView(viewProgress)
@@ -209,12 +213,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.count :
+                progress.setText("0%");
                     handler.sendEmptyMessage(0);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             drawView.check();
-                            int count = drawView.calculate();
+                            int count = drawView.calculate(handler);
                             handler.sendEmptyMessage(1);
                             Message message = Message.obtain();
                             message.what = 2;
@@ -264,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handler.removeMessages(1);
         handler.removeMessages(2);
         handler.removeMessages(3);
+        handler.removeMessages(4);
         dialogClear.dismiss();
         dialogClear = null;
         dialogResult.dismiss();
@@ -302,14 +308,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mActivity.get().progressDialog.show();
                     break;
                 case 1 :
+                    removeMessages(4);
                     mActivity.get().progressDialog.dismiss();
                     break;
                 case 2 :
-                    mActivity.get().textView.setText(msg.arg1 + " ");
+                    mActivity.get().textView.setText(String.format(Locale.CHINESE, "%d ", msg.arg1));
                     mActivity.get().dialogResult.show();
                     break;
                 case 3 :
                     mActivity.get().dialogClear.show();
+                    break;
+                case 4 :
+                    mActivity.get().progress.setText(String.format(Locale.CHINESE, "%d%%", msg.arg1));
                     break;
             }
         }

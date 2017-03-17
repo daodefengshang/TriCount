@@ -16,8 +16,7 @@ public class VersionUtil {
             versionName = packageInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-        }finally {
-            return versionName;
         }
+        return versionName;
     }
 }

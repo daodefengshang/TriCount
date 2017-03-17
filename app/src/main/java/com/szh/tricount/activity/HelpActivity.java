@@ -1,5 +1,6 @@
 package com.szh.tricount.activity;
 
+import android.support.v4.view.WindowCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ public class HelpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(WindowCompat.FEATURE_ACTION_MODE_OVERLAY);
         setContentView(R.layout.activity_help);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

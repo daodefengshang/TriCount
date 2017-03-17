@@ -47,7 +47,7 @@ public class MathUtil {
         int n = 100;
         int m = (point1.y - point0.y) * point.x + (point0.x - point1.x) * point.y + point1.x * point0.y - point0.x * point1.y;
         double l = Math.hypot(point1.y - point0.y, point1.x - point0.x);
-        if (Math.abs(m / l) < DensityUtil.dip2px(context, Contants.FUZZY_CONTANT)) {
+        if (Math.abs(m / l) < DensityUtil.dip2px(context, Contants.FUZZY_INCREASE_CONTANT)) {
             n = 0;
         }
         return n;
@@ -63,9 +63,23 @@ public class MathUtil {
     public static boolean isCoincideLines(Point point0, Point point1, Context context) {
         ArrayList<LinkedList<Point>> lines = DataList.getLines();
         for (LinkedList<Point> linkedList : lines) {
-            if (pointToLine2(linkedList.getFirst(), linkedList.getLast(), point0, context) == 0
-                    && pointToLine2(linkedList.getFirst(), linkedList.getLast(), point1, context) == 0) {
-                return true;
+            Point first = linkedList.getFirst();
+            Point last = linkedList.getLast();
+            double abs = Math.abs(vectorCos(first, last, point0, point1));
+            if (abs > 0.999) {
+                if (isIntersect(first, last, point0, point1)) {
+                    return true;
+                }else {
+                    if (pointToLine2(first, last, point0, context) == 0
+                            || pointToLine2(first, last, point1, context) == 0) {
+                        return true;
+                    }
+                }
+            }else {
+                if (pointToLine2(first, last, point0, context) == 0
+                        && pointToLine2(first, last, point1, context) == 0) {
+                    return true;
+                }
             }
         }
         return false;
