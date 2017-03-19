@@ -3,7 +3,6 @@ package com.szh.tricount.datas;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
@@ -400,11 +399,6 @@ public class Calculator {
         int count = 0;
         int once = 0;
         while (true) {
-            Message message = Message.obtain();
-            message.what = 4;
-            message.arg1 = (int) ((Math.pow(once - pointCount, 3) / Math.pow(pointCount, 2) + pointCount) * 100 / pointCount);
-            handler.sendMessage(message);
-            once++;
             int point = findFirstPoint();
             classify(point);
             int size = arrayLists0.size();
@@ -426,7 +420,12 @@ public class Calculator {
                     linkedLists.remove(i);
                 }
             }
-            if (linkedLists.size() < 3) {
+            once++;
+            Message message = Message.obtain();
+            message.what = 4;
+            message.arg1 = (int) ((Math.pow(once - pointCount, 3) / Math.pow(pointCount, 2) + pointCount) * 100 / pointCount);
+            handler.sendMessage(message);
+            if (linkedLists.size() < 3 || message.arg1 >= 100) {
                 break;
             }
         }

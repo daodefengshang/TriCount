@@ -31,11 +31,11 @@
     <string name="setting">设置</string>
     <string name="save">收藏</string>
     <string name="browse">查看</string>
-    <string name="avail_animation">使用侧滑动画</string>
-    <string name="inavail_animation">禁用侧滑动画</string>
+    <string name="avail_anim_drawer">开启侧滑动画</string>
     <string name="file_not_found">文件未找到</string>
     <string name="file_read_exception">文件读取异常</string>
     <string name="file_write_exception">文件写入异常</string>
+    <string name="force_init">强制初始化图形</string>
     <string name="clear_file">清除缓存</string>
     <string name="update">版本更新</string>
     <string name="help">查看帮助</string>

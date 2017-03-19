@@ -27,6 +27,8 @@ import com.szh.tricount.utils.ToastUtil;
  */
 public class LeftFragment extends Fragment implements View.OnClickListener {
 
+    private boolean isForceInit;
+
     private Button equilateralButton;
     private Button isocelesButton;
     private Button rectangularButton;
@@ -37,6 +39,11 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private TextView collection;
 
     private TextView browse;
+
+    public void setForceInit(boolean forceInit) {
+        isForceInit = forceInit;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,35 +88,27 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         DrawView drawView = MainActivity.getDrawView();
         switch (v.getId()) {
             case R.id.button_equilateral:
-                if (DataList.getLines().size() != 0) {
-                    toastAndClose();
+                if (!initDraw()) {
                     return;
                 }
-                ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
                 drawView.initDrawEquilateral(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.button_isosceles:
-                if (DataList.getLines().size() != 0) {
-                    toastAndClose();
+                if (!initDraw()) {
                     return;
                 }
-                ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
                 drawView.initDrawIsosceles(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.button_rectangular:
-                if (DataList.getLines().size() != 0) {
-                    toastAndClose();
+                if (!initDraw()) {
                     return;
                 }
-                ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
                 drawView.initDrawRectangular(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.square:
-                if (DataList.getLines().size() != 0) {
-                    toastAndClose();
+                if (!initDraw()) {
                     return;
                 }
-                ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
                 drawView.initDrawSquare(drawView.getLeft(), drawView.getTop(), drawView.getRight(), drawView.getBottom());
                 break;
             case R.id.set:
@@ -119,7 +118,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.collection:
                 MainActivity.getDrawView().destroyDrawingCache();
-                ObjectSerializeUtil.serializeList(getContext(), MainActivity.getDrawView().getDrawingCache());
+                ObjectSerializeUtil.serializeList(getContext().getApplicationContext(), MainActivity.getDrawView().getDrawingCache());
                 ((MainActivity) getActivity()).collectionAnim(collection);
                 collection.setEnabled(false);
                 break;
@@ -130,8 +129,17 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void toastAndClose() {
-        ToastUtil.toast(this.getContext(), R.string.requestClear);
+    private boolean initDraw() {
+        boolean flag = true;
+        if (isForceInit) {
+            DataList.setLines(null);
+        }else {
+            if (DataList.getLines().size() != 0) {
+                ToastUtil.initToast(this.getContext().getApplicationContext(), R.string.requestClear);
+                flag = false;
+            }
+        }
         ((MainActivity) getActivity()).getDrawerLayout().closeDrawer(Gravity.LEFT);
+        return flag;
     }
 }

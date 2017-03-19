@@ -191,11 +191,11 @@ public class PathView extends View implements GestureDetector.OnGestureListener 
         if (FACTOR == 2) {
             FACTOR = 1;
             getPathMatrix().setScale(FACTOR, FACTOR);
-            ToastUtil.toast(getContext(), R.string.magnify_one_times);
+            ToastUtil.toast(getContext().getApplicationContext(), R.string.magnify_one_times);
         }else {
             FACTOR = 2;
             getPathMatrix().setScale(FACTOR, FACTOR);
-            ToastUtil.toast(getContext(), R.string.magnify_two_times);
+            ToastUtil.toast(getContext().getApplicationContext(), R.string.magnify_two_times);
         }
         return true;
     }

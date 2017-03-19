@@ -20,17 +20,26 @@
                 android:id="@+id/radio_remove_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/radio_margin"
                 android:checkedButton="@+id/click_radio">
                 <RadioButton
                     android:id="@+id/click_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:layout_marginTop="@dimen/radio_margin"
+                    android:drawableLeft="@drawable/radio_selector"
+                    android:drawablePadding="@dimen/radio_drawable_padding"
                     android:text="@string/click_remove"
                     android:textColor="@android:color/black"/>
                 <RadioButton
                     android:id="@+id/line_radio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:layout_marginTop="@dimen/radio_margin"
+                    android:drawableLeft="@drawable/radio_selector"
+                    android:drawablePadding="@dimen/radio_drawable_padding"
                     android:text="@string/line_remove"
                     android:textColor="@android:color/black"/>
             </RadioGroup>
@@ -47,19 +56,19 @@
                 android:textSize="@dimen/init_text_size"
                 android:textColor="@color/blackGray"/>
             <Button
-                android:id="@+id/button_equilateral"
-                android:layout_width="@dimen/init_button_width"
-                android:layout_height="@dimen/init_button_height"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/equilateral_triangle"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="@drawable/button_selector"/>
-            <Button
                 android:id="@+id/button_isosceles"
                 android:layout_width="@dimen/init_button_width"
                 android:layout_height="@dimen/init_button_height"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/isosceles_triangle"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/button_selector"/>
+            <Button
+                android:id="@+id/button_equilateral"
+                android:layout_width="@dimen/init_button_width"
+                android:layout_height="@dimen/init_button_height"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/equilateral_triangle"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="@drawable/button_selector"/>
             <Button

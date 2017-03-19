@@ -31,7 +31,7 @@ import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.customview.PathView;
 import com.szh.tricount.fragment.LeftFragment;
-import com.szh.tricount.listener.AnimSharedPreferenceChangeListener;
+import com.szh.tricount.listener.AvailSharedPreferenceChangeListener;
 import com.szh.tricount.listener.CustomDrawerListener;
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DrawerLayoutUtil;
@@ -43,9 +43,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private long exitTime = 0;
-
-    private static final String SPNAME = "drawer_animation";
-    private static final String ISANIMATION = "isAnimation";
 
     private Button alter;
     private Button count;
@@ -66,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private CustomLinearLayout mContentLayout;
     private CustomDrawerListener drawerListener;
     private Toolbar mToolbar;
-    private AnimSharedPreferenceChangeListener animSharedPreferenceChangeListener;
+    private AvailSharedPreferenceChangeListener availSharedPreferenceChangeListener;
     private SharedPreferences sharedPreferences;
     private LeftFragment leftFragment;
     private View animView;
@@ -117,11 +114,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         createDialog();
-        sharedPreferences = getSharedPreferences(SPNAME, Activity.MODE_PRIVATE);
-        boolean isAnimation = sharedPreferences.getBoolean(ISANIMATION, true);
+        sharedPreferences = getSharedPreferences(Contants.SPNAME, Activity.MODE_PRIVATE);
+        boolean isAnimation = sharedPreferences.getBoolean(Contants.ISANIMATION, true);
+        boolean isForceInit = sharedPreferences.getBoolean(Contants.ISFORCEINIT, false);
         drawerListener.setAnimation(isAnimation);
-        animSharedPreferenceChangeListener = new AnimSharedPreferenceChangeListener(mContentLayout, drawerListener);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(animSharedPreferenceChangeListener);
+        leftFragment.setForceInit(isForceInit);
+        availSharedPreferenceChangeListener = new AvailSharedPreferenceChangeListener(mContentLayout, drawerListener, leftFragment);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(availSharedPreferenceChangeListener);
     }
 
     public LeftFragment getLeftFragment() {
@@ -264,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawView.destroyDrawingCache();
         drawView.setDrawingCacheEnabled(false);
         mDrawerLayout.removeDrawerListener(drawerListener);
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(animSharedPreferenceChangeListener);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(availSharedPreferenceChangeListener);
         handler.removeMessages(0);
         handler.removeMessages(1);
         handler.removeMessages(2);
@@ -277,13 +276,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog.dismiss();
         progressDialog = null;
         Contants.isAlter = false;
+        ToastUtil.setToastNull();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             if((System.currentTimeMillis() - exitTime) > 2000){
-                ToastUtil.toast(MainActivity.this, R.string.exit_string);
+                ToastUtil.toast(MainActivity.this.getApplicationContext(), R.string.exit_string);
                 exitTime = System.currentTimeMillis();
             } else {
                 this.finish();

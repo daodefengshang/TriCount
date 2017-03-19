@@ -40,7 +40,7 @@ public class BrowseActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         recyclerView = (RecyclerView) findViewById(R.id.browse_recyclerview);
-        list = ObjectSerializeUtil.findFiles(this);
+        list = ObjectSerializeUtil.findFiles(this.getApplicationContext());
         recyclerAdapter = new RecyclerAdapter(this, list);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setHasFixedSize(true);

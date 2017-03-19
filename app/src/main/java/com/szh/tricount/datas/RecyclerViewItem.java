@@ -1,10 +1,5 @@
 package com.szh.tricount.datas;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-
-import com.szh.tricount.utils.ObjectSerializeUtil;
-
 import java.io.File;
 import java.io.Serializable;
 

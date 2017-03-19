@@ -19,12 +19,12 @@ public class MathUtil {
     }
 
     /**
-     * 点到直线的距离
-     * @param point0 直线首端点
-     * @param point1 直线末端点
+     * 点到线段的距离
+     * @param point0 线段首端点
+     * @param point1 线段末端点
      * @param point 点的坐标
      * @param context
-     * @return 点到直线的距离 100 or 0
+     * @return 点到线段的距离 100 or 0
      */
     public static int pointToLine(Point point0, Point point1, Point point, Context context) {
         int n = 100;
@@ -43,6 +43,14 @@ public class MathUtil {
         return n;
     }
 
+    /**
+     * 点到直线的距离
+     * @param point0 直线首端点
+     * @param point1 直线末端点
+     * @param point 点的坐标
+     * @param context
+     * @return 点到直线的距离 100 or 0
+     */
     private static int pointToLine2(Point point0, Point point1, Point point, Context context) {
         int n = 100;
         int m = (point1.y - point0.y) * point.x + (point0.x - point1.x) * point.y + point1.x * point0.y - point0.x * point1.y;
@@ -66,19 +74,14 @@ public class MathUtil {
             Point first = linkedList.getFirst();
             Point last = linkedList.getLast();
             double abs = Math.abs(vectorCos(first, last, point0, point1));
-            if (abs > 0.999) {
+            if (abs > 0.9985) {
                 if (isIntersect(first, last, point0, point1)) {
                     return true;
                 }else {
-                    if (pointToLine2(first, last, point0, context) == 0
-                            || pointToLine2(first, last, point1, context) == 0) {
+                    if (pointToLine(first, last, point0, context) == 0
+                            || pointToLine(first, last, point1, context) == 0) {
                         return true;
                     }
-                }
-            }else {
-                if (pointToLine2(first, last, point0, context) == 0
-                        && pointToLine2(first, last, point1, context) == 0) {
-                    return true;
                 }
             }
         }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activity.SettingActivity">
     <include layout="@layout/toolbar_layout"/>
@@ -17,34 +18,72 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/lightGray">
-            <RadioGroup
-                android:id="@+id/anim_radio_group"
+            <LinearLayout
+                android:id="@+id/avail_anim_drawer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:paddingTop="@dimen/setting_item_padding"
                 android:paddingBottom="@dimen/setting_item_padding"
                 android:paddingLeft="@dimen/setting_item_padding"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:id="@+id/avail_radio"
+                android:paddingRight="@dimen/setting_item_padding"
+                android:background="@drawable/set_item_selector"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/avail_animation"
-                    android:textColor="@android:color/black"
-                    android:gravity="center"
-                    android:button="@drawable/radio_selector"/>
-                <RadioButton
-                    android:id="@+id/inavail_radio"
+                    android:text="@string/avail_anim_drawer"
+                    android:textColor="@android:color/black"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/anim_drawer_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:text="@string/inavail_animation"
-                    android:textColor="@android:color/black"
-                    android:gravity="center"
-                    android:button="@drawable/radio_selector"/>
-            </RadioGroup>
+                    android:typeface="normal"
+                    android:background="@null"
+                    app:theme="@style/mySwitch"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/arrow_right"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/force_init"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/setting_item_padding"
+                android:paddingBottom="@dimen/setting_item_padding"
+                android:paddingLeft="@dimen/setting_item_padding"
+                android:paddingRight="@dimen/setting_item_padding"
+                android:background="@drawable/set_item_selector"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/force_init"
+                    android:textColor="@android:color/black"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/init_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:typeface="normal"
+                    android:background="@null"
+                    app:theme="@style/mySwitch"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/arrow_right"/>
+            </LinearLayout>
             <FrameLayout
                 android:id="@+id/clear_file"
                 android:layout_width="match_parent"
@@ -94,7 +133,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorGray"/>
                 <ImageView
-                    android:id="@+id/right"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/arrow_right"/>

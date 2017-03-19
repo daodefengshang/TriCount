@@ -7,36 +7,31 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.szh.tricount.R;
-import com.szh.tricount.listener.AnimRadioCheckedChangeListener;
+import com.szh.tricount.listener.AnimDrawerSwitchCheckedChangeListener;
+import com.szh.tricount.listener.InitSwitchCheckedChangeListener;
+import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.ObjectSerializeUtil;
 import com.szh.tricount.utils.VersionUtil;
 
-import java.io.File;
-
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String SPNAME = "drawer_animation";
-    private static final String ISANIMATION = "isAnimation";
-
     private Toolbar mToolbar;
-    private RadioGroup animRadioGroup;
-    private RadioButton availRadio;
-    private RadioButton inavailRadio;
     private View clearView;
     private View updateView;
     private TextView versionView;
     private View helpView;
     private View authorView;
     private AlertDialog dialog;
+    private SwitchCompat initSwitch;
+    private SwitchCompat animDrawerSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +46,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        animRadioGroup = (RadioGroup) findViewById(R.id.anim_radio_group);
-        availRadio = (RadioButton) findViewById(R.id.avail_radio);
-        inavailRadio = (RadioButton) findViewById(R.id.inavail_radio);
+        animDrawerSwitch = (SwitchCompat) findViewById(R.id.anim_drawer_switch);
+        initSwitch = (SwitchCompat) findViewById(R.id.init_switch);
         clearView = findViewById(R.id.clear_file);
         updateView = findViewById(R.id.update);
         versionView = (TextView) findViewById(R.id.version);
@@ -63,13 +57,20 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initEvents() {
-        animRadioGroup.setOnCheckedChangeListener(new AnimRadioCheckedChangeListener(this));
-        SharedPreferences sharedPreferences = getSharedPreferences(SPNAME, Activity.MODE_PRIVATE);
-        boolean isAnimation = sharedPreferences.getBoolean(ISANIMATION, true);
+        animDrawerSwitch.setOnCheckedChangeListener(new AnimDrawerSwitchCheckedChangeListener(this));
+        SharedPreferences sharedPreferences = getSharedPreferences(Contants.SPNAME, Activity.MODE_PRIVATE);
+        boolean isAnimation = sharedPreferences.getBoolean(Contants.ISANIMATION, true);
         if (isAnimation) {
-            availRadio.setChecked(true);
+            animDrawerSwitch.setChecked(true);
         }else {
-            inavailRadio.setChecked(true);
+            animDrawerSwitch.setChecked(false);
+        }
+        initSwitch.setOnCheckedChangeListener(new InitSwitchCheckedChangeListener(this));
+        boolean isForceInit = sharedPreferences.getBoolean(Contants.ISFORCEINIT, false);
+        if (isForceInit) {
+            initSwitch.setChecked(true);
+        } else {
+            initSwitch.setChecked(false);
         }
         clearView.setOnClickListener(this);
         updateView.setOnClickListener(this);
