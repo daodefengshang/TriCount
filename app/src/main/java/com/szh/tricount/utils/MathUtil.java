@@ -48,7 +48,6 @@ public class MathUtil {
      * @param point0 直线首端点
      * @param point1 直线末端点
      * @param point 点的坐标
-     * @param context
      * @return 点到直线的距离 100 or 0
      */
     private static int pointToLine2(Point point0, Point point1, Point point, Context context) {
@@ -57,6 +56,31 @@ public class MathUtil {
         double l = Math.hypot(point1.y - point0.y, point1.x - point0.x);
         if (Math.abs(m / l) < DensityUtil.dip2px(context, Contants.FUZZY_INCREASE_CONTANT)) {
             n = 0;
+        }
+        return n;
+    }
+
+    /**
+     * 点到线段的距离
+     * @param point0 线段首端点
+     * @param point1 线段末端点
+     * @param point 点的坐标
+     * @param context
+     * @return 点到线段的距离 100 or 0
+     */
+    public static int pointToLine3(Point point0, Point point1, Point point, Context context) {
+        int n = 100;
+        double l1 = Math.hypot(point.x - point0.x, point.y - point0.y);
+        double l2 = Math.hypot(point.x - point1.x, point.y - point1.y);
+        double mod1 = ((point1.x - point0.x) * 1.0 * (point.x - point0.x) + (point1.y - point0.y) * (point.y - point0.y))
+                /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l1;
+        double mod2 = ((point0.x - point1.x) * 1.0 * (point.x - point1.x) + (point0.y - point1.y) * (point.y - point1.y))
+                /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l2;
+        if (mod1 > 0 && mod2 > 0) {
+            double mod0 = Math.sqrt(1 - Math.pow(mod1, 2)) * l1;
+            if (mod0 < DensityUtil.dip2px(context, Contants.FUZZY_INCREASE_CONTANT)) {
+                n = 0;
+            }
         }
         return n;
     }
@@ -74,12 +98,14 @@ public class MathUtil {
             Point first = linkedList.getFirst();
             Point last = linkedList.getLast();
             double abs = Math.abs(vectorCos(first, last, point0, point1));
-            if (abs > 0.9985) {
-                if (isIntersect(first, last, point0, point1)) {
+            if (abs > 0.997) {
+                if (isIntersect(first, last, point0, point1, context)) {
                     return true;
                 }else {
-                    if (pointToLine(first, last, point0, context) == 0
-                            || pointToLine(first, last, point1, context) == 0) {
+                    if (pointToLine3(first, last, point0, context) == 0
+                            || pointToLine3(first, last, point1, context) == 0
+                            || pointToLine3(point0, point1, first, context) == 0
+                            || pointToLine3(point0, point1, last, context) == 0) {
                         return true;
                     }
                 }
@@ -123,11 +149,44 @@ public class MathUtil {
         return false;
     }
     //判断两线段(1,2)、(3,4)是否相交
-    public static boolean isIntersect(Point point1, Point point2, Point point3, Point point4) {
+    public static boolean isIntersect(Point point1, Point point2, Point point3, Point point4, Context context) {
         boolean flag = false;
         int d = (point2.x-point1.x)*(point4.y-point3.y) - (point2.y-point1.y)*(point4.x-point3.x);
-        if(d!=0)
-        {
+        if (d == 0) {
+            if (pointToLine2(point1, point2, point3, context) != 0) {
+                return false;
+            }
+            int maxX = 0;
+            int maxY = 0;
+            if (Math.abs(point1.x - point3.x) > maxX) {
+                maxX = Math.abs(point1.x - point3.x);
+            }
+            if (Math.abs(point1.x - point4.x) > maxX) {
+                maxX = Math.abs(point1.x - point4.x);
+            }
+            if (Math.abs(point2.x - point3.x) > maxX) {
+                maxX = Math.abs(point2.x - point3.x);
+            }
+            if (Math.abs(point2.x - point4.x) > maxX) {
+                maxX = Math.abs(point2.x - point4.x);
+            }
+            if (Math.abs(point1.y - point3.y) > maxY) {
+                maxY = Math.abs(point1.y - point3.y);
+            }
+            if (Math.abs(point1.y - point4.y) > maxY) {
+                maxY = Math.abs(point1.y - point4.y);
+            }
+            if (Math.abs(point2.y - point3.y) > maxY) {
+                maxY = Math.abs(point2.y - point3.y);
+            }
+            if (Math.abs(point2.y - point4.y) > maxY) {
+                maxY = Math.abs(point2.y - point4.y);
+            }
+            if (Math.abs(point1.x - point2.x) + Math.abs(point3.x - point4.x) >= maxX
+                    && Math.abs(point1.y - point2.y) + Math.abs(point3.y - point4.y) >= maxY) {
+                flag = true;
+            }
+        } else {
             double r = ((point1.y-point3.y)*(point4.x-point3.x)-(point1.x-point3.x)*(point4.y-point3.y)) * 1.0/d;
             double s = ((point1.y-point3.y)*(point2.x-point1.x)-(point1.x-point3.x)*(point2.y-point1.y)) * 1.0/d;
             if((r>=0) && (r <= 1) && (s >=0) && (s<=1))

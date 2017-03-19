@@ -19,7 +19,6 @@
             android:orientation="vertical"
             android:background="@color/lightGray">
             <LinearLayout
-                android:id="@+id/avail_anim_drawer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -41,6 +40,38 @@
                     android:layout_weight="1"/>
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/anim_drawer_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:typeface="normal"
+                    android:background="@null"
+                    app:theme="@style/mySwitch"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/arrow_right"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/setting_item_padding"
+                android:paddingBottom="@dimen/setting_item_padding"
+                android:paddingLeft="@dimen/setting_item_padding"
+                android:paddingRight="@dimen/setting_item_padding"
+                android:background="@drawable/set_item_selector"
+                android:layout_marginTop="@dimen/activity_vertical_margin">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/avail_gesture_drawer"
+                    android:textColor="@android:color/black"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/gesture_drawer_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:typeface="normal"

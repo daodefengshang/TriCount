@@ -1,7 +1,9 @@
 package com.szh.tricount.listener;
 
 import android.content.SharedPreferences;
+import android.support.v4.widget.DrawerLayout;
 
+import com.szh.tricount.activity.MainActivity;
 import com.szh.tricount.customview.CustomLinearLayout;
 import com.szh.tricount.fragment.LeftFragment;
 import com.szh.tricount.utils.Contants;
@@ -13,11 +15,14 @@ public class AvailSharedPreferenceChangeListener implements SharedPreferences.On
 
     private CustomLinearLayout mContentLayout;
     private CustomDrawerListener drawerListener;
+    private DrawerLayout mDrawerLayout;
     private LeftFragment leftFragment;
 
-    public AvailSharedPreferenceChangeListener(CustomLinearLayout contentLayout, CustomDrawerListener drawerListener, LeftFragment leftFragment) {
+    public AvailSharedPreferenceChangeListener(CustomLinearLayout contentLayout, CustomDrawerListener drawerListener,
+                                               DrawerLayout drawerLayout, LeftFragment leftFragment) {
         this.drawerListener = drawerListener;
         this.mContentLayout = contentLayout;
+        this.mDrawerLayout = drawerLayout;
         this.leftFragment = leftFragment;
     }
 
@@ -31,7 +36,14 @@ public class AvailSharedPreferenceChangeListener implements SharedPreferences.On
                 mContentLayout.setScaleY(1);
             }
             drawerListener.setAnimation(flag);
-        }else if (Contants.ISFORCEINIT.equals(key)) {
+        } else if (Contants.ISGESTURE.equals(key)) {
+            MainActivity.getDrawView().setGestureDrawer(flag);
+            if (flag) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            } else {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+        } else if (Contants.ISFORCEINIT.equals(key)) {
             leftFragment.setForceInit(flag);
         }
     }

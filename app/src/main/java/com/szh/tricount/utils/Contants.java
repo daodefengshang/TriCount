@@ -7,6 +7,7 @@ public class Contants {
 
     public static final String SPNAME = "is_available";
     public static final String ISANIMATION = "isAnimation";
+    public static final String ISGESTURE = "isGestureDrawer";
     public static final String ISFORCEINIT = "isForceInit";
 
     public static boolean isAlter = false;
@@ -19,7 +20,7 @@ public class Contants {
 
     public static int parent = 0;
 
-    public static final int FUZZY_CONTANT = 12;
+    public static final int FUZZY_CONTANT = 10;
 
     public static final int FUZZY_CALCULAR_CONTANT = 8;
 

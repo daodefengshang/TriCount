@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.szh.tricount.R;
 import com.szh.tricount.listener.AnimDrawerSwitchCheckedChangeListener;
+import com.szh.tricount.listener.GestureDrawerSwitchCheckedChangeListener;
 import com.szh.tricount.listener.InitSwitchCheckedChangeListener;
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.ObjectSerializeUtil;
@@ -32,6 +33,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private AlertDialog dialog;
     private SwitchCompat initSwitch;
     private SwitchCompat animDrawerSwitch;
+    private SwitchCompat gestureDrawerSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         animDrawerSwitch = (SwitchCompat) findViewById(R.id.anim_drawer_switch);
+        gestureDrawerSwitch = (SwitchCompat) findViewById(R.id.gesture_drawer_switch);
         initSwitch = (SwitchCompat) findViewById(R.id.init_switch);
         clearView = findViewById(R.id.clear_file);
         updateView = findViewById(R.id.update);
@@ -57,13 +60,20 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initEvents() {
-        animDrawerSwitch.setOnCheckedChangeListener(new AnimDrawerSwitchCheckedChangeListener(this));
         SharedPreferences sharedPreferences = getSharedPreferences(Contants.SPNAME, Activity.MODE_PRIVATE);
+        animDrawerSwitch.setOnCheckedChangeListener(new AnimDrawerSwitchCheckedChangeListener(this));
         boolean isAnimation = sharedPreferences.getBoolean(Contants.ISANIMATION, true);
         if (isAnimation) {
             animDrawerSwitch.setChecked(true);
-        }else {
+        } else {
             animDrawerSwitch.setChecked(false);
+        }
+        gestureDrawerSwitch.setOnCheckedChangeListener(new GestureDrawerSwitchCheckedChangeListener(this));
+        boolean isGestureDrawer = sharedPreferences.getBoolean(Contants.ISGESTURE, true);
+        if (isGestureDrawer) {
+            gestureDrawerSwitch.setChecked(true);
+        } else {
+            gestureDrawerSwitch.setChecked(false);
         }
         initSwitch.setOnCheckedChangeListener(new InitSwitchCheckedChangeListener(this));
         boolean isForceInit = sharedPreferences.getBoolean(Contants.ISFORCEINIT, false);

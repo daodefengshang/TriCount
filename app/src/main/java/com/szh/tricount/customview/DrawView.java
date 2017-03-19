@@ -34,6 +34,8 @@ import java.util.List;
  */
 public class DrawView extends View {
 
+    private boolean isGestureDrawer;
+
     private RemoveMode removeMode = RemoveMode.CLICK_RADIO;
     private List<Integer> listRemove = new ArrayList<>();
 
@@ -121,6 +123,10 @@ public class DrawView extends View {
             layoutParams.alpha = 0.8f;
             dialogWindow.setAttributes(layoutParams);
         }
+    }
+
+    public void setGestureDrawer(boolean gestureDrawer) {
+        isGestureDrawer = gestureDrawer;
     }
 
     public void clearHashMap() {
@@ -336,7 +342,7 @@ public class DrawView extends View {
                         for (int i = 0; i < size; i++) {
                             Point first = DataList.getLines().get(i).getFirst();
                             Point last = DataList.getLines().get(i).getLast();
-                            boolean intersect = MathUtil.isIntersect(ss.get(0), ss.get(1), first, last);
+                            boolean intersect = MathUtil.isIntersect(ss.get(0), ss.get(1), first, last, getContext());
                             if (intersect) {
                                 listRemove.add(i);
                             }
@@ -359,7 +365,7 @@ public class DrawView extends View {
         Point point0 = new Point(x, y);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (x < 50) {
+                if (isGestureDrawer && x < 30) {
                     return;
                 }
                 ss = new LinkedList<>();

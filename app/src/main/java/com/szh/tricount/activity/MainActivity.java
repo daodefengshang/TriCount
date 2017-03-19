@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -69,6 +71,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View animView;
     private TextView progress;
 
+    private Runnable toolbarHomeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            View toolbarHome = null;
+            if (mToolbar.getChildCount() > 1) {
+                toolbarHome = mToolbar.getChildAt(1);
+            }
+            if (toolbarHome != null) {
+                toolbarHome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                            mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        } else {
+                            mDrawerLayout.openDrawer(Gravity.LEFT);
+                        }
+                    }
+                });
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.id_drawerLayout);
         mContentLayout = (CustomLinearLayout) findViewById(R.id.content_layout);
         alter = (Button) findViewById(R.id.alter);
@@ -108,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawerListener = new CustomDrawerListener(this, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close, mContentLayout);
         drawerListener.syncState();
         mDrawerLayout.addDrawerListener(drawerListener);
+        mDrawerLayout.post(toolbarHomeRunnable);
     }
 
     @Override
@@ -116,10 +142,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         createDialog();
         sharedPreferences = getSharedPreferences(Contants.SPNAME, Activity.MODE_PRIVATE);
         boolean isAnimation = sharedPreferences.getBoolean(Contants.ISANIMATION, true);
+        boolean isGestureDrawer = sharedPreferences.getBoolean(Contants.ISGESTURE, true);
         boolean isForceInit = sharedPreferences.getBoolean(Contants.ISFORCEINIT, false);
         drawerListener.setAnimation(isAnimation);
+        drawView.setGestureDrawer(isGestureDrawer);
+        if (isGestureDrawer) {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        } else {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
         leftFragment.setForceInit(isForceInit);
-        availSharedPreferenceChangeListener = new AvailSharedPreferenceChangeListener(mContentLayout, drawerListener, leftFragment);
+        availSharedPreferenceChangeListener = new AvailSharedPreferenceChangeListener(mContentLayout, drawerListener, mDrawerLayout, leftFragment);
         sharedPreferences.registerOnSharedPreferenceChangeListener(availSharedPreferenceChangeListener);
     }
 
@@ -203,31 +236,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.alter :
+            case R.id.alter:
                 Contants.isAlter = !Contants.isAlter;
                 if (Contants.isAlter) {
                     alter.setBackgroundResource(R.color.normalGray);
-                }else {
+                } else {
                     alter.setBackgroundResource(R.color.lightGray);
                 }
                 break;
-            case R.id.count :
+            case R.id.count:
                 progress.setText("0%");
-                    handler.sendEmptyMessage(0);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            drawView.check();
-                            int count = drawView.calculate(handler);
-                            handler.sendEmptyMessage(1);
-                            Message message = Message.obtain();
-                            message.what = 2;
-                            message.arg1 = count;
-                            handler.sendMessage(message);
-                        }
-                    }).start();
+                handler.sendEmptyMessage(0);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        drawView.check();
+                        int count = drawView.calculate(handler);
+                        handler.sendEmptyMessage(1);
+                        Message message = Message.obtain();
+                        message.what = 2;
+                        message.arg1 = count;
+                        handler.sendMessage(message);
+                    }
+                }).start();
                 break;
-            case R.id.clear :
+            case R.id.clear:
                 handler.sendEmptyMessage(3);
                 break;
         }
@@ -244,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_about :
+            case R.id.menu_about:
                 Intent intent = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.anim_enter, R.anim.anim_exit);
@@ -263,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         drawView.destroyDrawingCache();
         drawView.setDrawingCacheEnabled(false);
         mDrawerLayout.removeDrawerListener(drawerListener);
+        mDrawerLayout.removeCallbacks(toolbarHomeRunnable);
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(availSharedPreferenceChangeListener);
         handler.removeMessages(0);
         handler.removeMessages(1);
@@ -281,8 +315,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            if((System.currentTimeMillis() - exitTime) > 2000){
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
                 ToastUtil.toast(MainActivity.this.getApplicationContext(), R.string.exit_string);
                 exitTime = System.currentTimeMillis();
             } else {
@@ -304,21 +338,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 0 :
+                case 0:
                     mActivity.get().progressDialog.show();
                     break;
-                case 1 :
+                case 1:
                     removeMessages(4);
                     mActivity.get().progressDialog.dismiss();
                     break;
-                case 2 :
+                case 2:
                     mActivity.get().textView.setText(String.format(Locale.CHINESE, "%d ", msg.arg1));
                     mActivity.get().dialogResult.show();
                     break;
-                case 3 :
+                case 3:
                     mActivity.get().dialogClear.show();
                     break;
-                case 4 :
+                case 4:
                     mActivity.get().progress.setText(String.format(Locale.CHINESE, "%d%%", msg.arg1));
                     break;
             }

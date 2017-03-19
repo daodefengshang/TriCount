@@ -32,6 +32,7 @@
     <string name="save">收藏</string>
     <string name="browse">查看</string>
     <string name="avail_anim_drawer">开启侧滑动画</string>
+    <string name="avail_gesture_drawer">开启手势侧滑</string>
     <string name="file_not_found">文件未找到</string>
     <string name="file_read_exception">文件读取异常</string>
     <string name="file_write_exception">文件写入异常</string>
