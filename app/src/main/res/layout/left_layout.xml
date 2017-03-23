@@ -3,18 +3,20 @@
     android:layout_width="@dimen/left_width"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="1"
     android:background="@drawable/background">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/zeroAlpha">
+        android:background="@null">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:background="@null"
             android:orientation="vertical">
             <RadioGroup
                 android:id="@+id/radio_remove_group"
@@ -92,12 +94,25 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="@android:color/darker_gray"/>
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_lock_degree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="false"
+                android:layout_margin="@dimen/radio_margin"
+                android:drawableLeft="@drawable/checkbox_selector"
+                android:drawablePadding="@dimen/radio_drawable_padding"
+                android:text="@string/lock_degree"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
     </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/left_fixed_height"
         android:gravity="center_vertical"
+        android:background="@null"
+        android:weightSum="4"
         android:orientation="horizontal">
         <View
             android:layout_width="0dp"

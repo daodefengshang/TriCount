@@ -12,6 +12,8 @@ public class Contants {
 
     public static boolean isAlter = false;
 
+    public static boolean lockDegree = false;
+
     public static int countLayout = 0;
 
     public static int prei = 0;

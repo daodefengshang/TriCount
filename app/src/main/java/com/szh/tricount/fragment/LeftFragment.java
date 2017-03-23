@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import com.szh.tricount.activity.SettingActivity;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.datas.DataList;
 import com.szh.tricount.listener.RemoveRadioCheckedChangeListener;
+import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.ObjectSerializeUtil;
 import com.szh.tricount.utils.ToastUtil;
 
@@ -39,6 +42,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private TextView collection;
 
     private TextView browse;
+    private AppCompatCheckBox checkBoxLockDegree;
 
     public void setForceInit(boolean forceInit) {
         isForceInit = forceInit;
@@ -63,6 +67,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         isocelesButton = (Button) view.findViewById(R.id.button_isosceles);
         rectangularButton = (Button) view.findViewById(R.id.button_rectangular);
         squareButton = (Button) view.findViewById(R.id.square);
+        checkBoxLockDegree = (AppCompatCheckBox) view.findViewById(R.id.checkbox_lock_degree);
         setting = (TextView) view.findViewById(R.id.set);
         collection = (TextView) view.findViewById(R.id.collection);
         browse = (TextView) view.findViewById(R.id.browse);
@@ -74,6 +79,12 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         isocelesButton.setOnClickListener(this);
         rectangularButton.setOnClickListener(this);
         squareButton.setOnClickListener(this);
+        checkBoxLockDegree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Contants.lockDegree = isChecked;
+            }
+        });
         setting.setOnClickListener(this);
         collection.setOnClickListener(this);
         browse.setOnClickListener(this);

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 计算类
  * Created by szh on 2016/12/24.
  */
 public class Calculator {
@@ -33,6 +34,8 @@ public class Calculator {
     private Point tmpFirstPoint = new Point(-1, -1);
     //正在绘制线段中间第二吸附点，当isFirstFixed == false时使用
     private Point tmpSecondPoint = new Point(-1, -1);
+    //是否水平锁定
+    private boolean isHorizontal;
 
     private Context mContext;
     private static volatile Calculator calculator;
@@ -103,6 +106,15 @@ public class Calculator {
     public void setTmpSecondPoint(Point tmpSecondPoint) {
         this.tmpSecondPoint = tmpSecondPoint;
     }
+
+    public boolean isHorizontal() {
+        return isHorizontal;
+    }
+
+    public void setHorizontal(boolean horizontal) {
+        isHorizontal = horizontal;
+    }
+
     //还原
     public void reduction() {
         isFirstFixed = true;
@@ -218,7 +230,7 @@ public class Calculator {
         return point;
     }
 
-    //只在MotionEvent.ACTION_UP中调用
+    //只在普通绘制MotionEvent.ACTION_UP中调用
     public Point checkLine(Point point0) {
         Point point = new Point();
         ArrayList<LinkedList<Point>> lines = DataList.getLines();
@@ -230,6 +242,28 @@ public class Calculator {
                 for (int j = 0; j < sizeChild; j++) {
                     if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
                         point = MathUtil.getIntersection(first, last, tmpFirstPoint, point0);
+                        return point;
+                    }
+                }
+            }
+        }
+        point.x = point0.x;
+        point.y = point0.y;
+        return point;
+    }
+
+    //只在锁定角度绘制MotionEvent.ACTION_UP中调用
+    public Point checkLineLock(Point point0, Point point1) {
+        Point point = new Point();
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> linkedList : lines) {
+            if (linkedList != null) {
+                int sizeChild = linkedList.size();
+                Point first = linkedList.getFirst();
+                Point last = linkedList.getLast();
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
+                        point = MathUtil.getIntersection(first, last, point0, point1);
                         return point;
                     }
                 }

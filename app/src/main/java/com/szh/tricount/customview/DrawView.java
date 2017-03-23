@@ -287,7 +287,11 @@ public class DrawView extends View {
         if (Contants.isAlter) {
             alter(event);
         } else {
-            drawMotionEvent(event);
+            if (Contants.lockDegree) {
+                drawLockDegree(event);
+            } else {
+                drawMotionEvent(event);
+            }
         }
         return true;
     }
@@ -358,7 +362,7 @@ public class DrawView extends View {
         }
     }
 
-    //绘制
+    //普通绘制
     private void drawMotionEvent(MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
@@ -496,6 +500,134 @@ public class DrawView extends View {
                                     }
                                 }
                             }
+                        }
+                        Calculator.getInstance(getContext()).reduction();
+                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)
+                                || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
+                            ss = null;
+                            invalidate();
+                            return;
+                        }
+                        DataList.getLines().add(ss);
+                        ss = null;
+                        invalidate();
+                        Calculator.getInstance(getContext()).increasePoint();
+                    }
+                }
+                break;
+        }
+    }
+
+    //锁定角度绘制
+    private void drawLockDegree(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        Point point0 = new Point(x, y);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (isGestureDrawer && x < 30) {
+                    return;
+                }
+                ss = new LinkedList<>();
+                ss.add(0, point0);
+                Point point = Calculator.getInstance(getContext()).checkInitPosition(ss.get(0));
+                ss.set(0, point);
+                ss.add(1, point);
+                invalidate();
+                MainActivity.showPathView(x, y);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (ss != null && ss.size() == 2) {
+                    if (Calculator.getInstance(getContext()).isFirstFixed()) {
+                        if (MathUtil.pointToPoint(ss.get(0), point0) > DensityUtil.dip2px(this.getContext(), Contants.FUZZY_INCREASE_CONTANT)) {
+                            double absCos = Math.abs(MathUtil.vectorCosHorizontal(ss.get(0), point0));
+                            Point tmpPoint;
+                            if (absCos > Math.cos(Math.PI / 8)) {
+                                tmpPoint = new Point(point0.x, ss.get(0).y);
+                            } else if (absCos < Math.cos(Math.PI * 3 / 8)) {
+                                tmpPoint = new Point(ss.get(0).x, point0.y);
+                            } else {
+                                if (point0.x > ss.get(0).x && point0.y > ss.get(0).y || point0.x < ss.get(0).x && point0.y < ss.get(0).y) {
+                                    tmpPoint = MathUtil.getPoint(ss.get(0), new Point(ss.get(0).x + 100, ss.get(0).y + 100), point0);
+                                } else {
+                                    tmpPoint = MathUtil.getPoint(ss.get(0), new Point(ss.get(0).x + 100, ss.get(0).y - 100), point0);
+                                }
+                            }
+                            ss.set(1, tmpPoint);
+                        }
+                    } else {
+                        Point tmpFirstPoint = Calculator.getInstance(getContext()).getTmpFirstPoint();
+                        Point tmpPoint;
+                        if (tmpFirstPoint.x == -1 && tmpFirstPoint.y == -1) {
+                            double absCos = Math.abs(MathUtil.vectorCosHorizontal(ss.get(0), point0));
+                            if (absCos > Math.cos(Math.PI / 4)) {
+                                tmpPoint = new Point(point0.x, ss.get(0).y);
+                                if (point0.y > Calculator.getInstance(getContext()).getHeadPoint().y
+                                        && point0.y < Calculator.getInstance(getContext()).getFootPoint().y
+                                        || point0.y < Calculator.getInstance(getContext()).getHeadPoint().y
+                                        && point0.y > Calculator.getInstance(getContext()).getFootPoint().y) {
+                                    if (!point0.equals(Calculator.getInstance(getContext()).checkPoint(point0))) {
+                                        Calculator.getInstance(getContext())
+                                                .setTmpFirstPoint(Calculator.getInstance(getContext()).checkPoint(point0));
+                                        Calculator.getInstance(getContext()).setHorizontal(true);
+                                    }
+                                }
+                            } else {
+                                tmpPoint = new Point(ss.get(0).x, point0.y);
+                                if (point0.x > Calculator.getInstance(getContext()).getHeadPoint().x
+                                        && point0.x < Calculator.getInstance(getContext()).getFootPoint().x
+                                        || point0.x < Calculator.getInstance(getContext()).getHeadPoint().x
+                                        && point0.x > Calculator.getInstance(getContext()).getFootPoint().x) {
+                                    if (!point0.equals(Calculator.getInstance(getContext()).checkPoint(point0))) {
+                                        Calculator.getInstance(getContext())
+                                                .setTmpFirstPoint(Calculator.getInstance(getContext()).checkPoint(point0));
+                                        Calculator.getInstance(getContext()).setHorizontal(false);
+                                    }
+                                }
+                            }
+                            ss.set(1, tmpPoint);
+                        } else {
+                            if (Calculator.getInstance(getContext()).isHorizontal()) {
+                                if (point0.y > Calculator.getInstance(getContext()).getHeadPoint().y
+                                        && point0.y < Calculator.getInstance(getContext()).getFootPoint().y
+                                        || point0.y < Calculator.getInstance(getContext()).getHeadPoint().y
+                                        && point0.y > Calculator.getInstance(getContext()).getFootPoint().y) {
+                                    if (!point0.equals(Calculator.getInstance(getContext()).checkPoint(point0))) {
+                                        tmpFirstPoint = Calculator.getInstance(getContext()).checkPoint(point0);
+                                        Calculator.getInstance(getContext()).setTmpFirstPoint(tmpFirstPoint);
+                                    }
+                                }
+                                ss.set(0, MathUtil.getIntersection(tmpFirstPoint, new Point(tmpFirstPoint.x + 100, tmpFirstPoint.y),
+                                        Calculator.getInstance(getContext()).getHeadPoint(), Calculator.getInstance(getContext()).getFootPoint()));
+                                ss.set(1, new Point(point0.x, tmpFirstPoint.y));
+                            } else {
+                                if (point0.x > Calculator.getInstance(getContext()).getHeadPoint().x
+                                        && point0.x < Calculator.getInstance(getContext()).getFootPoint().x
+                                        || point0.x < Calculator.getInstance(getContext()).getHeadPoint().x
+                                        && point0.x > Calculator.getInstance(getContext()).getFootPoint().x) {
+                                    if (!point0.equals(Calculator.getInstance(getContext()).checkPoint(point0))) {
+                                        tmpFirstPoint = Calculator.getInstance(getContext()).checkPoint(point0);
+                                        Calculator.getInstance(getContext()).setTmpFirstPoint(tmpFirstPoint);
+                                    }
+                                }
+                                ss.set(0, MathUtil.getIntersection(tmpFirstPoint, new Point(tmpFirstPoint.x, tmpFirstPoint.y + 100),
+                                        Calculator.getInstance(getContext()).getHeadPoint(), Calculator.getInstance(getContext()).getFootPoint()));
+                                ss.set(1, new Point(tmpFirstPoint.x, point0.y));
+                            }
+                        }
+                    }
+                    invalidate();
+                    MainActivity.showPathView(x, y);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if (ss != null) {
+                    if (ss.size() < 2) {
+                        ss = null;
+                    } else {
+                        Point checkPosition = Calculator.getInstance(getContext()).checkLineLock(ss.get(1), ss.get(0));
+                        if (checkPosition != null && !checkPosition.equals(ss.get(1))) {
+                            ss.set(1, checkPosition);
                         }
                         Calculator.getInstance(getContext()).reduction();
                         if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)

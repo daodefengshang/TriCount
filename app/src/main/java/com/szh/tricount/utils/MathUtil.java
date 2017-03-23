@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 数学工具类
  * Created by szh on 2016/12/11.
  */
 public class MathUtil {
@@ -23,7 +24,7 @@ public class MathUtil {
      * @param point0 线段首端点
      * @param point1 线段末端点
      * @param point 点的坐标
-     * @param context
+     * @param context 上下文对象
      * @return 点到线段的距离 100 or 0
      */
     public static int pointToLine(Point point0, Point point1, Point point, Context context) {
@@ -65,7 +66,7 @@ public class MathUtil {
      * @param point0 线段首端点
      * @param point1 线段末端点
      * @param point 点的坐标
-     * @param context
+     * @param context 上下文对象
      * @return 点到线段的距离 100 or 0
      */
     public static int pointToLine3(Point point0, Point point1, Point point, Context context) {
@@ -89,7 +90,7 @@ public class MathUtil {
      * 判断是否与已有直线重合
      * @param point0 直线首端点
      * @param point1 直线末端点
-     * @param context
+     * @param context 上下文对象
      * @return true if重合
      */
     public static boolean isCoincideLines(Point point0, Point point1, Context context) {
@@ -98,7 +99,7 @@ public class MathUtil {
             Point first = linkedList.getFirst();
             Point last = linkedList.getLast();
             double abs = Math.abs(vectorCos(first, last, point0, point1));
-            if (abs > 0.997) {
+            if (abs > Math.cos(Math.PI / 36)) {
                 if (isIntersect(first, last, point0, point1, context)) {
                     return true;
                 }else {
@@ -142,7 +143,7 @@ public class MathUtil {
     //判断list内是否有i
     public static boolean hasSameNumber(int i, List<Integer> list) {
         for (Integer num : list) {
-            if (i == num.intValue()) {
+            if (i == num) {
                 return true;
             }
         }
@@ -209,10 +210,7 @@ public class MathUtil {
         double v0 = vectorCos(headPoint, point0, footPoint, point0);
         double v1 = vectorCos(headPoint, point0, point0, point);
         double v2 = vectorCos(footPoint, point0, point0, point);
-        if (v0 < v1 && v0 < v2) {
-            return true;
-        }
-        return false;
+        return v0 < v1 && v0 < v2;
     }
 
     /**
@@ -230,12 +228,24 @@ public class MathUtil {
     }
 
     /**
+     * 求向量与x轴的夹角
+     * @param point1 向量起点
+     * @param point2 向量终点
+     * @return 向量与x轴夹角余玄值
+     */
+    public static double vectorCosHorizontal(Point point1, Point point2) {
+        double a = (point2.x - point1.x);
+        double b = pointToPoint(point2, point1);
+        return a / b;
+    }
+
+    /**
      * 求两直线交点坐标
      * @param point1 (1,2)
      * @param point2 (1,2)
      * @param point3 (3,4)
      * @param point4 (3,4)
-     * @return
+     * @return 两直线交点坐标
      */
     public static Point getIntersection(Point point1, Point point2, Point point3, Point point4) {
         Point point = null;
