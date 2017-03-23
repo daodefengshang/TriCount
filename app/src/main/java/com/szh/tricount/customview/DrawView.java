@@ -22,6 +22,7 @@ import com.szh.tricount.datas.DataList;
 import com.szh.tricount.datas.Point;
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.DensityUtil;
+import com.szh.tricount.utils.DrawMode;
 import com.szh.tricount.utils.MathUtil;
 import com.szh.tricount.utils.RemoveMode;
 
@@ -37,6 +38,7 @@ public class DrawView extends View {
     private boolean isGestureDrawer;
 
     private RemoveMode removeMode = RemoveMode.CLICK_RADIO;
+    private DrawMode drawMode = DrawMode.DEFAULT_DRAW_RADIO;
     private List<Integer> listRemove = new ArrayList<>();
 
     private LinkedList<Point> ss;
@@ -145,6 +147,10 @@ public class DrawView extends View {
 
     public void setRemoveMode(RemoveMode removeMode) {
         this.removeMode = removeMode;
+    }
+
+    public void setDrawMode(DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 
     public void clearLines() {
@@ -287,8 +293,10 @@ public class DrawView extends View {
         if (Contants.isAlter) {
             alter(event);
         } else {
-            if (Contants.lockDegree) {
+            if (drawMode == DrawMode.LOCK_DEGREE_RADIO) {
                 drawLockDegree(event);
+            } else if (drawMode == DrawMode.LOCK_MID_POINT_RADIO) {
+                drawLockMidPoint(event);
             } else {
                 drawMotionEvent(event);
             }
@@ -628,6 +636,67 @@ public class DrawView extends View {
                         Point checkPosition = Calculator.getInstance(getContext()).checkLineLock(ss.get(1), ss.get(0));
                         if (checkPosition != null && !checkPosition.equals(ss.get(1))) {
                             ss.set(1, checkPosition);
+                        }
+                        Calculator.getInstance(getContext()).reduction();
+                        if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)
+                                || MathUtil.isCoincideLines(ss.get(0), ss.get(1), this.getContext())) {
+                            ss = null;
+                            invalidate();
+                            return;
+                        }
+                        DataList.getLines().add(ss);
+                        ss = null;
+                        invalidate();
+                        Calculator.getInstance(getContext()).increasePoint();
+                    }
+                }
+                break;
+        }
+    }
+
+    //锁定中点绘制
+    private void drawLockMidPoint(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
+        Point point0 = new Point(x, y);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (isGestureDrawer && x < 30) {
+                    return;
+                }
+                ss = new LinkedList<>();
+                ss.add(0, point0);
+                Point point = Calculator.getInstance(getContext()).checkInitMidPosition(ss.get(0));
+                if (Calculator.getInstance(getContext()).isFirstFixed()) {
+                    ss.set(0, point);
+                } else {
+                    Point headPoint = Calculator.getInstance(getContext()).getHeadPoint();
+                    Point footPoint = Calculator.getInstance(getContext()).getFootPoint();
+                    ss.set(0, new Point((headPoint.x + footPoint.x) / 2, (headPoint.y + footPoint.y) / 2));
+                }
+                ss.add(1, point);
+                invalidate();
+                MainActivity.showPathView(x, y);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (ss != null && ss.size() == 2) {
+                    ss.set(1, point0);
+                    invalidate();
+                    MainActivity.showPathView(x, y);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                if (ss != null) {
+                    if (ss.size() < 2) {
+                        ss = null;
+                    } else {
+                        Point pointUp = Calculator.getInstance(getContext()).checkInitMidPosition(ss.get(1));
+                        if (Calculator.getInstance(getContext()).isFirstFixed()) {
+                            ss.set(1, pointUp);
+                        } else {
+                            Point headPoint = Calculator.getInstance(getContext()).getHeadPoint();
+                            Point footPoint = Calculator.getInstance(getContext()).getFootPoint();
+                            ss.set(1, new Point((headPoint.x + footPoint.x) / 2, (headPoint.y + footPoint.y) / 2));
                         }
                         Calculator.getInstance(getContext()).reduction();
                         if (MathUtil.pointToPoint(ss.get(0), ss.get(1)) < DensityUtil.dip2px(this.getContext(), Contants.FUZZY_CONTANT)

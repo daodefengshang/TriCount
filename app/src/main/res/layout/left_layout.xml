@@ -94,17 +94,43 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:background="@android:color/darker_gray"/>
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/checkbox_lock_degree"
+            <RadioGroup
+                android:id="@+id/radio_draw_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:checked="false"
-                android:layout_margin="@dimen/radio_margin"
-                android:drawableLeft="@drawable/checkbox_selector"
-                android:drawablePadding="@dimen/radio_drawable_padding"
-                android:text="@string/lock_degree"
-                android:textColor="@android:color/black"/>
+                android:layout_marginLeft="@dimen/radio_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:checkedButton="@+id/default_draw_radio">
+                <RadioButton
+                    android:id="@+id/default_draw_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/radio_selector"
+                    android:drawablePadding="@dimen/radio_drawable_padding"
+                    android:text="@string/default_draw"
+                    android:textColor="@android:color/black"/>
+                <RadioButton
+                    android:id="@+id/lock_degree_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:layout_marginTop="@dimen/radio_margin"
+                    android:drawableLeft="@drawable/radio_selector"
+                    android:drawablePadding="@dimen/radio_drawable_padding"
+                    android:text="@string/lock_degree_draw"
+                    android:textColor="@android:color/black"/>
+                <RadioButton
+                    android:id="@+id/lock_midpoint_radio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:layout_marginTop="@dimen/radio_margin"
+                    android:drawableLeft="@drawable/radio_selector"
+                    android:drawablePadding="@dimen/radio_drawable_padding"
+                    android:text="@string/lock_mid_point_draw"
+                    android:textColor="@android:color/black"/>
+            </RadioGroup>
         </LinearLayout>
     </ScrollView>
     <LinearLayout

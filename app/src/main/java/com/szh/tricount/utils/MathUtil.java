@@ -99,7 +99,7 @@ public class MathUtil {
             Point first = linkedList.getFirst();
             Point last = linkedList.getLast();
             double abs = Math.abs(vectorCos(first, last, point0, point1));
-            if (abs > Math.cos(Math.PI / 36)) {
+            if (abs > Math.cos(Math.PI / 90)) {
                 if (isIntersect(first, last, point0, point1, context)) {
                     return true;
                 }else {

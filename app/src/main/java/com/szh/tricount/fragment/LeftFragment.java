@@ -20,6 +20,7 @@ import com.szh.tricount.R;
 import com.szh.tricount.activity.SettingActivity;
 import com.szh.tricount.customview.DrawView;
 import com.szh.tricount.datas.DataList;
+import com.szh.tricount.listener.DrawRadioCheckedChangeListener;
 import com.szh.tricount.listener.RemoveRadioCheckedChangeListener;
 import com.szh.tricount.utils.Contants;
 import com.szh.tricount.utils.ObjectSerializeUtil;
@@ -42,7 +43,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private TextView collection;
 
     private TextView browse;
-    private AppCompatCheckBox checkBoxLockDegree;
+    private RadioGroup radioDrawGroup;
 
     public void setForceInit(boolean forceInit) {
         isForceInit = forceInit;
@@ -67,7 +68,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         isocelesButton = (Button) view.findViewById(R.id.button_isosceles);
         rectangularButton = (Button) view.findViewById(R.id.button_rectangular);
         squareButton = (Button) view.findViewById(R.id.square);
-        checkBoxLockDegree = (AppCompatCheckBox) view.findViewById(R.id.checkbox_lock_degree);
+        radioDrawGroup = (RadioGroup) view.findViewById(R.id.radio_draw_group);
         setting = (TextView) view.findViewById(R.id.set);
         collection = (TextView) view.findViewById(R.id.collection);
         browse = (TextView) view.findViewById(R.id.browse);
@@ -79,12 +80,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         isocelesButton.setOnClickListener(this);
         rectangularButton.setOnClickListener(this);
         squareButton.setOnClickListener(this);
-        checkBoxLockDegree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Contants.lockDegree = isChecked;
-            }
-        });
+        radioDrawGroup.setOnCheckedChangeListener(new DrawRadioCheckedChangeListener());
         setting.setOnClickListener(this);
         collection.setOnClickListener(this);
         browse.setOnClickListener(this);

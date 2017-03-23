@@ -180,6 +180,55 @@ public class Calculator {
         return point;
     }
 
+    //检查并更新点的坐标,只在锁定中点绘制中调用
+    public Point checkInitMidPosition(Point point0) {
+        isFirstFixed = true;
+        Point point = new Point();
+        ArrayList<LinkedList<Point>> lines = DataList.getLines();
+        for (LinkedList<Point> linkedList : lines) {
+            if (linkedList != null) {
+                int sizeChild = linkedList.size();
+                Point first = linkedList.getFirst();
+                Point last = linkedList.getLast();
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToPoint(linkedList.get(j), point0) < fuzzyContant) {
+                        point.x = linkedList.get(j).x;
+                        point.y = linkedList.get(j).y;
+                        return point;
+                    }
+                }
+                for (int j = 0; j < sizeChild; j++) {
+                    if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
+                        point = MathUtil.getPoint(first, last, point0);
+                        isFirstFixed = false;
+                        for (int i = 0; i < sizeChild - 1; i++) {
+                            Point point1 = linkedList.get(i);
+                            Point point2 = linkedList.get(i + 1);
+                            if (point.x > point1.x + fuzzyDeleteContant && point.x < point2.x - fuzzyDeleteContant
+                                    || point.x < point1.x - fuzzyDeleteContant && point.x > point2.x + fuzzyDeleteContant
+                                    || point.y > point1.y + fuzzyDeleteContant && point.y < point2.y - fuzzyDeleteContant
+                                    || point.y < point1.y - fuzzyDeleteContant && point.y > point2.y + fuzzyDeleteContant) {
+                                headPoint.x = point1.x;
+                                headPoint.y = point1.y;
+                                footPoint.x = point2.x;
+                                footPoint.y = point2.y;
+                                return point;
+                            }
+                        }
+                        headPoint.x = first.x;
+                        headPoint.y = first.y;
+                        footPoint.x = last.x;
+                        footPoint.y = last.y;
+                        return point;
+                    }
+                }
+            }
+        }
+        point.x = point0.x;
+        point.y = point0.y;
+        return point;
+    }
+
     //检查并更新点的坐标
     public Point checkPosition(Point point0) {
         Point point = new Point();
