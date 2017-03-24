@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -72,14 +73,13 @@ public class DrawView extends View {
         setWillNotDraw(false);
         Contants.countLayout = 0;
         paint = new Paint();
-        paint.setColor(Color.BLACK);
-        paint.setAlpha(180);
+        paint.setColor(0xFF808080);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setStrokeWidth(DensityUtil.dip2px(this.getContext(), 3));
+        paint.setStrokeWidth(DensityUtil.dip2px(this.getContext(), 2));
         paintTmp = new Paint(this.paint);
-        paintTmp.setAlpha(255);
         paintTmp.setColor(Color.RED);
+        paintTmp.setStrokeWidth(DensityUtil.dip2px(this.getContext(), 3));
         createDeleteDialog();
     }
 
@@ -274,7 +274,6 @@ public class DrawView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.saveLayer(this.getLeft(),this.getTop(),this.getRight(),this.getBottom(),paint,Canvas.HAS_ALPHA_LAYER_SAVE_FLAG);
         for (int i = 0; i < DataList.getLines().size(); i++) {
             if (MathUtil.hasSameNumber(i, listRemove)) {
                 canvas.drawLine(DataList.getLines().get(i).getFirst().x, DataList.getLines().get(i).getFirst().y, DataList.getLines().get(i).getLast().x, DataList.getLines().get(i).getLast().y, paintTmp);
@@ -285,7 +284,6 @@ public class DrawView extends View {
         if (ss != null) {
             canvas.drawLine(ss.getFirst().x,ss.getFirst().y,ss.getLast().x,ss.getLast().y,paint);
         }
-        canvas.restore();
     }
 
     @Override

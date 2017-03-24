@@ -18,3 +18,6 @@
 -keepclassmembers class com.szh.tricount.webjs.JavaScriptObject {public *;}
 -keepattributes *Annocation*
 -keepattributes *JavascriptInterface*
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+}

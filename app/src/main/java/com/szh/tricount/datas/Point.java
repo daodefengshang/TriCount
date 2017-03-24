@@ -10,6 +10,7 @@ import java.io.Serializable;
  * Created by szh on 2017/3/6.
  */
 public class Point implements Parcelable, Serializable {
+    private static final long serialVersionUID = 2L;
     public int x;
     public int y;
 
