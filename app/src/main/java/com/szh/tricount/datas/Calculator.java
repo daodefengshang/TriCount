@@ -200,7 +200,6 @@ public class Calculator {
                 for (int j = 0; j < sizeChild; j++) {
                     if (MathUtil.pointToLine(first, last, point0, mContext) == 0) {
                         point = MathUtil.getPoint(first, last, point0);
-                        isFirstFixed = false;
                         for (int i = 0; i < sizeChild - 1; i++) {
                             Point point1 = linkedList.get(i);
                             Point point2 = linkedList.get(i + 1);
@@ -208,6 +207,7 @@ public class Calculator {
                                     || point.x < point1.x - fuzzyDeleteContant && point.x > point2.x + fuzzyDeleteContant
                                     || point.y > point1.y + fuzzyDeleteContant && point.y < point2.y - fuzzyDeleteContant
                                     || point.y < point1.y - fuzzyDeleteContant && point.y > point2.y + fuzzyDeleteContant) {
+                                isFirstFixed = false;
                                 headPoint.x = point1.x;
                                 headPoint.y = point1.y;
                                 footPoint.x = point2.x;
@@ -215,11 +215,6 @@ public class Calculator {
                                 return point;
                             }
                         }
-                        headPoint.x = first.x;
-                        headPoint.y = first.y;
-                        footPoint.x = last.x;
-                        footPoint.y = last.y;
-                        return point;
                     }
                 }
             }
