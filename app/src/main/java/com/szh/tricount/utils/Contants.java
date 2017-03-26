@@ -26,6 +26,6 @@ public class Contants {
 
     public static final int FUZZY_INCREASE_CONTANT = 4;
 
-    public static final int FUZZY_DELETE_CONTANT = 3;
+    public static final int FUZZY_DELETE_CONTANT = 4;
 
 }

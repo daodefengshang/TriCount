@@ -415,6 +415,8 @@ public class Calculator {
     private void createMap() {
         if (hashMap == null) {
             hashMap = new HashMap<>();
+        } else {
+            hashMap.clear();
         }
         ArrayList<LinkedList<Point>> lines = DataList.getLines();
         for (LinkedList<Point> list : lines) {
@@ -431,7 +433,11 @@ public class Calculator {
     }
 
     private void createNewList() {
-        linkedLists = new LinkedList<>();
+        if (linkedLists == null) {
+            linkedLists = new LinkedList<>();
+        } else {
+            linkedLists.clear();
+        }
         ArrayList<LinkedList<Point>> lines = DataList.getLines();
         for (LinkedList<Point> list : lines) {
             LinkedList<Integer> linkedList = new LinkedList<>();
@@ -503,7 +509,7 @@ public class Calculator {
             message.what = 4;
             message.arg1 = (int) ((Math.pow(once - pointCount, 3) / Math.pow(pointCount, 2) + pointCount) * 100 / pointCount);
             handler.sendMessage(message);
-            if (linkedLists.size() < 3 || message.arg1 >= 100) {
+            if (linkedLists.size() < 3 || message.arg1 > 100) {
                 break;
             }
         }
