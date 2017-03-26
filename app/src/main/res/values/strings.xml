@@ -15,7 +15,7 @@
     <string name="positive">确定</string>
     <string name="negative">取消</string>
     <string name="ensureRemove">确定删除此线段吗？</string>
-    <string name="requestClear">请先清空图形</string>
+    <string name="requestClear">请先清空绘图区</string>
     <string name="exit_string">再按一次退出</string>
     <string name="magnify_one_times">放大×1</string>
     <string name="magnify_two_times">放大×2</string>

@@ -44,7 +44,7 @@ public class ToastUtil {
         View view = inflate.inflate(R.layout.toast_layout, null);
         TextView textView = (TextView) view.findViewById(R.id.toast_message);
         textView.setText(context.getResources().getText(resId));
-        toast.setView(textView);
+        toast.setView(view);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.RIGHT|Gravity.BOTTOM, DensityUtil.dip2px(context, 20),
                 (int) context.getResources().getDimension(R.dimen.button_height) + DensityUtil.dip2px(context, 10));
