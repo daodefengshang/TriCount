@@ -14,7 +14,7 @@ import com.szh.tricount.utils.VersionUtil;
 public class SplashActivity extends AppCompatActivity {
 
     private TextView view;
-    private static final int AUTO_SHOW_DELAY_MILLIS = 2500;
+    private static final int AUTO_SHOW_DELAY_MILLIS = 3000;
     private final Handler mHideHandler = new Handler();
 
     private final Runnable mHidePart2Runnable = new Runnable() {
