@@ -25,6 +25,7 @@ public class BrowseActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
     private List<RecyclerViewItem> list;
+    private OnRecyclerItemClickListener itemClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,12 @@ public class BrowseActivity extends AppCompatActivity {
     private void initEvents() {
         final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ListItemTouchCallback(recyclerAdapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(recyclerView) {
+        itemClickListener = new OnRecyclerItemClickListener(recyclerView) {
             @Override
             public void onLongClick(RecyclerView.ViewHolder vh, int position) {
                 super.onLongClick(vh, position);
             }
+
             @Override
             public void onItemClick(RecyclerView.ViewHolder vh, int position) {
                 super.onItemClick(vh, position);
@@ -66,13 +68,15 @@ public class BrowseActivity extends AppCompatActivity {
                 ObjectSerializeUtil.deserializeList(getApplicationContext(), list.get(position));
                 MainActivity.getDrawView().invalidate();
             }
-        });
+        };
+        recyclerView.addOnItemTouchListener(itemClickListener);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         list.clear();
+        recyclerView.removeOnItemTouchListener(itemClickListener);
     }
 
     @Override
