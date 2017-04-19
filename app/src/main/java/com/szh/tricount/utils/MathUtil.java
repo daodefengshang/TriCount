@@ -31,11 +31,11 @@ public class MathUtil {
         int n = 100;
         double l1 = Math.hypot(point.x - point0.x, point.y - point0.y);
         double l2 = Math.hypot(point.x - point1.x, point.y - point1.y);
-        double mod1 = ((point1.x - point0.x) * 1.0 * (point.x - point0.x) + (point1.y - point0.y) * (point.y - point0.y))
-                        /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l1;
-        double mod2 = ((point0.x - point1.x) * 1.0 * (point.x - point1.x) + (point0.y - point1.y) * (point.y - point1.y))
-                        /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l2;
-        if (mod1 > 0 && mod2 > 0) {
+        int p = (point1.x - point0.x) * (point.x - point0.x) + (point1.y - point0.y) * (point.y - point0.y);
+        int q = (point0.x - point1.x) * (point.x - point1.x) + (point0.y - point1.y) * (point.y - point1.y);
+        double mod1 = p * 1.0 / Math.hypot(point1.x - point0.x, point1.y - point0.y) / l1;
+        double mod2 = q * 1.0 / Math.hypot(point1.x - point0.x, point1.y - point0.y) / l2;
+        if (mod1 > 0 && mod2 > 0 || p == 0 || q == 0) {
             double mod0 = Math.sqrt(1 - Math.pow(mod1, 2)) * l1;
             if (mod0 < DensityUtil.dip2px(context, Contants.FUZZY_CONTANT)) {
                 n = 0;
@@ -73,11 +73,11 @@ public class MathUtil {
         int n = 100;
         double l1 = Math.hypot(point.x - point0.x, point.y - point0.y);
         double l2 = Math.hypot(point.x - point1.x, point.y - point1.y);
-        double mod1 = ((point1.x - point0.x) * 1.0 * (point.x - point0.x) + (point1.y - point0.y) * (point.y - point0.y))
-                /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l1;
-        double mod2 = ((point0.x - point1.x) * 1.0 * (point.x - point1.x) + (point0.y - point1.y) * (point.y - point1.y))
-                /Math.hypot(point1.x - point0.x, point1.y - point0.y)/l2;
-        if (mod1 > 0 && mod2 > 0) {
+        int p = (point1.x - point0.x) * (point.x - point0.x) + (point1.y - point0.y) * (point.y - point0.y);
+        int q = (point0.x - point1.x) * (point.x - point1.x) + (point0.y - point1.y) * (point.y - point1.y);
+        double mod1 = p * 1.0 / Math.hypot(point1.x - point0.x, point1.y - point0.y) / l1;
+        double mod2 = q * 1.0 / Math.hypot(point1.x - point0.x, point1.y - point0.y) / l2;
+        if (mod1 > 0 && mod2 > 0 || p == 0 || q == 0) {
             double mod0 = Math.sqrt(1 - Math.pow(mod1, 2)) * l1;
             if (mod0 < DensityUtil.dip2px(context, Contants.FUZZY_INCREASE_CONTANT)) {
                 n = 0;

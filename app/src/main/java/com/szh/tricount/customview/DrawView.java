@@ -631,6 +631,7 @@ public class DrawView extends View {
                     if (ss.size() < 2) {
                         ss = null;
                     } else {
+                        Point tmpFirstPoint = Calculator.getInstance(getContext()).getTmpFirstPoint();
                         Point checkPosition = Calculator.getInstance(getContext()).checkLineLock(ss.get(1), ss.get(0));
                         if (checkPosition != null && !checkPosition.equals(ss.get(1))) {
                             ss.set(1, checkPosition);
