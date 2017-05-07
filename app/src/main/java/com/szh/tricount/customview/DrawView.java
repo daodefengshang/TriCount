@@ -166,14 +166,20 @@ public class DrawView extends View {
         super.onLayout(changed, left, top, right, bottom);
         if (Contants.countLayout == 1) {
             if (DataList.getLines() == null || DataList.getLines().size() == 0) {
-                initDrawIsosceles(left, top, right, bottom);
+                initDrawIsosceles(left, top, right, bottom, false);
             }
-            Contants.countLayout = 0;
         }
-        Contants.countLayout = 1;
+        if (Contants.countLayout < 2) {
+            Contants.countLayout++;
+        }
     }
     //画等腰三角形
+
     public void initDrawIsosceles(int left, int top, int right, int bottom) {
+        initDrawIsosceles(left, top, right, bottom, true);
+    }
+
+    public void initDrawIsosceles(int left, int top, int right, int bottom, boolean isInvalidate) {
         ss = new LinkedList<>();
         ss.add(0, new Point((left + right)/2, top + 60));
         ss.add(1, new Point(left + 60,bottom - 60));
@@ -189,7 +195,9 @@ public class DrawView extends View {
         ss.add(1, new Point(right - 60, bottom - 60));
         DataList.getLines().add(ss);
         ss = null;
-        invalidate();
+        if (isInvalidate) {
+            invalidate();
+        }
     }
     //画等边三角形
     public void initDrawEquilateral(int left, int top, int right, int bottom) {
